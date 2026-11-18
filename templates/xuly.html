@@ -12,16 +12,52 @@
 </head>
 <body>
 
-  <!-- HEADER -->
+    <!-- ===== HEADER ===== -->
   <header class="header">
     <div class="container">
-      <a href="#" class="logo">
+      <a href="index.html" class="logo" style="text-decoration:none;">
         <div class="logo-icon"><i class="fas fa-cubes"></i></div>
         <div class="logo-text">ToolHub</div>
       </a>
-      <div class="header-actions">
-        <a href="#" class="btn btn-login">Đăng nhập</a>
-        <a href="#" class="btn btn-register">Đăng ký</a>
+
+      <div class="header-search-wrap">
+        <div class="header-search">
+          <input type="text" id="searchInput" placeholder="Tìm công cụ: nén PDF, ghép ảnh, chuyển đổi..."
+                 autocomplete="off" aria-autocomplete="list" aria-controls="searchSuggestions">
+          <button type="button" id="searchSubmitBtn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+
+      <div class="header-actions" id="headerActions">
+        <div id="guestActions" style="display:flex; gap:8px;">
+          <a href="index.html" class="btn btn-login" onclick="if(typeof openModal==='function'){openModal('login'); return false;}">Đăng nhập</a>
+          <a href="index.html" class="btn btn-register" onclick="if(typeof openModal==='function'){openModal('register'); return false;}">Đăng ký</a>
+        </div>
+
+        <div id="userActions" class="user-menu" style="display:none;">
+          <div class="user-menu-trigger" id="userMenuTrigger">
+            <div class="user-avatar" id="headerAvatar">U</div>
+            <span class="user-name" id="headerUserName">Người dùng</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-header">
+              <strong id="dropdownName">Người dùng</strong>
+              <small id="dropdownEmail">user@example.com</small>
+            </div>
+            <a href="index.html" class="user-dropdown-item">
+              <i class="fas fa-history"></i> Lịch sử xử lý
+            </a>
+            <a href="index.html" class="user-dropdown-item">
+              <i class="fas fa-cog"></i> Cài đặt tài khoản
+            </a>
+            <div class="user-dropdown-divider"></div>
+            <a href="#" class="user-dropdown-item danger" onclick="logout(); return false;">
+              <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -134,102 +170,9 @@
 
   </div>
 
-  <script>
-    /* =========================================================
-       TOGGLE ACTIVE CHO CÁC NÚT TÙY CHỌN
-       ========================================================= */
-    function setOrientation(btn) {
-      const btns = btn.parentElement.querySelectorAll('.opt-btn');
-      btns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    }
-
-    function setMargin(btn) {
-      const btns = btn.parentElement.querySelectorAll('.opt-btn');
-      btns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    }
-
-    /* =========================================================
-       XỬ LÝ CHỌN FILE (CẬP NHẬT PREVIEW VÀ BADGE)
-       ========================================================= */
-    let selectedFiles = [];
-
-    function handleFileSelect(event) {
-      const files = Array.from(event.target.files);
-      if (!files.length) return;
-
-      // Lấy file đầu tiên để hiển thị preview (giữ logic đơn giản như ảnh mẫu)
-      const firstFile = files[0];
-      
-      // Cập nhật tên file
-      document.getElementById('fileName').textContent = firstFile.name;
-      
-      // Cập nhật badge đếm số file
-      const badge = document.getElementById('fileCountBadge');
-      const currentCount = parseInt(badge.textContent) || 1;
-      badge.textContent = currentCount + files.length - 1; // +thêm file mới
-
-      // Nếu là ảnh thì hiển thị preview
-      if (firstFile.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById('filePreview').innerHTML = 
-            `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: contain;">`;
-        };
-        reader.readAsDataURL(firstFile);
-      }
-    }
-
-    /* =========================================================
-       XÓA FILE (RESET VỀ TRẠNG THÁI BAN ĐẦU)
-       ========================================================= */
-    function removeFile() {
-      document.getElementById('fileInput').value = '';
-      document.getElementById('fileName').textContent = '4758f49c82ec4c9ab6759056a...';
-      document.getElementById('fileCountBadge').textContent = '1';
-      
-      // Trả lại khung giấy giả lập
-      document.getElementById('filePreview').innerHTML = `
-        <div class="paper-mockup">
-          <div class="line title"></div>
-          <div class="line"></div>
-          <div class="line short"></div>
-          <div class="line"></div>
-          <div class="line block"></div>
-          <div class="line"></div>
-          <div class="line short"></div>
-        </div>
-      `;
-    }
-
-    /* =========================================================
-       XỬ LÝ CHUYỂN ĐỔI (GIẢ LẬP)
-       ========================================================= */
-    function startConvert() {
-      const btn = document.getElementById('btnConvert');
-      const originalHtml = btn.innerHTML;
-      
-      // Vô hiệu hóa nút và hiển thị loading
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
-
-      // Giả lập thời gian xử lý
-      setTimeout(() => {
-        btn.disabled = false;
-        btn.innerHTML = originalHtml;
-        alert('Tạo file PDF thành công!\n(Đây là giao diện mô phỏng xử lý)');
-      }, 1500);
-    }
-
-    // Hiển thị tên file được chọn từ trang chon-file.html (nếu có)
-    (function initFileFromSession() {
-      const saved = sessionStorage.getItem('toolhub_selected_file_name');
-      if (saved) {
-        document.getElementById('fileName').textContent = saved;
-      }
-    })();
-  </script>
+  <!-- ===== JAVASCRIPT CHÍNH ===== -->
+  <script src="../static/js/app.js"></script>
+  <script src="../static/js/pages/xuly.js"></script>
 
 </body>
 </html>

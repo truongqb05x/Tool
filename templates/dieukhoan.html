@@ -13,22 +13,52 @@
 </head>
 <body>
 
-  <!-- HEADER -->
+    <!-- ===== HEADER ===== -->
   <header class="header">
     <div class="container">
-      <a href="#" class="logo">
+      <a href="index.html" class="logo" style="text-decoration:none;">
         <div class="logo-icon"><i class="fas fa-cubes"></i></div>
         <div class="logo-text">ToolHub</div>
       </a>
 
-      <div class="header-search">
-        <input type="text" placeholder="Tìm công cụ: nén PDF, ghép ảnh, chuyển đổi...">
-        <button type="button"><i class="fas fa-search"></i></button>
+      <div class="header-search-wrap">
+        <div class="header-search">
+          <input type="text" id="searchInput" placeholder="Tìm công cụ: nén PDF, ghép ảnh, chuyển đổi..."
+                 autocomplete="off" aria-autocomplete="list" aria-controls="searchSuggestions">
+          <button type="button" id="searchSubmitBtn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
       </div>
 
-      <div class="header-actions">
-        <a href="#" class="btn btn-login">Đăng nhập</a>
-        <a href="#" class="btn btn-register">Đăng ký</a>
+      <div class="header-actions" id="headerActions">
+        <div id="guestActions" style="display:flex; gap:8px;">
+          <a href="index.html" class="btn btn-login" onclick="if(typeof openModal==='function'){openModal('login'); return false;}">Đăng nhập</a>
+          <a href="index.html" class="btn btn-register" onclick="if(typeof openModal==='function'){openModal('register'); return false;}">Đăng ký</a>
+        </div>
+
+        <div id="userActions" class="user-menu" style="display:none;">
+          <div class="user-menu-trigger" id="userMenuTrigger">
+            <div class="user-avatar" id="headerAvatar">U</div>
+            <span class="user-name" id="headerUserName">Người dùng</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-header">
+              <strong id="dropdownName">Người dùng</strong>
+              <small id="dropdownEmail">user@example.com</small>
+            </div>
+            <a href="index.html" class="user-dropdown-item">
+              <i class="fas fa-history"></i> Lịch sử xử lý
+            </a>
+            <a href="index.html" class="user-dropdown-item">
+              <i class="fas fa-cog"></i> Cài đặt tài khoản
+            </a>
+            <div class="user-dropdown-divider"></div>
+            <a href="#" class="user-dropdown-item danger" onclick="logout(); return false;">
+              <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -513,90 +543,9 @@
     </div>
   </div>
 
-  <script>
-    /* =========================================================
-       1) SCROLL SPY — HIGHLIGHT MỤC LỤC
-       ========================================================= */
-    const sections = document.querySelectorAll('.terms-section');
-    const tocLinks = document.querySelectorAll('.toc-menu a[data-toc]');
-
-    function updateTocActive() {
-      let currentId = null;
-      const scrollPos = window.scrollY + 130;
-
-      sections.forEach(function(sec) {
-        if (sec.offsetTop <= scrollPos) {
-          currentId = sec.id;
-        }
-      });
-
-      tocLinks.forEach(function(link) {
-        link.classList.toggle('active', link.getAttribute('data-toc') === currentId);
-      });
-    }
-
-    window.addEventListener('scroll', updateTocActive);
-    updateTocActive();
-
-    /* =========================================================
-       2) CLICK MỤC LỤC — SCROLL MƯỢT
-       ========================================================= */
-    tocLinks.forEach(function(link) {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        const target = document.getElementById(this.getAttribute('data-toc'));
-        if (target) {
-          window.scrollTo({ top: target.offsetTop - 16, behavior: 'smooth' });
-        }
-      });
-    });
-
-    /* =========================================================
-       3) BACK TO TOP
-       ========================================================= */
-    const backToTop = document.getElementById('backToTop');
-    window.addEventListener('scroll', function() {
-      if (window.scrollY > 400) backToTop.classList.add('show');
-      else backToTop.classList.remove('show');
-    });
-
-    /* =========================================================
-       4) CHẤP NHẬN ĐIỀU KHOẢN
-       ========================================================= */
-    function acceptTerms() {
-      const btn = document.getElementById('acceptBtn');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fas fa-check-circle"></i> Đã đồng ý';
-
-      // Lưu vào localStorage (demo)
-      try {
-        localStorage.setItem('toolhub_terms_accepted', JSON.stringify({
-          version: '1.2',
-          acceptedAt: new Date().toISOString()
-        }));
-      } catch (e) {}
-
-      // Thông báo nhẹ nhàng
-      setTimeout(function() {
-        alert('Cảm ơn bạn đã đồng ý với Điều khoản sử dụng của ToolHub.\nBạn có thể tiếp tục sử dụng dịch vụ.');
-      }, 200);
-    }
-
-    /* Khôi phục trạng thái đã đồng ý (nếu có) */
-    (function initAccept() {
-      try {
-        const saved = localStorage.getItem('toolhub_terms_accepted');
-        if (saved) {
-          const data = JSON.parse(saved);
-          if (data && data.version === '1.2') {
-            const btn = document.getElementById('acceptBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-check-circle"></i> Đã đồng ý';
-          }
-        }
-      } catch (e) {}
-    })();
-  </script>
+  <!-- ===== JAVASCRIPT CHÍNH ===== -->
+  <script src="../static/js/app.js"></script>
+  <script src="../static/js/pages/dieukhoan.js"></script>
 
 </body>
 </html>

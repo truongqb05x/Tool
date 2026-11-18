@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gộp Nhiều File PDF Thành 1 — Nối Ghép File PDF Trực Tuyến | ToolHub</title>
+  <meta name="description" content="Gộp nhiều file PDF thành một tệp duy nhất trực tuyến miễn phí. Sắp xếp thứ tự trang và tài liệu theo ý muốn dễ dàng, bảo mật 100%.">
+  <meta name="keywords" content="gộp pdf, ghép pdf, nối pdf, gộp nhiều file pdf, merge pdf online">
+
+  <!-- Font Awesome & CSS Layout -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../static/css/layout/base.css">
+  <link rel="stylesheet" href="../../static/css/layout/header.css">
+  <link rel="stylesheet" href="../../static/css/layout/footer.css">
+  <link rel="stylesheet" href="../../static/css/layout/modal.css">
+  <link rel="stylesheet" href="../../static/css/tools/tool-page.css">
+</head>
+<body>
+
+  <!-- ===== HEADER CHUẨN ===== -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-cubes"></i></div>
+        <div class="logo-text">ToolHub</div>
+      </a>
+
+      <div class="header-search-wrap">
+        <div class="header-search">
+          <input type="text" id="searchInput" placeholder="Tìm kiếm công cụ (ví dụ: Nén PDF, Cắt ảnh, Mã QR...)" autocomplete="off">
+          <button type="button" id="searchSubmitBtn" aria-label="Tìm kiếm"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+
+      <div class="header-right">
+        <div class="header-actions" id="guestActions">
+          <button type="button" class="btn btn-outline" onclick="openModal('login')">Đăng nhập</button>
+          <button type="button" class="btn btn-primary" onclick="openModal('register')">Đăng ký</button>
+        </div>
+
+        <div class="header-user" id="userActions" style="display: none;">
+          <div class="user-menu-trigger" id="userMenuTrigger">
+            <div class="user-avatar" id="headerAvatar">U</div>
+            <span class="user-name" id="headerUserName">Người dùng</span>
+            <i class="fas fa-chevron-down caret"></i>
+          </div>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="dropdown-header">
+              <div class="name" id="dropdownName">Người dùng</div>
+              <div class="email" id="dropdownEmail">user@example.com</div>
+            </div>
+            <a href="../index.html" class="dropdown-item"><i class="fas fa-home"></i> Trang chủ</a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item danger" onclick="logout(); return false;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== BREADCRUMB & HERO ===== -->
+  <div class="container">
+    <nav class="breadcrumb-nav">
+      <a href="../index.html"><i class="fas fa-home"></i> Trang chủ</a>
+      <span>/</span>
+      <a href="../index.html">Công cụ PDF</a>
+      <span>/</span>
+      <strong>Gộp nhiều PDF</strong>
+    </nav>
+  </div>
+
+  <div class="tool-hero">
+    <div class="tool-hero-badge"><i class="fas fa-object-group"></i> Ghép nối nhanh chóng</div>
+    <h1>Gộp nhiều file PDF trực tuyến</h1>
+    <p>Nối và kết hợp nhiều tài liệu PDF thành một file duy nhất theo thứ tự mong muốn trong chớp mắt.</p>
+  </div>
+
+  <div class="tool-container">
+
+    <!-- BƯỚC 1: TẢI NHIỀU FILE PDF -->
+    <div class="upload-panel" id="uploadPanel">
+      <div class="upload-panel-header">
+        <i class="fas fa-object-group"></i> Chọn các tệp PDF cần ghép nối
+      </div>
+      <div class="drop-zone" id="dropZone">
+        <div class="dz-icon"><i class="fas fa-copy"></i></div>
+        <h3>Kéo &amp; thả các file PDF vào đây</h3>
+        <p>hoặc nhấn chọn từ 2 file PDF trở lên từ máy tính của bạn</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn các tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" multiple style="display:none;">
+        <div class="dz-note"><i class="fas fa-shield-alt"></i> Có thể chọn nhiều file cùng lúc · Tối đa 20 file mỗi lần</div>
+      </div>
+    </div>
+
+    <!-- BƯỚC 2: WORKSPACE SẮP XẾP VÀ GHÉP NỐI -->
+    <div class="tool-workspace" id="toolWorkspace">
+      <div class="workspace-left">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <strong style="color:#333; font-size:0.95rem;">Danh sách file ghép nối (<span id="fileCountText">0</span> file):</strong>
+          <button type="button" class="btn-redo" onclick="document.getElementById('fileInput').click()" style="margin:0;">
+            <i class="fas fa-plus"></i> Thêm file khác
+          </button>
+        </div>
+
+        <div id="fileListContainer">
+          <!-- Render dynamically by gop-pdf.js -->
+        </div>
+      </div>
+
+      <div class="workspace-right">
+        <div class="ws-options-head">
+          <i class="fas fa-cog" style="margin-right:6px;"></i> Thiết lập file gộp
+        </div>
+        <div class="ws-options-body">
+          <div class="ws-option-group">
+            <label class="ws-option-label" for="outputFileName">Tên file kết quả:</label>
+            <input type="text" id="outputFileName" value="tailieu_da_gop.pdf" style="width:100%; padding:8px 10px; border:1px solid #ccc; border-radius:3px; font-size:0.88rem;">
+          </div>
+          <div style="padding:10px; background:#f4f7fb; border:1px solid #d5dde6; border-radius:3px; font-size:0.82rem; color:#555;">
+            <i class="fas fa-info-circle" style="color:#1e5b9c;"></i> Các file sẽ được nối theo thứ tự từ trên xuống dưới trong danh sách bên trái.
+          </div>
+        </div>
+
+        <div class="ws-options-action">
+          <button type="button" class="btn-execute" id="btnMerge" onclick="startMergePdf()">
+            Gộp các file PDF <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BƯỚC 3: TẢI KẾT QUẢ -->
+    <div class="download-card" id="downloadCard">
+      <div class="download-card-icon"><i class="fas fa-check"></i></div>
+      <h3>Đã gộp các file PDF thành công!</h3>
+      <p id="downloadMeta">File kết quả đã sẵn sàng để tải xuống máy tính của bạn.</p>
+      <button type="button" class="btn-download-result" onclick="downloadMergedFile()">
+        <i class="fas fa-download"></i> Tải xuống file PDF đã gộp
+      </button>
+      <div>
+        <button type="button" class="btn-redo" onclick="resetMergeSelection()">
+          <i class="fas fa-redo"></i> Ghép thêm file PDF khác
+        </button>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <section class="seo-section">
+      <h2><i class="fas fa-list-ol"></i> Cách gộp nhiều file PDF thành 1 file duy nhất</h2>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h4>Chọn các file PDF</h4>
+          <p>Tải lên từ 2 file PDF trở lên mà bạn muốn kết hợp lại với nhau.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h4>Sắp xếp thứ tự</h4>
+          <p>Kéo hoặc bấm mũi tên để đổi vị trí file nào đứng trước, file nào đứng sau.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h4>Bấm gộp &amp; Tải về</h4>
+          <p>Nhấn nút "Gộp các file PDF" và lưu tệp hoàn chỉnh về máy tính ngay lập tức.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-cols">
+        <div class="footer-col footer-about">
+          <div class="footer-logo">
+            <div class="footer-logo-icon"><i class="fas fa-cubes"></i></div>
+            <div class="footer-logo-text">ToolHub</div>
+          </div>
+          <p>Nền tảng tiện ích trực tuyến tổng hợp: PDF, hình ảnh, văn bản và công cụ tiện ích miễn phí hàng đầu.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Công cụ PDF</h4>
+          <ul>
+            <li><a href="nen-pdf.html">Nén PDF</a></li>
+            <li><a href="gop-pdf.html">Gộp PDF</a></li>
+            <li><a href="tach-pdf.html">Tách PDF</a></li>
+            <li><a href="pdf-sang-word.html">PDF sang Word</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Chỉnh sửa ảnh</h4>
+          <ul>
+            <li><a href="../anh/cat-anh.html">Cắt &amp; xoay ảnh</a></li>
+            <li><a href="../anh/ghep-anh.html">Ghép ảnh</a></li>
+            <li><a href="../anh/xoa-phong-nen.html">Xóa phông nền</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Hỗ trợ &amp; Điều khoản</h4>
+          <ul>
+            <li><a href="../trogiup.html">Trung tâm trợ giúp</a></li>
+            <li><a href="../dieukhoan.html">Điều khoản sử dụng</a></li>
+            <li><a href="../dieukhoan.html">Chính sách bảo mật</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="bottom-bar">
+    <div class="container">
+      <div>© 2025 ToolHub — Nền tảng tiện ích trực tuyến</div>
+      <div>
+        <a href="../trogiup.html">Trợ giúp</a>
+        <a href="../dieukhoan.html">Điều khoản</a>
+        <a href="../dieukhoan.html">Bảo mật</a>
+        <a href="#"><i class="fas fa-globe"></i> Ngôn ngữ: VI</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../static/js/app.js"></script>
+  <script src="../../static/js/tools/pdf/gop-pdf.js"></script>
+</body>
+</html>

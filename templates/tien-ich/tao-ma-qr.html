@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tạo Mã QR Trực Tuyến — Trình Tạo QR Code Miễn Phí Cho URL &amp; Văn Bản | ToolHub</title>
+  <meta name="description" content="Tạo mã QR trực tuyến miễn phí cho website, liên kết URL, WiFi, số điện thoại hoặc văn bản. Tùy chỉnh màu sắc mã QR, tải ảnh PNG độ nét cao.">
+  <meta name="keywords" content="tạo mã qr, qr code generator, tạo qr online, tạo mã qr miễn phí, qr code cho website">
+
+  <!-- Font Awesome & CSS Layout -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../static/css/layout/base.css">
+  <link rel="stylesheet" href="../../static/css/layout/header.css">
+  <link rel="stylesheet" href="../../static/css/layout/footer.css">
+  <link rel="stylesheet" href="../../static/css/layout/modal.css">
+  <link rel="stylesheet" href="../../static/css/tools/tool-page.css">
+</head>
+<body>
+
+  <!-- ===== HEADER CHUẨN ===== -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-cubes"></i></div>
+        <div class="logo-text">ToolHub</div>
+      </a>
+
+      <div class="header-search-wrap">
+        <div class="header-search">
+          <input type="text" id="searchInput" placeholder="Tìm kiếm công cụ (ví dụ: Nén PDF, Cắt ảnh, Mã QR...)" autocomplete="off">
+          <button type="button" id="searchSubmitBtn" aria-label="Tìm kiếm"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+
+      <div class="header-right">
+        <div class="header-actions" id="guestActions">
+          <button type="button" class="btn btn-outline" onclick="openModal('login')">Đăng nhập</button>
+          <button type="button" class="btn btn-primary" onclick="openModal('register')">Đăng ký</button>
+        </div>
+
+        <div class="header-user" id="userActions" style="display: none;">
+          <div class="user-menu-trigger" id="userMenuTrigger">
+            <div class="user-avatar" id="headerAvatar">U</div>
+            <span class="user-name" id="headerUserName">Người dùng</span>
+            <i class="fas fa-chevron-down caret"></i>
+          </div>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="dropdown-header">
+              <div class="name" id="dropdownName">Người dùng</div>
+              <div class="email" id="dropdownEmail">user@example.com</div>
+            </div>
+            <a href="../index.html" class="dropdown-item"><i class="fas fa-home"></i> Trang chủ</a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item danger" onclick="logout(); return false;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== BREADCRUMB & HERO ===== -->
+  <div class="container">
+    <nav class="breadcrumb-nav">
+      <a href="../index.html"><i class="fas fa-home"></i> Trang chủ</a>
+      <span>/</span>
+      <a href="../index.html">Ứng dụng &amp; Tiện ích</a>
+      <span>/</span>
+      <strong>Tạo mã QR</strong>
+    </nav>
+  </div>
+
+  <div class="tool-hero">
+    <div class="tool-hero-badge"><i class="fas fa-qrcode"></i> Tạo mã tức thì</div>
+    <h1>Tạo mã QR Code trực tuyến</h1>
+    <p>Chuyển đổi đường dẫn website, văn bản, thông tin liên lạc thành mã QR nhanh chóng và tải về ảnh PNG sắc nét.</p>
+  </div>
+
+  <div class="tool-container">
+
+    <!-- WORKSPACE TẠO MÃ QR -->
+    <div class="tool-workspace active" id="qrWorkspace" style="margin-bottom:36px;">
+      <!-- Cột trái: Nhập dữ liệu & Tùy chọn -->
+      <div class="workspace-left" style="background:#fff; border-right:1px solid #ccc; padding:24px;">
+        <h3 style="font-size:1.1rem; color:#1e5b9c; margin-bottom:14px;"><i class="fas fa-edit"></i> Nội dung mã QR</h3>
+
+        <div class="ws-option-group">
+          <label class="ws-option-label" for="qrContent">Nhập liên kết URL hoặc văn bản:</label>
+          <textarea id="qrContent" rows="4" placeholder="Ví dụ: https://toolhub.vn hoặc văn bản bất kỳ..." style="width:100%; padding:10px; border:1px solid #ccc; border-radius:3px; font-size:0.92rem; font-family:inherit; resize:vertical;">https://toolhub.vn</textarea>
+        </div>
+
+        <div class="ws-option-group" style="margin-top:16px;">
+          <label class="ws-option-label">Chọn màu sắc mã QR:</label>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <button type="button" class="color-btn" data-color="#000000" onclick="setQrColor(this, '#000000')" style="width:32px; height:32px; border-radius:50%; background:#000000; border:2px solid #1e5b9c; cursor:pointer;" title="Màu đen cổ điển"></button>
+            <button type="button" class="color-btn" data-color="#1e5b9c" onclick="setQrColor(this, '#1e5b9c')" style="width:32px; height:32px; border-radius:50%; background:#1e5b9c; border:2px solid transparent; cursor:pointer;" title="Xanh ToolHub"></button>
+            <button type="button" class="color-btn" data-color="#27ae60" onclick="setQrColor(this, '#27ae60')" style="width:32px; height:32px; border-radius:50%; background:#27ae60; border:2px solid transparent; cursor:pointer;" title="Xanh lá"></button>
+            <button type="button" class="color-btn" data-color="#c0392b" onclick="setQrColor(this, '#c0392b')" style="width:32px; height:32px; border-radius:50%; background:#c0392b; border:2px solid transparent; cursor:pointer;" title="Đỏ"></button>
+          </div>
+        </div>
+
+        <button type="button" class="btn-execute" onclick="generateQrCode()" style="margin-top:14px;">
+          <i class="fas fa-sync-alt"></i> Cập nhật mã QR
+        </button>
+      </div>
+
+      <!-- Cột phải: Xem trước & Tải về -->
+      <div class="workspace-right" style="align-items:center; justify-content:center; padding:24px; text-align:center;">
+        <div class="ws-options-head" style="width:100%; margin-bottom:20px;">
+          <i class="fas fa-eye" style="margin-right:6px;"></i> Xem trước mã QR
+        </div>
+
+        <div id="qrPreviewBox" style="background:#fff; padding:16px; border:1px solid #d0d7de; border-radius:4px; box-shadow:0 2px 8px rgba(0,0,0,0.06); margin-bottom:16px; display:inline-block;">
+          <!-- SVG QR Code -->
+          <svg id="qrSvg" width="180" height="180" viewBox="0 0 29 29" style="display:block;">
+            <rect width="29" height="29" fill="#ffffff" />
+            <!-- Mẫu QR chuẩn -->
+            <path id="qrPath" fill="#000000" d="M2,2 h7 v7 h-7 z M3,3 v5 h5 v-5 z M4,4 h3 v3 h-3 z M20,2 h7 v7 h-7 z M21,3 v5 h5 v-5 z M22,4 h3 v3 h-3 z M2,20 h7 v7 h-7 z M3,21 v5 h5 v-5 z M4,22 h3 v3 h-3 z M11,2 h2 v5 h-2 z M15,2 h4 v2 h-4 z M11,8 h4 v2 h-4 z M2,11 h3 v2 h-3 z M7,11 h3 v4 h-3 z M13,11 h3 v2 h-3 z M18,11 h2 v4 h-2 z M22,11 h5 v2 h-5 z M11,15 h3 v3 h-3 z M16,14 h3 v3 h-3 z M21,15 h6 v2 h-6 z M11,20 h3 v4 h-3 z M16,19 h4 v2 h-4 z M22,19 h5 v3 h-5 z M11,25 h6 v2 h-6 z M19,24 h3 v3 h-3 z M24,24 h3 v3 h-3 z" />
+          </svg>
+        </div>
+
+        <button type="button" class="btn-download-result" onclick="downloadQrImage()" style="width:100%; font-size:0.92rem; padding:10px;">
+          <i class="fas fa-download"></i> Tải ảnh QR (PNG)
+        </button>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <section class="seo-section">
+      <h2><i class="fas fa-list-ol"></i> Mã QR là gì và cách sử dụng hiệu quả</h2>
+      <p>Mã QR (Quick Response Code) là dạng mã vạch hai chiều cho phép người dùng dùng camera điện thoại quét để truy cập nhanh liên kết website, số điện thoại, thông tin mạng WiFi hoặc thanh toán mà không cần nhập thủ công.</p>
+      <div class="steps-grid" style="margin-top:16px;">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h4>Nhập nội dung</h4>
+          <p>Dán địa chỉ website hoặc nhập đoạn văn bản mà bạn muốn mã hóa.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h4>Tùy chỉnh màu sắc</h4>
+          <p>Lựa chọn màu sắc nhận diện thương hiệu để mã QR nổi bật và chuyên nghiệp.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h4>Tải về &amp; Sử dụng</h4>
+          <p>Lưu ảnh mã QR về máy để in ấn trên danh thiếp, menu, tờ rơi quảng cáo.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-cols">
+        <div class="footer-col footer-about">
+          <div class="footer-logo">
+            <div class="footer-logo-icon"><i class="fas fa-cubes"></i></div>
+            <div class="footer-logo-text">ToolHub</div>
+          </div>
+          <p>Nền tảng tiện ích trực tuyến tổng hợp: PDF, hình ảnh, văn bản và công cụ tiện ích miễn phí hàng đầu.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Công cụ PDF</h4>
+          <ul>
+            <li><a href="../pdf/nen-pdf.html">Nén PDF</a></li>
+            <li><a href="../pdf/gop-pdf.html">Gộp PDF</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Chỉnh sửa ảnh</h4>
+          <ul>
+            <li><a href="../anh/cat-anh.html">Cắt &amp; xoay ảnh</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Ứng dụng &amp; Tiện ích</h4>
+          <ul>
+            <li><a href="tao-ma-qr.html">Tạo mã QR</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="bottom-bar">
+    <div class="container">
+      <div>© 2025 ToolHub — Nền tảng tiện ích trực tuyến</div>
+      <div>
+        <a href="../trogiup.html">Trợ giúp</a>
+        <a href="../dieukhoan.html">Điều khoản</a>
+        <a href="#"><i class="fas fa-globe"></i> Ngôn ngữ: VI</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../static/js/app.js"></script>
+  <script src="../../static/js/tools/tien-ich/tao-ma-qr.js"></script>
+</body>
+</html>

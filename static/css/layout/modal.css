@@ -171,3 +171,231 @@
     font-size: 0.85rem;
   }
 }
+
+.forgot-notice {
+  background: #fffbe6;
+  border: 1px solid #e6d8a0;
+  border-radius: 3px;
+  padding: 10px 12px;
+  font-size: 0.83rem;
+  color: #6b5e2e;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.forgot-notice i {
+  color: #c48a12;
+  margin-top: 2px;
+  font-size: 0.95rem;
+}
+
+/* =========================================================
+   THÔNG BÁO HỆ THỐNG PHONG CÁCH CỔ ĐIỂN (CLASSIC NOTICE SYSTEM)
+   ========================================================= */
+
+/* Hộp thoại thông báo cổ điển (Classic Dialog) */
+.classic-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1050;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+}
+.classic-dialog-overlay.show {
+  display: flex;
+}
+
+.classic-dialog {
+  background: #fcfcf9;
+  border: 1px solid #999;
+  border-radius: 3px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+  width: 100%;
+  max-width: 450px;
+  overflow: hidden;
+  animation: classicDialogPop 0.18s ease-out;
+}
+@keyframes classicDialogPop {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.classic-dialog-header {
+  background: linear-gradient(to bottom, #f2f2eb, #e4e4db);
+  border-bottom: 1px solid #bbb;
+  padding: 8px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.classic-dialog-header i {
+  color: #1e5b9c;
+  margin-right: 6px;
+}
+.classic-dialog-close {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #777;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.classic-dialog-close:hover {
+  color: #c0392b;
+}
+
+.classic-dialog-body {
+  padding: 20px 18px 16px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.classic-dialog-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #eef7ee;
+  border: 1px solid #c2e2c2;
+  color: #27ae60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+.classic-dialog-main {
+  flex: 1;
+}
+.classic-dialog-main h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e5b9c;
+  margin-bottom: 6px;
+}
+.classic-dialog-main p {
+  font-size: 0.88rem;
+  color: #444;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.classic-dialog-sim {
+  background: #fffbe6;
+  border: 1px solid #e6d8a0;
+  border-radius: 3px;
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  color: #6b5e2e;
+  line-height: 1.5;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.classic-dialog-sim i {
+  color: #c48a12;
+  margin-top: 2px;
+  font-size: 0.9rem;
+}
+
+.classic-dialog-footer {
+  background: #f0f0ea;
+  border-top: 1px solid #ccc;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.classic-dialog-btn {
+  padding: 7px 20px;
+  background: #1e5b9c;
+  color: #fff;
+  border: 1px solid #164677;
+  border-radius: 3px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.classic-dialog-btn:hover {
+  background: #164677;
+}
+
+/* Toast thông báo giả lập góc màn hình phong cách cổ điển */
+.classic-toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1060;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.classic-toast {
+  pointer-events: auto;
+  background: #ffffff;
+  border: 1px solid #bbb;
+  border-left: 4px solid #1e5b9c;
+  border-radius: 3px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  width: 320px;
+  overflow: hidden;
+  animation: classicToastSlide 0.25s ease-out;
+}
+@keyframes classicToastSlide {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.classic-toast.fade-out {
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.3s ease-in;
+}
+.classic-toast-head {
+  background: #e8e8e0;
+  border-bottom: 1px solid #ccc;
+  padding: 5px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #444;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.classic-toast-body {
+  padding: 10px 12px;
+  font-size: 0.84rem;
+  color: #333;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.classic-toast-body i {
+  font-size: 1.1rem;
+  color: #27ae60;
+}
+.classic-toast-close {
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  color: #888;
+  cursor: pointer;
+}
+.classic-toast-close:hover {
+  color: #c0392b;
+}
