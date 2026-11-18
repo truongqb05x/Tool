@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToolHub - Công cụ tổng hợp</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <!-- CSS LAYOUT DÙNG CHUNG -->
+  <link rel="stylesheet" href="../static/css/layout/layout.css">
+  <link rel="stylesheet" href="../static/css/layout/modal.css">
+  <!-- CSS RIÊNG CỦA TRANG CHỦ -->
+  <link rel="stylesheet" href="../static/css/pages/index.css">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <div class="logo-icon"><i class="fas fa-cubes"></i></div>
+        <div class="logo-text">ToolHub</div>
+      </div>
+
+      <div class="header-search-wrap">
+        <div class="header-search">
+          <input type="text" id="searchInput" placeholder="Tìm công cụ: nén PDF, ghép ảnh, chuyển đổi..."
+                 autocomplete="off" aria-autocomplete="list" aria-controls="searchSuggestions">
+          <button type="button"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+
+      <div class="header-actions" id="headerActions">
+        <div id="guestActions" style="display:flex; gap:8px;">
+          <button type="button" class="btn btn-login" onclick="openModal('login')">Đăng nhập</button>
+          <button type="button" class="btn btn-register" onclick="openModal('register')">Đăng ký</button>
+        </div>
+
+        <div id="userActions" class="user-menu" style="display:none;">
+          <div class="user-menu-trigger" id="userMenuTrigger">
+            <div class="user-avatar" id="headerAvatar">U</div>
+            <span class="user-name" id="headerUserName">Người dùng</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-header">
+              <strong id="dropdownName">Người dùng</strong>
+              <small id="dropdownEmail">user@example.com</small>
+            </div>
+            <a href="#" class="user-dropdown-item" onclick="openUserHistory(); return false;">
+              <i class="fas fa-history"></i> Lịch sử xử lý
+            </a>
+            <a href="#" class="user-dropdown-item" onclick="openUserSettings(); return false;">
+              <i class="fas fa-cog"></i> Cài đặt tài khoản
+            </a>
+            <div class="user-dropdown-divider"></div>
+            <a href="#" class="user-dropdown-item danger" onclick="logout(); return false;">
+              <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== LAYOUT ===== -->
+  <div class="container">
+    <div class="layout">
+
+      <!-- ===== SIDEBAR ===== -->
+      <aside class="sidebar">
+        <div class="side-box">
+          <div class="side-box-header"><i class="fas fa-list" style="margin-right:6px;"></i> Danh mục công cụ</div>
+          <div class="side-box-body">
+            <ul class="side-menu">
+              <li>
+                <a href="#" class="menu-toggle active">
+                  <i class="fas fa-th-large"></i>
+                  <span>Tất cả công cụ</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-star"></i> Mới nhất</a></li>
+                  <li><a href="#"><i class="fas fa-fire"></i> Phổ biến</a></li>
+                  <li><a href="#"><i class="fas fa-clock"></i> Dùng gần đây</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-file-pdf"></i>
+                  <span>Công cụ PDF</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-compress-alt"></i> Nén PDF</a></li>
+                  <li><a href="#"><i class="fas fa-object-group"></i> Gộp PDF</a></li>
+                  <li><a href="#"><i class="fas fa-file-signature"></i> PDF sang Word</a></li>
+                  <li><a href="#"><i class="fas fa-cut"></i> Tách PDF</a></li>
+                  <li><a href="#"><i class="fas fa-lock"></i> Bảo vệ PDF</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-image"></i>
+                  <span>Chỉnh sửa ảnh</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-crop-alt"></i> Cắt &amp; xoay ảnh</a></li>
+                  <li><a href="#"><i class="fas fa-images"></i> Ghép ảnh</a></li>
+                  <li><a href="#"><i class="fas fa-magic"></i> Xóa phông nền</a></li>
+                  <li><a href="#"><i class="fas fa-adjust"></i> Chỉnh màu</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-mobile-alt"></i>
+                  <span>Ứng dụng App</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-calculator"></i> Máy tính online</a></li>
+                  <li><a href="#"><i class="fas fa-qrcode"></i> Tạo mã QR</a></li>
+                  <li><a href="#"><i class="fas fa-clock"></i> Đồng hồ đếm ngược</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-exchange-alt"></i>
+                  <span>Chuyển đổi</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-file-word"></i> Word sang PDF</a></li>
+                  <li><a href="#"><i class="fas fa-file-excel"></i> Excel sang PDF</a></li>
+                  <li><a href="#"><i class="fas fa-file-image"></i> Ảnh sang PDF</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-file-alt"></i>
+                  <span>Văn bản</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-spell-check"></i> Kiểm tra chính tả</a></li>
+                  <li><a href="#"><i class="fas fa-text-width"></i> Đếm ký tự</a></li>
+                  <li><a href="#"><i class="fas fa-language"></i> Dịch văn bản</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-video"></i>
+                  <span>Video</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-cut"></i> Cắt video</a></li>
+                  <li><a href="#"><i class="fas fa-compress"></i> Nén video</a></li>
+                  <li><a href="#"><i class="fas fa-exchange-alt"></i> Chuyển đổi định dạng</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-tools"></i>
+                  <span>Tiện ích khác</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-ruler"></i> Chuyển đổi đơn vị</a></li>
+                  <li><a href="#"><i class="fas fa-key"></i> Tạo mật khẩu</a></li>
+                  <li><a href="#"><i class="fas fa-random"></i> Tạo số ngẫu nhiên</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="side-box">
+          <div class="side-box-header"><i class="fas fa-info-circle" style="margin-right:6px;"></i> Ghi chú</div>
+          <div class="side-stats" style="font-size:0.8rem;">
+            File của bạn được xử lý trên máy chủ bảo mật và tự động xóa sau 1 giờ.
+          </div>
+        </div>
+      </aside>
+
+      <!-- ===== MAIN CONTENT ===== -->
+      <main class="main-content">
+
+        <!-- ===== GUEST PAGE ===== -->
+        <div class="guest-page" id="guestPage">
+          <div class="intro-box">
+            <h1>Công cụ tổng hợp PDF, Hình ảnh &amp; Ứng dụng</h1>
+            <p>Chọn công cụ bên dưới để bắt đầu. Tất cả đều miễn phí, không cần cài đặt, hỗ trợ mọi thiết bị.</p>
+          </div>
+
+          <div class="section-bar">
+            <span><i class="fas fa-file-pdf" style="margin-right:6px;"></i> Công cụ PDF</span>
+            <a href="#">Xem tất cả &raquo;</a>
+          </div>
+          <div class="tool-table">
+            <div class="tool-row">
+              <div class="tr-icon"><i class="fas fa-compress-alt"></i></div>
+              <div class="tr-body">
+                <h4>Nén PDF</h4>
+                <p>Giảm dung lượng file PDF mà vẫn giữ chất lượng tốt nhất.</p>
+              </div>
+              <div class="tr-action"><a href="#">Sử dụng</a></div>
+            </div>
+            <div class="tool-row">
+              <div class="tr-icon"><i class="fas fa-object-group"></i></div>
+              <div class="tr-body">
+                <h4>Gộp nhiều PDF</h4>
+                <p>Kết hợp nhiều file PDF thành một tài liệu duy nhất.</p>
+              </div>
+              <div class="tr-action"><a href="#">Sử dụng</a></div>
+            </div>
+            <div class="tool-row">
+              <div class="tr-icon"><i class="fas fa-file-signature"></i></div>
+              <div class="tr-body">
+                <h4>Chuyển PDF sang Word</h4>
+                <p>Chuyển đổi PDF sang DOCX có thể chỉnh sửa.</p>
+              </div>
+              <div class="tr-action"><a href="#">Sử dụng</a></div>
+            </div>
+          </div>
+
+          <div class="section-bar">
+            <span><i class="fas fa-image" style="margin-right:6px;"></i> Chỉnh sửa hình ảnh</span>
+            <a href="#">Xem tất cả &raquo;</a>
+          </div>
+          <div class="tool-table">
+            <div class="tool-row">
+              <div class="tr-icon"><i class="fas fa-crop-alt"></i></div>
+              <div class="tr-body">
+                <h4>Cắt &amp; xoay ảnh</h4>
+                <p>Cắt, xoay, thay đổi kích thước ảnh nhanh chóng.</p>
+              </div>
+              <div class="tr-action"><a href="#">Sử dụng</a></div>
+            </div>
+            <div class="tool-row">
+              <div class="tr-icon"><i class="fas fa-images"></i></div>
+              <div class="tr-body">
+                <h4>Ghép ảnh</h4>
+                <p>Ghép nhiều ảnh thành một bức ảnh lớn theo bố cục.</p>
+              </div>
+              <div class="tr-action"><a href="#">Sử dụng</a></div>
+            </div>
+            <div class="tool-row">
+              <div class="tr-icon"><i class="fas fa-magic"></i></div>
+              <div class="tr-body">
+                <h4>Xóa phông nền</h4>
+                <p>Tự động tách nền ảnh chỉ trong vài giây.</p>
+              </div>
+              <div class="tr-action"><a href="#">Sử dụng</a></div>
+            </div>
+          </div>
+
+          <div class="section-bar">
+            <span><i class="fas fa-mobile-alt" style="margin-right:6px;"></i> Ứng dụng &amp; Tiện ích</span>
+            <a href="#">Xem tất cả &raquo;</a>
+          </div>
+          <div class="tool-table">
+            <div class="tool-row">
+              <div class="tr-icon"><i class="fas fa-calculator"></i></div>
+              <div class="tr-body">
+                <h4>Máy tính online</h4>
+                <p>Tính toán cơ bản và nâng cao trực tiếp trên trình duyệt.</p>
+              </div>
+              <div class="tr-action"><a href="#">Sử dụng</a></div>
+            </div>
+            <div class="tool-row">
+              <div class="tr-icon"><i class="fas fa-qrcode"></i></div>
+              <div class="tr-body">
+                <h4>Tạo mã QR</h4>
+                <p>Tạo mã QR cho văn bản, URL, email và nhiều hơn nữa.</p>
+              </div>
+              <div class="tr-action"><a href="#">Sử dụng</a></div>
+            </div>
+          </div>
+
+          <div class="notice-box">
+            <strong><i class="fas fa-lightbulb"></i> Mẹo:</strong> Bạn có thể nhấn vào danh mục ở cột bên trái để mở rộng và chọn công cụ con theo nhu cầu.
+          </div>
+        </div>
+
+        <!-- ===== USER PAGE ===== -->
+        <div class="user-page" id="userPage">
+          <div class="page-hero">
+            <div class="avatar-lg" id="pageAvatar">U</div>
+            <div>
+              <h2 id="pageUserName">Xin chào, Người dùng!</h2>
+              <p>Chào mừng bạn quay lại ToolHub. Tiếp tục khám phá các công cụ hữu ích.</p>
+            </div>
+          </div>
+
+          <div class="stat-cards">
+            <div class="stat-card">
+              <div class="stat-label">Công cụ đã dùng</div>
+              <div class="stat-value">12</div>
+              <div class="stat-sub">Trong 30 ngày qua</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">File đã xử lý</div>
+              <div class="stat-value">38</div>
+              <div class="stat-sub">Tổng dung lượng 245 MB</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Tiết kiệm</div>
+              <div class="stat-value">4.2 GB</div>
+              <div class="stat-sub">Nhờ nén file</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Hạng thành viên</div>
+              <div class="stat-value">Miễn phí</div>
+              <div class="stat-sub">Nâng cấp để mở khóa</div>
+            </div>
+          </div>
+
+          <!-- Hoạt động gần đây -->
+          <div class="user-section-head">
+            <div class="user-section-title"><i class="fas fa-clock" style="margin-right:6px;"></i> Hoạt động gần đây</div>
+            <a href="#" class="view-all" onclick="return false;">Xem tất cả &raquo;</a>
+          </div>
+          <div class="recent-list">
+            <div class="recent-item">
+              <div class="recent-icon"><i class="fas fa-compress-alt"></i></div>
+              <div class="recent-body">
+                <strong>Nén PDF: baocao_2025.pdf</strong>
+                <span>245 MB → 82 MB (tiết kiệm 66%)</span>
+              </div>
+              <div class="recent-time">2 giờ trước</div>
+            </div>
+            <div class="recent-item">
+              <div class="recent-icon"><i class="fas fa-magic"></i></div>
+              <div class="recent-body">
+                <strong>Xóa phông nền: avatar.png</strong>
+                <span>Đã tách nền tự động</span>
+              </div>
+              <div class="recent-time">Hôm qua</div>
+            </div>
+            <div class="recent-item">
+              <div class="recent-icon"><i class="fas fa-file-signature"></i></div>
+              <div class="recent-body">
+                <strong>Chuyển PDF sang Word: hopdong.pdf</strong>
+                <span>Đã tạo hopdong.docx</span>
+              </div>
+              <div class="recent-time">2 ngày trước</div>
+            </div>
+            <div class="recent-item">
+              <div class="recent-icon"><i class="fas fa-qrcode"></i></div>
+              <div class="recent-body">
+                <strong>Tạo mã QR cho website</strong>
+                <span>URL: https://toolhub.vn</span>
+              </div>
+              <div class="recent-time">3 ngày trước</div>
+            </div>
+          </div>
+
+          <!-- FILE CỦA BẠN (thay cho Truy cập nhanh) -->
+          <div class="user-section-head">
+            <div class="user-section-title"><i class="fas fa-folder-open" style="margin-right:6px;"></i> File của bạn</div>
+            <a href="#" class="view-all" onclick="return false;">Xem tất cả &raquo;</a>
+          </div>
+          <div class="file-list">
+            <div class="file-item">
+              <div class="file-icon pdf"><i class="fas fa-file-pdf"></i></div>
+              <div class="file-body">
+                <strong>baocao_2025_nen.pdf</strong>
+                <div class="file-meta">
+                  <span class="file-type-badge">PDF</span>
+                  <span>82 MB</span>
+                  <span class="dot">•</span>
+                  <span>2 giờ trước</span>
+                  <span class="dot">•</span>
+                  <span>Đã nén</span>
+                </div>
+              </div>
+              <div class="file-actions">
+                <a href="#" class="btn-download" onclick="fakeDownload('baocao_2025_nen.pdf'); return false;">
+                  <i class="fas fa-download"></i> Tải xuống
+                </a>
+              </div>
+            </div>
+
+            <div class="file-item">
+              <div class="file-icon img"><i class="fas fa-file-image"></i></div>
+              <div class="file-body">
+                <strong>avatar_no_bg.png</strong>
+                <div class="file-meta">
+                  <span class="file-type-badge">PNG</span>
+                  <span>1.2 MB</span>
+                  <span class="dot">•</span>
+                  <span>Hôm qua</span>
+                  <span class="dot">•</span>
+                  <span>Đã tách nền</span>
+                </div>
+              </div>
+              <div class="file-actions">
+                <a href="#" class="btn-download" onclick="fakeDownload('avatar_no_bg.png'); return false;">
+                  <i class="fas fa-download"></i> Tải xuống
+                </a>
+              </div>
+            </div>
+
+            <div class="file-item">
+              <div class="file-icon doc"><i class="fas fa-file-word"></i></div>
+              <div class="file-body">
+                <strong>hopdong_da_chuyen.docx</strong>
+                <div class="file-meta">
+                  <span class="file-type-badge">DOCX</span>
+                  <span>340 KB</span>
+                  <span class="dot">•</span>
+                  <span>2 ngày trước</span>
+                  <span class="dot">•</span>
+                  <span>Từ PDF</span>
+                </div>
+              </div>
+              <div class="file-actions">
+                <a href="#" class="btn-download" onclick="fakeDownload('hopdong_da_chuyen.docx'); return false;">
+                  <i class="fas fa-download"></i> Tải xuống
+                </a>
+              </div>
+            </div>
+
+            <div class="file-item">
+              <div class="file-icon img"><i class="fas fa-qrcode"></i></div>
+              <div class="file-body">
+                <strong>qr_toolhub.png</strong>
+                <div class="file-meta">
+                  <span class="file-type-badge">PNG</span>
+                  <span>48 KB</span>
+                  <span class="dot">•</span>
+                  <span>3 ngày trước</span>
+                  <span class="dot">•</span>
+                  <span>Mã QR</span>
+                </div>
+              </div>
+              <div class="file-actions">
+                <a href="#" class="btn-download" onclick="fakeDownload('qr_toolhub.png'); return false;">
+                  <i class="fas fa-download"></i> Tải xuống
+                </a>
+              </div>
+            </div>
+
+            <div class="file-item">
+              <div class="file-icon vid"><i class="fas fa-file-video"></i></div>
+              <div class="file-body">
+                <strong>intro_da_nen.mp4</strong>
+                <div class="file-meta">
+                  <span class="file-type-badge">MP4</span>
+                  <span>18.5 MB</span>
+                  <span class="dot">•</span>
+                  <span>4 ngày trước</span>
+                  <span class="dot">•</span>
+                  <span>Đã nén</span>
+                </div>
+              </div>
+              <div class="file-actions">
+                <a href="#" class="btn-download" onclick="fakeDownload('intro_da_nen.mp4'); return false;">
+                  <i class="fas fa-download"></i> Tải xuống
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Đã xóa box Ưu đãi -->
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-cols">
+        <div class="footer-col footer-about">
+          <div class="footer-logo">
+            <div class="footer-logo-icon"><i class="fas fa-cubes"></i></div>
+            <div class="footer-logo-text">ToolHub</div>
+          </div>
+          <p>ToolHub là nền tảng tổng hợp công cụ trực tuyến miễn phí, giúp bạn xử lý PDF, hình ảnh, văn bản và nhiều tiện ích khác ngay trên trình duyệt — không cần cài đặt.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Liên kết</h4>
+          <ul>
+            <li><a href="#"><i class="fas fa-angle-right"></i> Giới thiệu</a></li>
+            <li><a href="dieukhoan.html"><i class="fas fa-angle-right"></i> Điều khoản sử dụng</a></li>
+            <li><a href="#"><i class="fas fa-angle-right"></i> Chính sách bảo mật</a></li>
+            <li><a href="trogiup.html"><i class="fas fa-angle-right"></i> Câu hỏi thường gặp</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Liên hệ</h4>
+          <ul class="footer-contact">
+            <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</li>
+            <li><i class="fas fa-phone-alt"></i> 0123 456 789</li>
+            <li><i class="fas fa-envelope"></i> hotro@toolhub.vn</li>
+            <li><i class="fas fa-clock"></i> Thứ 2 – Thứ 7: 8:00 – 17:30</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ===== THANH DƯỚI FOOTER (BOTTOM BAR) ===== -->
+  <div class="bottom-bar">
+    <div class="container">
+      <div>© 2025 ToolHub — Nền tảng tiện ích trực tuyến</div>
+      <div>
+        <a href="trogiup.html">Trợ giúp</a>
+        <a href="dieukhoan.html">Điều khoản</a>
+        <a href="#">Bảo mật</a>
+        <a href="#"><i class="fas fa-globe"></i> Ngôn ngữ: VI</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL ĐĂNG NHẬP / ĐĂNG KÝ ===== -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h3 id="modalTitle"><i class="fas fa-user-circle"></i> <span id="modalTitleText">Đăng nhập</span></h3>
+        <button class="modal-close" onclick="closeModal()" aria-label="Đóng">&times;</button>
+      </div>
+
+      <div class="modal-tabs">
+        <button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Đăng nhập</button>
+        <button class="modal-tab" id="tabRegister" onclick="switchTab('register')">Đăng ký</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-error" id="formError"></div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="loginEmail">Email hoặc tên đăng nhập</label>
+            <div class="input-wrap">
+              <i class="fas fa-envelope"></i>
+              <input type="text" id="loginEmail" placeholder="you@example.com" autocomplete="username">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Mật khẩu</label>
+            <div class="input-wrap">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="loginPassword" placeholder="Nhập mật khẩu" autocomplete="current-password">
+              <button type="button" class="toggle-pw" onclick="togglePw('loginPassword', this)"><i class="fas fa-eye"></i></button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label><input type="checkbox" id="rememberMe"> Ghi nhớ đăng nhập</label>
+            <a href="#" onclick="return false;">Quên mật khẩu?</a>
+          </div>
+          <button type="submit" class="btn-submit" id="loginSubmitBtn">Đăng nhập</button>
+        </form>
+
+        <form id="registerForm" style="display:none;" onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label for="regName">Họ và tên</label>
+            <div class="input-wrap">
+              <i class="fas fa-user"></i>
+              <input type="text" id="regName" placeholder="Nguyễn Văn A" autocomplete="name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email</label>
+            <div class="input-wrap">
+              <i class="fas fa-envelope"></i>
+              <input type="email" id="regEmail" placeholder="you@example.com" autocomplete="email">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Mật khẩu</label>
+            <div class="input-wrap">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="regPassword" placeholder="Tối thiểu 6 ký tự" autocomplete="new-password">
+              <button type="button" class="toggle-pw" onclick="togglePw('regPassword', this)"><i class="fas fa-eye"></i></button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="regPasswordConfirm">Xác nhận mật khẩu</label>
+            <div class="input-wrap">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="regPasswordConfirm" placeholder="Nhập lại mật khẩu" autocomplete="new-password">
+            </div>
+          </div>
+          <div class="form-row">
+            <label><input type="checkbox" id="agreeTerms"> Tôi đồng ý với <a href="#" onclick="return false;" style="display:inline;">điều khoản</a></label>
+          </div>
+          <button type="submit" class="btn-submit" id="registerSubmitBtn">Tạo tài khoản</button>
+        </form>
+
+        <div class="modal-divider">hoặc tiếp tục với</div>
+
+        <div class="social-login">
+          <button type="button" onclick="fakeSocialLogin('Google')"><i class="fab fa-google" style="color:#db4437;"></i> Google</button>
+          <button type="button" onclick="fakeSocialLogin('Facebook')"><i class="fab fa-facebook-f" style="color:#1877f2;"></i> Facebook</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+       1) DROPDOWN MENU SIDEBAR
+       ========================================================= */
+    document.querySelectorAll('.side-menu .menu-toggle').forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        const submenu = this.parentElement.querySelector('.submenu');
+        const isOpen = this.classList.contains('open');
+
+        document.querySelectorAll('.side-menu .menu-toggle').forEach(function(otherToggle) {
+          if (otherToggle !== toggle) {
+            otherToggle.classList.remove('open');
+            const otherSubmenu = otherToggle.parentElement.querySelector('.submenu');
+            if (otherSubmenu) otherSubmenu.classList.remove('show');
+          }
+        });
+
+        if (isOpen) {
+          this.classList.remove('open');
+          submenu.classList.remove('show');
+        } else {
+          this.classList.add('open');
+          submenu.classList.add('show');
+        }
+      });
+    });
+
+    /* =========================================================
+       2) SEARCH SUGGESTIONS
+       ========================================================= */
+    const TOOL_DATA = [
+      { name: 'Nén PDF', icon: 'fa-compress-alt', cat: 'Công cụ PDF' },
+      { name: 'Gộp nhiều PDF', icon: 'fa-object-group', cat: 'Công cụ PDF' },
+      { name: 'Chuyển PDF sang Word', icon: 'fa-file-signature', cat: 'Công cụ PDF' },
+      { name: 'Tách PDF', icon: 'fa-cut', cat: 'Công cụ PDF' },
+      { name: 'Bảo vệ PDF', icon: 'fa-lock', cat: 'Công cụ PDF' },
+      { name: 'Cắt & xoay ảnh', icon: 'fa-crop-alt', cat: 'Chỉnh sửa ảnh' },
+      { name: 'Ghép ảnh', icon: 'fa-images', cat: 'Chỉnh sửa ảnh' },
+      { name: 'Xóa phông nền', icon: 'fa-magic', cat: 'Chỉnh sửa ảnh' },
+      { name: 'Chỉnh màu ảnh', icon: 'fa-adjust', cat: 'Chỉnh sửa ảnh' },
+      { name: 'Máy tính online', icon: 'fa-calculator', cat: 'Ứng dụng App' },
+      { name: 'Tạo mã QR', icon: 'fa-qrcode', cat: 'Ứng dụng App' },
+      { name: 'Đồng hồ đếm ngược', icon: 'fa-clock', cat: 'Ứng dụng App' },
+      { name: 'Word sang PDF', icon: 'fa-file-word', cat: 'Chuyển đổi' },
+      { name: 'Excel sang PDF', icon: 'fa-file-excel', cat: 'Chuyển đổi' },
+      { name: 'Ảnh sang PDF', icon: 'fa-file-image', cat: 'Chuyển đổi' },
+      { name: 'Kiểm tra chính tả', icon: 'fa-spell-check', cat: 'Văn bản' },
+      { name: 'Đếm ký tự', icon: 'fa-text-width', cat: 'Văn bản' },
+      { name: 'Dịch văn bản', icon: 'fa-language', cat: 'Văn bản' },
+      { name: 'Cắt video', icon: 'fa-cut', cat: 'Video' },
+      { name: 'Nén video', icon: 'fa-compress', cat: 'Video' },
+      { name: 'Chuyển đổi định dạng video', icon: 'fa-exchange-alt', cat: 'Video' },
+      { name: 'Chuyển đổi đơn vị', icon: 'fa-ruler', cat: 'Tiện ích khác' },
+      { name: 'Tạo mật khẩu', icon: 'fa-key', cat: 'Tiện ích khác' },
+      { name: 'Tạo số ngẫu nhiên', icon: 'fa-random', cat: 'Tiện ích khác' }
+    ];
+
+    const searchInput = document.getElementById('searchInput');
+    const suggestionsBox = document.getElementById('searchSuggestions');
+    let activeSuggestionIndex = -1;
+    let currentSuggestions = [];
+
+    function removeDiacritics(str) {
+      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+    }
+
+    function highlightMatch(text, query) {
+      if (!query) return text;
+      const normText = removeDiacritics(text).toLowerCase();
+      const normQuery = removeDiacritics(query).toLowerCase();
+      const idx = normText.indexOf(normQuery);
+      if (idx === -1) return text;
+      return text.slice(0, idx) + '<mark>' + text.slice(idx, idx + query.length) + '</mark>' + text.slice(idx + query.length);
+    }
+
+    function buildSuggestions(query) {
+      const normQuery = removeDiacritics(query).toLowerCase().trim();
+      if (!normQuery) return [];
+
+      return TOOL_DATA.filter(function(tool) {
+        const n = removeDiacritics(tool.name).toLowerCase();
+        const c = removeDiacritics(tool.cat).toLowerCase();
+        return n.indexOf(normQuery) !== -1 || c.indexOf(normQuery) !== -1;
+      }).slice(0, 8);
+    }
+
+    function renderSuggestions(query) {
+      currentSuggestions = buildSuggestions(query);
+      activeSuggestionIndex = -1;
+
+      if (!query.trim()) {
+        suggestionsBox.classList.remove('show');
+        suggestionsBox.innerHTML = '';
+        return;
+      }
+
+      if (currentSuggestions.length === 0) {
+        suggestionsBox.innerHTML = '<div class="suggestion-empty"><i class="fas fa-search" style="margin-right:6px;"></i>Không tìm thấy công cụ phù hợp với "' + escapeHtml(query) + '"</div>';
+        suggestionsBox.classList.add('show');
+        return;
+      }
+
+      let html = '';
+      currentSuggestions.forEach(function(tool, i) {
+        html += '<div class="suggestion-item" data-index="' + i + '" data-name="' + escapeHtml(tool.name) + '">'
+              +   '<div class="s-icon"><i class="fas ' + tool.icon + '"></i></div>'
+              +   '<div class="s-body">'
+              +     '<strong>' + highlightMatch(tool.name, query) + '</strong>'
+              +     '<span>' + escapeHtml(tool.cat) + '</span>'
+              +   '</div>'
+              +   '<i class="fas fa-arrow-right s-arrow"></i>'
+              + '</div>';
+      });
+      html += '<div class="suggestion-footer"><kbd>↑</kbd> <kbd>↓</kbd> để chọn · <kbd>Enter</kbd> để mở · <kbd>Esc</kbd> để đóng</div>';
+
+      suggestionsBox.innerHTML = html;
+      suggestionsBox.classList.add('show');
+
+      suggestionsBox.querySelectorAll('.suggestion-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+          selectSuggestion(this.getAttribute('data-name'));
+        });
+      });
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function(c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    function selectSuggestion(name) {
+      searchInput.value = name;
+      suggestionsBox.classList.remove('show');
+      suggestionsBox.innerHTML = '';
+      console.log('Chọn công cụ:', name);
+    }
+
+    function updateActiveItem() {
+      const items = suggestionsBox.querySelectorAll('.suggestion-item');
+      items.forEach(function(it, i) {
+        it.classList.toggle('active', i === activeSuggestionIndex);
+      });
+      if (activeSuggestionIndex >= 0 && items[activeSuggestionIndex]) {
+        items[activeSuggestionIndex].scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+    searchInput.addEventListener('input', function() {
+      renderSuggestions(this.value);
+    });
+
+    searchInput.addEventListener('keydown', function(e) {
+      const isOpen = suggestionsBox.classList.contains('show');
+      const items = suggestionsBox.querySelectorAll('.suggestion-item');
+
+      if (e.key === 'ArrowDown') {
+        if (!isOpen) { renderSuggestions(this.value); return; }
+        e.preventDefault();
+        activeSuggestionIndex = (activeSuggestionIndex + 1) % items.length;
+        updateActiveItem();
+      } else if (e.key === 'ArrowUp') {
+        if (!isOpen) return;
+        e.preventDefault();
+        activeSuggestionIndex = (activeSuggestionIndex - 1 + items.length) % items.length;
+        updateActiveItem();
+      } else if (e.key === 'Enter') {
+        if (isOpen && activeSuggestionIndex >= 0 && items[activeSuggestionIndex]) {
+          e.preventDefault();
+          selectSuggestion(items[activeSuggestionIndex].getAttribute('data-name'));
+        } else if (isOpen && items.length > 0) {
+          e.preventDefault();
+          selectSuggestion(items[0].getAttribute('data-name'));
+        }
+      } else if (e.key === 'Escape') {
+        suggestionsBox.classList.remove('show');
+        activeSuggestionIndex = -1;
+      }
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!suggestionsBox.contains(e.target) && e.target !== searchInput) {
+        suggestionsBox.classList.remove('show');
+        activeSuggestionIndex = -1;
+      }
+    });
+
+    searchInput.addEventListener('focus', function() {
+      if (this.value.trim()) renderSuggestions(this.value);
+    });
+
+    /* =========================================================
+       3) TẢI XUỐNG GIẢ LẬP
+       ========================================================= */
+    function fakeDownload(filename) {
+      // Tạo file text nhỏ để minh họa việc tải xuống thực sự hoạt động
+      const content = 'ToolHub demo download\nFile: ' + filename + '\nThời gian: ' + new Date().toLocaleString('vi-VN');
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename + '.txt'; // thêm .txt để trình duyệt tải được
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+    }
+
+    /* =========================================================
+       4) MODAL AUTH
+       ========================================================= */
+    const authModal = document.getElementById('authModal');
+
+    function openModal(mode) {
+      authModal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      switchTab(mode || 'login');
+      clearError();
+    }
+
+    function closeModal() {
+      authModal.classList.remove('show');
+      document.body.style.overflow = '';
+      clearError();
+    }
+
+    authModal.addEventListener('click', function(e) {
+      if (e.target === authModal) closeModal();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && authModal.classList.contains('show')) closeModal();
+    });
+
+    function switchTab(mode) {
+      clearError();
+      const tabLogin = document.getElementById('tabLogin');
+      const tabRegister = document.getElementById('tabRegister');
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const modalTitleText = document.getElementById('modalTitleText');
+
+      if (mode === 'login') {
+        tabLogin.classList.add('active');
+        tabRegister.classList.remove('active');
+        loginForm.style.display = '';
+        registerForm.style.display = 'none';
+        modalTitleText.textContent = 'Đăng nhập';
+      } else {
+        tabRegister.classList.add('active');
+        tabLogin.classList.remove('active');
+        registerForm.style.display = '';
+        loginForm.style.display = 'none';
+        modalTitleText.textContent = 'Đăng ký';
+      }
+    }
+
+    function togglePw(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const icon = btn.querySelector('i');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    function showError(msg) {
+      const box = document.getElementById('formError');
+      box.textContent = msg;
+      box.classList.add('show');
+    }
+    function clearError() {
+      const box = document.getElementById('formError');
+      box.textContent = '';
+      box.classList.remove('show');
+    }
+
+    /* =========================================================
+       5) XỬ LÝ ĐĂNG NHẬP / ĐĂNG KÝ
+       ========================================================= */
+    function handleLogin(e) {
+      e.preventDefault();
+      clearError();
+
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const remember = document.getElementById('rememberMe').checked;
+
+      if (!email) { showError('Vui lòng nhập email hoặc tên đăng nhập.'); return; }
+      if (!password) { showError('Vui lòng nhập mật khẩu.'); return; }
+      if (password.length < 6) { showError('Mật khẩu phải có ít nhất 6 ký tự.'); return; }
+
+      const users = JSON.parse(localStorage.getItem('toolhub_users') || '{}');
+      let displayName;
+
+      if (users[email.toLowerCase()]) {
+        if (users[email.toLowerCase()].password !== password) {
+          showError('Mật khẩu không đúng. Vui lòng thử lại.');
+          return;
+        }
+        displayName = users[email.toLowerCase()].name;
+      } else {
+        displayName = email.split('@')[0];
+        displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+      }
+
+      const btn = document.getElementById('loginSubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Đang đăng nhập...';
+
+      setTimeout(function() {
+        btn.disabled = false;
+        btn.textContent = 'Đăng nhập';
+        setLoggedIn({ name: displayName, email: email, remember: remember });
+        closeModal();
+        document.getElementById('loginForm').reset();
+      }, 500);
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      clearError();
+
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const confirm = document.getElementById('regPasswordConfirm').value;
+      const agree = document.getElementById('agreeTerms').checked;
+
+      if (!name) { showError('Vui lòng nhập họ và tên.'); return; }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError('Email không hợp lệ.'); return;
+      }
+      if (password.length < 6) { showError('Mật khẩu phải có ít nhất 6 ký tự.'); return; }
+      if (password !== confirm) { showError('Mật khẩu xác nhận không khớp.'); return; }
+      if (!agree) { showError('Bạn cần đồng ý với điều khoản để tiếp tục.'); return; }
+
+      const users = JSON.parse(localStorage.getItem('toolhub_users') || '{}');
+      if (users[email.toLowerCase()]) {
+        showError('Email này đã được đăng ký. Vui lòng đăng nhập.');
+        return;
+      }
+
+      const btn = document.getElementById('registerSubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Đang tạo tài khoản...';
+
+      setTimeout(function() {
+        btn.disabled = false;
+        btn.textContent = 'Tạo tài khoản';
+        users[email.toLowerCase()] = { name: name, email: email, password: password };
+        localStorage.setItem('toolhub_users', JSON.stringify(users));
+
+        setLoggedIn({ name: name, email: email, remember: true });
+        closeModal();
+        document.getElementById('registerForm').reset();
+      }, 600);
+    }
+
+    function fakeSocialLogin(provider) {
+      const demoName = provider === 'Google' ? 'Google User' : 'Facebook User';
+      const demoEmail = provider.toLowerCase() + '.user@example.com';
+      setLoggedIn({ name: demoName, email: demoEmail, remember: true });
+      closeModal();
+    }
+
+    /* =========================================================
+       6) QUẢN LÝ TRẠNG THÁI ĐĂNG NHẬP
+       ========================================================= */
+    function setLoggedIn(user) {
+      const storage = user.remember ? localStorage : sessionStorage;
+      storage.setItem('toolhub_current_user', JSON.stringify({
+        name: user.name,
+        email: user.email
+      }));
+
+      applyLoggedInUI(user);
+      showUserPage();
+    }
+
+    function logout() {
+      localStorage.removeItem('toolhub_current_user');
+      sessionStorage.removeItem('toolhub_current_user');
+      document.getElementById('userDropdown').classList.remove('show');
+      applyLoggedOutUI();
+      showGuestPage();
+    }
+
+    function applyLoggedInUI(user) {
+      document.getElementById('guestActions').style.display = 'none';
+      document.getElementById('userActions').style.display = '';
+
+      const initial = (user.name || 'U').charAt(0).toUpperCase();
+      document.getElementById('headerAvatar').textContent = initial;
+      document.getElementById('headerUserName').textContent = user.name;
+      document.getElementById('dropdownName').textContent = user.name;
+      document.getElementById('dropdownEmail').textContent = user.email;
+
+      document.getElementById('pageAvatar').textContent = initial;
+      document.getElementById('pageUserName').textContent = 'Xin chào, ' + user.name + '!';
+    }
+
+    function applyLoggedOutUI() {
+      document.getElementById('guestActions').style.display = 'flex';
+      document.getElementById('userActions').style.display = 'none';
+    }
+
+    /* =========================================================
+       7) CHUYỂN TRANG GUEST / USER
+       ========================================================= */
+    function showUserPage() {
+      document.getElementById('guestPage').style.display = 'none';
+      document.getElementById('userPage').classList.add('show');
+    }
+    function showGuestPage() {
+      document.getElementById('userPage').classList.remove('show');
+      document.getElementById('guestPage').style.display = '';
+    }
+
+    /* =========================================================
+       8) USER DROPDOWN
+       ========================================================= */
+    const userMenuTrigger = document.getElementById('userMenuTrigger');
+    const userDropdown = document.getElementById('userDropdown');
+
+    userMenuTrigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!userDropdown.contains(e.target) && !userMenuTrigger.contains(e.target)) {
+        userDropdown.classList.remove('show');
+      }
+    });
+
+    /* =========================================================
+       9) KHỞI TẠO
+       ========================================================= */
+    (function init() {
+      let saved = localStorage.getItem('toolhub_current_user')
+                || sessionStorage.getItem('toolhub_current_user');
+      if (saved) {
+        try {
+          const user = JSON.parse(saved);
+          applyLoggedInUI(user);
+          showUserPage();
+        } catch (err) {}
+      }
+    })();
+  </script>
+
+</body>
+</html>

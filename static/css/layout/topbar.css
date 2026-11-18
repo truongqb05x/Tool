@@ -1,0 +1,36 @@
+/* =========================================================
+   BOTTOM BAR / TOP BAR (DÙNG CHUNG)
+   ========================================================= */
+.topbar, .bottom-bar {
+  background: #1e5b9c;
+  color: #d6e4f0;
+  font-size: 0.8rem;
+  padding: 6px 0;
+}
+
+.topbar .container, .bottom-bar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topbar a, .bottom-bar a {
+  color: #d6e4f0;
+  margin-left: 14px;
+  text-decoration: none;
+}
+.topbar a:hover, .bottom-bar a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+@media (max-width: 560px) {
+  .topbar .container, .bottom-bar .container {
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+  }
+  .topbar a, .bottom-bar a {
+    margin: 0 6px;
+  }
+}

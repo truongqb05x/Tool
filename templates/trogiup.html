@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trợ giúp - ToolHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <!-- CSS LAYOUT DÙNG CHUNG -->
+  <link rel="stylesheet" href="../static/css/layout/layout.css">
+  <!-- CSS RIÊNG CỦA TRANG TRỢ GIÚP -->
+  <link rel="stylesheet" href="../static/css/pages/trogiup.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo" style="text-decoration:none;">
+        <div class="logo-icon"><i class="fas fa-cubes"></i></div>
+        <div class="logo-text">ToolHub</div>
+      </a>
+
+      <div class="header-search">
+        <input type="text" placeholder="Tìm công cụ: nén PDF, ghép ảnh, chuyển đổi...">
+        <button type="button"><i class="fas fa-search"></i></button>
+      </div>
+
+      <div class="header-actions">
+        <a href="#" class="btn btn-login">Đăng nhập</a>
+        <a href="#" class="btn btn-register">Đăng ký</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- BREADCRUMB -->
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Trang chủ</a>
+      <span>/</span>
+      <span class="current">Trung tâm trợ giúp</span>
+    </div>
+  </div>
+
+  <!-- HERO / SEARCH HELP -->
+  <div class="container">
+    <div class="help-hero">
+      <h1><i class="fas fa-life-ring"></i> Trung tâm trợ giúp ToolHub</h1>
+      <p>Tìm kiếm câu trả lời nhanh hoặc duyệt qua các chủ đề bên dưới</p>
+      <div class="help-search">
+        <input type="text" id="helpSearchInput" placeholder="Nhập câu hỏi hoặc từ khóa: nén file, tài khoản, lỗi...">
+        <button type="button"><i class="fas fa-search"></i> Tìm kiếm</button>
+      </div>
+      <div class="help-quick-links">
+        Gợi ý:
+        <a href="#faq">Câu hỏi thường gặp</a>
+        <a href="#guide">Cách sử dụng</a>
+        <a href="#account">Tài khoản</a>
+        <a href="#security">Bảo mật</a>
+        <a href="#contact">Liên hệ hỗ trợ</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT: SIDEBAR + CONTENT -->
+  <div class="container">
+    <div class="help-layout">
+
+      <!-- SIDEBAR MỤC LỤC -->
+      <aside class="help-sidebar">
+        <div class="side-box">
+          <div class="side-box-header"><i class="fas fa-compass" style="margin-right:6px;"></i> Chủ đề trợ giúp</div>
+          <div class="side-box-body">
+            <ul class="help-menu">
+              <li><a href="#intro" class="active"><i class="fas fa-info-circle"></i> Giới thiệu chung</a></li>
+              <li><a href="#guide"><i class="fas fa-book-open"></i> Hướng dẫn sử dụng</a></li>
+              <li><a href="#faq"><i class="fas fa-question-circle"></i> Câu hỏi thường gặp</a></li>
+              <li><a href="#account"><i class="fas fa-user"></i> Tài khoản & Đăng nhập</a></li>
+              <li><a href="#security"><i class="fas fa-shield-alt"></i> Bảo mật & Dữ liệu</a></li>
+              <li><a href="#troubleshoot"><i class="fas fa-wrench"></i> Khắc phục sự cố</a></li>
+              <li><a href="#contact"><i class="fas fa-headset"></i> Liên hệ hỗ trợ</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="side-box">
+          <div class="side-box-header"><i class="fas fa-phone-alt" style="margin-right:6px;"></i> Hỗ trợ trực tiếp</div>
+          <div class="side-box-body" style="padding:12px; font-size:0.82rem; color:#666; line-height:1.6;">
+            <div><strong>Hotline:</strong> 0123 456 789</div>
+            <div><strong>Email:</strong> hotro@toolhub.vn</div>
+            <div><strong>Thời gian:</strong> 8:00 – 17:30 (T2–T7)</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CONTENT CHÍNH -->
+      <main class="help-content">
+
+        <!-- 1. GIỚI THIỆU -->
+        <section class="help-section" id="intro">
+          <div class="help-section-header">
+            <i class="fas fa-info-circle"></i> Giới thiệu về ToolHub
+          </div>
+          <div class="help-section-body">
+            <p><strong>ToolHub</strong> là nền tảng trực tuyến miễn phí cung cấp đa dạng các công cụ xử lý file tài liệu, hình ảnh, âm thanh và văn bản ngay trên trình duyệt mà không cần cài đặt bất kỳ phần mềm nào.</p>
+            <p>Mọi công cụ đều được tối ưu hóa để hoạt động nhanh, chính xác và bảo mật tối đa cho người dùng.</p>
+          </div>
+        </section>
+
+        <!-- 2. HƯỚNG DẪN -->
+        <section class="help-section" id="guide">
+          <div class="help-section-header">
+            <i class="fas fa-book-open"></i> Hướng dẫn sử dụng cơ bản
+          </div>
+          <div class="help-section-body">
+            <ol class="help-steps">
+              <li><strong>Chọn công cụ:</strong> Tìm và nhấp vào công cụ bạn cần trên trang chủ hoặc thanh tìm kiếm.</li>
+              <li><strong>Tải file lên:</strong> Kéo thả file hoặc nhấn "Chọn file" từ máy tính của bạn.</li>
+              <li><strong>Tùy chỉnh & Xử lý:</strong> Điều chỉnh các tùy chọn theo ý muốn và nhấn nút thực hiện.</li>
+              <li><strong>Tải file về:</strong> Nhấn nút tải xuống để lưu kết quả về máy.</li>
+            </ol>
+          </div>
+        </section>
+
+        <!-- 3. CÂU HỎI THƯỜNG GẶP -->
+        <section class="help-section" id="faq">
+          <div class="help-section-header">
+            <i class="fas fa-question-circle"></i> Câu hỏi thường gặp (FAQ)
+          </div>
+          <div class="help-section-body">
+            <div class="faq-list">
+              <div class="faq-item">
+                <div class="faq-question">
+                  <span>Dịch vụ của ToolHub có miễn phí không?</span>
+                  <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                  <p>Có, hầu hết các tính năng cơ bản trên ToolHub đều hoàn toàn miễn phí sử dụng.</p>
+                </div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-question">
+                  <span>File của tôi có được bảo mật không?</span>
+                  <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                  <p>Tất cả file được truyền qua kết nối SSL bảo mật và sẽ tự động xóa vĩnh viễn khỏi máy chủ sau 1 giờ.</p>
+                </div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-question">
+                  <span>Giới hạn dung lượng file tối đa là bao nhiêu?</span>
+                  <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                  <p>Dung lượng file tối đa hỗ trợ thông thường là 50MB đến 100MB tùy theo từng loại công cụ.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. TÀI KHOẢN -->
+        <section class="help-section" id="account">
+          <div class="help-section-header">
+            <i class="fas fa-user"></i> Tài khoản & Đăng nhập
+          </div>
+          <div class="help-section-body">
+            <p><strong>Đăng ký tài khoản:</strong> nhấn nút <em>"Đăng ký"</em> ở góc phải header, điền họ tên, email và mật khẩu (tối thiểu 6 ký tự). Xác nhận điều khoản và nhấn "Tạo tài khoản".</p>
+
+            <p><strong>Lợi ích khi có tài khoản:</strong></p>
+            <ul class="help-list">
+              <li>Lưu lịch sử các công cụ đã dùng.</li>
+              <li>Quản lý file đã xử lý trong mục "File của bạn".</li>
+              <li>Tải lại file kết quả mà không cần xử lý lại.</li>
+              <li>Đồng bộ trạng thái trên nhiều thiết bị.</li>
+            </ul>
+
+            <p><strong>Quên mật khẩu:</strong> nhấn "Quên mật khẩu?" trong form đăng nhập, nhập email đã đăng ký. Hệ thống sẽ gửi link đặt lại mật khẩu qua email (trong vòng 5 phút).</p>
+
+            <div class="callout success">
+              <i class="fas fa-check-circle"></i>
+              <div>Bạn có thể dùng ToolHub mà <strong>không cần đăng nhập</strong>. Tài khoản chỉ để lưu lịch sử và quản lý file.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. BẢO MẬT -->
+        <section class="help-section" id="security">
+          <div class="help-section-header">
+            <i class="fas fa-shield-alt"></i> Bảo mật & Quyền riêng tư
+          </div>
+          <div class="help-section-body">
+            <p>Chúng tôi hiểu file của bạn có thể chứa thông tin quan trọng. ToolHub cam kết:</p>
+
+            <ul class="help-list">
+              <li><strong>Mã hóa đường truyền:</strong> mọi file tải lên đều qua giao thức HTTPS an toàn.</li>
+              <li><strong>Tự động xóa:</strong> file được xóa vĩnh viễn sau 1 giờ, không lưu trữ lâu dài.</li>
+              <li><strong>Không chia sẻ:</strong> chúng tôi không bán, không chia sẻ file cho bên thứ ba.</li>
+              <li><strong>Không quét nội dung:</strong> file được xử lý tự động, không có nhân viên xem nội dung.</li>
+              <li><strong>Máy chủ bảo mật:</strong> đặt tại trung tâm dữ liệu có chứng nhận an toàn thông tin.</li>
+            </ul>
+
+            <div class="callout warn">
+              <i class="fas fa-exclamation-triangle"></i>
+              <div><strong>Lưu ý:</strong> Không tải lên file chứa thông tin cực kỳ nhạy cảm (mật khẩu, số thẻ tín dụng, giấy tờ tùy thân...) nếu không thực sự cần thiết.</div>
+            </div>
+
+            <p>Xem chi tiết tại <a href="#">Chính sách bảo mật</a> và <a href="#">Điều khoản sử dụng</a>.</p>
+          </div>
+        </section>
+
+        <!-- 6. KHẮC PHỤC LỖI -->
+        <section class="help-section" id="troubleshoot">
+          <div class="help-section-header">
+            <i class="fas fa-wrench"></i> Khắc phục sự cố
+          </div>
+          <div class="help-section-body">
+            <p><strong>Trang bị treo hoặc không phản hồi:</strong></p>
+            <ul class="help-list">
+              <li>Tải lại trang (Ctrl + F5 hoặc Cmd + Shift + R).</li>
+              <li>Xóa cache trình duyệt (Cài đặt → Lịch sử → Xóa dữ liệu duyệt web).</li>
+              <li>Thử trình duyệt khác (Chrome, Edge, Firefox mới nhất).</li>
+            </ul>
+
+            <p><strong>File tải xuống bị lỗi hoặc không mở được:</strong></p>
+            <ul class="help-list">
+              <li>Kiểm tra dung lượng file — nếu 0 KB, quá trình tải bị gián đoạn, hãy thử lại.</li>
+              <li>Đảm bảo file kết quả đúng định dạng (ví dụ PDF phải mở bằng ứng dụng đọc PDF).</li>
+              <li>Thử tải lại từ mục "File của bạn" (nếu đã đăng nhập).</li>
+            </ul>
+
+            <p><strong>Không nhận được email đặt lại mật khẩu:</strong></p>
+            <ul class="help-list">
+              <li>Kiểm tra hộp thư <strong>Spam / Quảng cáo</strong>.</li>
+              <li>Đảm bảo nhập đúng email đã đăng ký.</li>
+              <li>Đợi 5–10 phút rồi thử lại (email có thể bị chậm).</li>
+            </ul>
+
+            <div class="callout info">
+              <i class="fas fa-info-circle"></i>
+              <div>Nếu đã thử các cách trên mà vẫn lỗi, hãy liên hệ hỗ trợ kèm <strong>ảnh chụp màn hình</strong> và <strong>mô tả lỗi</strong> để được xử lý nhanh hơn.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7. LIÊN HỆ -->
+        <section class="help-section" id="contact">
+          <div class="help-section-header">
+            <i class="fas fa-headset"></i> Liên hệ hỗ trợ
+          </div>
+          <div class="help-section-body">
+            <p>Không tìm thấy câu trả lời? Đội ngũ ToolHub sẵn sàng hỗ trợ bạn qua các kênh sau:</p>
+
+            <div class="contact-grid">
+              <div class="contact-card">
+                <div class="cc-icon"><i class="fas fa-envelope"></i></div>
+                <h4>Email</h4>
+                <p>Phản hồi trong 24 giờ</p>
+                <a href="mailto:hotro@toolhub.vn">hotro@toolhub.vn</a>
+              </div>
+
+              <div class="contact-card">
+                <div class="cc-icon"><i class="fas fa-phone-alt"></i></div>
+                <h4>Hotline</h4>
+                <p>Thứ 2 – Thứ 7, 8:00 – 17:30</p>
+                <a href="tel:0123456789">0123 456 789</a>
+              </div>
+
+              <div class="contact-card">
+                <div class="cc-icon"><i class="fas fa-comments"></i></div>
+                <h4>Live Chat</h4>
+                <p>Chat trực tuyến với nhân viên</p>
+                <a href="#" onclick="alert('Tính năng chat đang được phát triển.'); return false;">Mở chat</a>
+              </div>
+
+              <div class="contact-card">
+                <div class="cc-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <h4>Địa chỉ</h4>
+                <p>123 Đường ABC, Quận 1</p>
+                <a href="#" onclick="return false;">TP. Hồ Chí Minh</a>
+              </div>
+            </div>
+
+            <div class="callout success" style="margin-top:16px;">
+              <i class="fas fa-clock"></i>
+              <div><strong>Thời gian phản hồi trung bình:</strong> Email — 4 giờ làm việc · Hotline — ngay lập tức · Chat — 5 phút.</div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- BACK TO TOP -->
+  <button type="button" class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="Lên đầu trang">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-cols">
+        <div class="footer-col footer-about">
+          <div class="footer-logo">
+            <div class="footer-logo-icon"><i class="fas fa-cubes"></i></div>
+            <div class="footer-logo-text">ToolHub</div>
+          </div>
+          <p>ToolHub là nền tảng tổng hợp công cụ trực tuyến miễn phí, giúp bạn xử lý PDF, hình ảnh, văn bản và nhiều tiện ích khác ngay trên trình duyệt — không cần cài đặt.</p>
+          <p><i class="fas fa-shield-alt" style="color:#1e5b9c; font-size:0.75rem;"></i> File được xử lý bảo mật và tự động xóa sau 1 giờ.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Liên kết</h4>
+          <ul>
+            <li><a href="#"><i class="fas fa-angle-right"></i> Giới thiệu</a></li>
+            <li><a href="#"><i class="fas fa-angle-right"></i> Điều khoản sử dụng</a></li>
+            <li><a href="#"><i class="fas fa-angle-right"></i> Chính sách bảo mật</a></li>
+            <li><a href="#"><i class="fas fa-angle-right"></i> Câu hỏi thường gặp</a></li>
+            <li><a href="#"><i class="fas fa-angle-right"></i> Sitemap</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Liên hệ</h4>
+          <ul class="footer-contact">
+            <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</li>
+            <li><i class="fas fa-phone-alt"></i> 0123 456 789</li>
+            <li><i class="fas fa-envelope"></i> hotro@toolhub.vn</li>
+            <li><i class="fas fa-clock"></i> Thứ 2 – Thứ 7: 8:00 – 17:30</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        © 2025 ToolHub — Công cụ tổng hợp miễn phí. Bảo lưu mọi quyền.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== THANH DƯỚI FOOTER (BOTTOM BAR) ===== -->
+  <div class="bottom-bar">
+    <div class="container">
+      <div>© 2025 ToolHub — Nền tảng tiện ích trực tuyến</div>
+      <div>
+        <a href="trogiup.html">Trợ giúp</a>
+        <a href="dieukhoan.html">Điều khoản</a>
+        <a href="#">Bảo mật</a>
+        <a href="#"><i class="fas fa-globe"></i> Ngôn ngữ: VI</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+       1) FAQ ACCORDION
+       ========================================================= */
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+
+      // Đóng tất cả item khác (chỉ mở 1 tại 1 thời điểm)
+      document.querySelectorAll('.faq-item.open').forEach(function(el) {
+        if (el !== item) el.classList.remove('open');
+      });
+
+      item.classList.toggle('open', !isOpen);
+    }
+
+    function openFaq(id) {
+      const item = document.getElementById(id);
+      if (!item) return;
+
+      document.querySelectorAll('.faq-item.open').forEach(function(el) {
+        el.classList.remove('open');
+      });
+      item.classList.add('open');
+
+      // Scroll tới FAQ
+      const faqSection = document.getElementById('faq');
+      if (faqSection) {
+        setTimeout(function() {
+          faqSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    }
+
+    /* =========================================================
+       2) TÌM KIẾM TRỢ GIÚP
+       ========================================================= */
+    function doHelpSearch() {
+      const q = document.getElementById('helpSearchInput').value.trim();
+      if (!q) {
+        alert('Vui lòng nhập từ khóa tìm kiếm.');
+        return;
+      }
+
+      // Tìm trong FAQ và các mục
+      const lower = q.toLowerCase();
+      let matchedFaq = null;
+
+      document.querySelectorAll('.faq-item').forEach(function(item) {
+        const text = item.textContent.toLowerCase();
+        if (!matchedFaq && text.indexOf(lower) !== -1) {
+          matchedFaq = item;
+        }
+      });
+
+      // Tìm trong tiêu đề section
+      let matchedSection = null;
+      document.querySelectorAll('.help-section').forEach(function(sec) {
+        if (!matchedSection && sec.textContent.toLowerCase().indexOf(lower) !== -1) {
+          matchedSection = sec;
+        }
+      });
+
+      if (matchedFaq) {
+        openFaq(matchedFaq.id);
+      } else if (matchedSection) {
+        matchedSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        alert('Không tìm thấy kết quả cho "' + q + '".\nVui lòng thử từ khóa khác hoặc liên hệ hotro@toolhub.vn.');
+      }
+    }
+
+    // Enter trong ô tìm kiếm
+    document.getElementById('helpSearchInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        doHelpSearch();
+      }
+    });
+
+    /* =========================================================
+       3) HIGHLIGHT MỤC LỤC THEO SCROLL
+       ========================================================= */
+    const sections = document.querySelectorAll('.help-section');
+    const tocLinks = document.querySelectorAll('.toc-menu a[data-toc]');
+
+    function updateTocActive() {
+      let currentId = null;
+      const scrollPos = window.scrollY + 120;
+
+      sections.forEach(function(sec) {
+        if (sec.offsetTop <= scrollPos) {
+          currentId = sec.id;
+        }
+      });
+
+      tocLinks.forEach(function(link) {
+        link.classList.toggle('active', link.getAttribute('data-toc') === currentId);
+      });
+    }
+
+    window.addEventListener('scroll', updateTocActive);
+    updateTocActive();
+
+    // Click mục lục thì scroll mượt
+    tocLinks.forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.getElementById(this.getAttribute('data-toc'));
+        if (target) {
+          window.scrollTo({ top: target.offsetTop - 16, behavior: 'smooth' });
+        }
+      });
+    });
+
+    /* =========================================================
+       4) BACK TO TOP
+       ========================================================= */
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 400) backToTop.classList.add('show');
+      else backToTop.classList.remove('show');
+    });
+  </script>
+
+</body>
+</html>

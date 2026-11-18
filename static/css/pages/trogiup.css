@@ -1,0 +1,497 @@
+/* =========================================================
+   TRANG TRỢ GIÚP - TROGIUP.CSS
+   Giao diện trung tâm trợ giúp, tìm kiếm FAQ, Accordion câu hỏi
+   ========================================================= */
+/* ===== HERO / SEARCH HELP ===== */
+    .help-hero {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      padding: 24px 24px 22px;
+      margin: 18px 0 22px;
+      text-align: center;
+    }
+    .help-hero h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e5b9c;
+      margin-bottom: 6px;
+    }
+    .help-hero p {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 16px;
+    }
+    .help-search {
+      display: flex;
+      max-width: 560px;
+      margin: 0 auto;
+      border: 1px solid #bbb;
+      border-radius: 3px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .help-search input {
+      flex: 1; padding: 10px 14px;
+      border: none; outline: none;
+      font-size: 0.92rem;
+      font-family: inherit;
+    }
+    .help-search button {
+      background: #1e5b9c; color: #fff;
+      border: none; padding: 0 22px;
+      cursor: pointer; font-size: 0.92rem;
+      font-weight: 600;
+    }
+    .help-search button:hover { background: #174a7e; }
+
+    .help-quick-links {
+      margin-top: 14px;
+      font-size: 0.8rem;
+      color: #888;
+    }
+    .help-quick-links a {
+      display: inline-block;
+      margin: 3px 4px;
+      padding: 3px 10px;
+      background: #f0f5fb;
+      border: 1px solid #d5e0ec;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      color: #1e5b9c;
+    }
+    .help-quick-links a:hover {
+      background: #1e5b9c;
+      color: #fff;
+      text-decoration: none;
+      border-color: #1e5b9c;
+    }
+
+    /* ===== LAYOUT: SIDEBAR + CONTENT ===== */
+    .help-layout {
+      display: flex;
+      gap: 22px;
+      padding-bottom: 40px;
+      align-items: flex-start;
+    }
+
+    /* --- SIDEBAR MỤC LỤC --- */
+    .help-sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 16px;
+    }
+
+    .side-box {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .side-box-header {
+      background: #e8e8e0;
+      border-bottom: 1px solid #ccc;
+      padding: 7px 12px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .side-box-body { padding: 6px 0; }
+
+    .toc-menu { list-style: none; }
+    .toc-menu li { border-bottom: 1px dotted #e0e0e0; }
+    .toc-menu li:last-child { border-bottom: none; }
+
+    .toc-menu a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      font-size: 0.86rem;
+      color: #444;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .toc-menu a:hover {
+      background: #f0f5fb;
+      color: #1e5b9c;
+      text-decoration: none;
+    }
+    .toc-menu a i {
+      width: 16px;
+      text-align: center;
+      color: #888;
+      font-size: 0.78rem;
+    }
+    .toc-menu a:hover i { color: #1e5b9c; }
+    .toc-menu a.active {
+      background: #1e5b9c;
+      color: #fff;
+      font-weight: 600;
+    }
+    .toc-menu a.active i { color: #fff; }
+
+    .side-help-contact {
+      padding: 10px 12px;
+      font-size: 0.82rem;
+      color: #666;
+      line-height: 1.7;
+    }
+    .side-help-contact strong { color: #1e5b9c; }
+    .side-help-contact a {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 4px;
+      font-size: 0.82rem;
+    }
+
+    /* --- MAIN CONTENT --- */
+    .help-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .help-section {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      scroll-margin-top: 16px;
+    }
+    .help-section-header {
+      background: #e8e8e0;
+      border-bottom: 1px solid #ccc;
+      padding: 9px 16px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .help-section-header i { color: #1e5b9c; }
+    .help-section-body { padding: 16px 18px; }
+
+    .help-section-body p {
+      font-size: 0.88rem;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .help-section-body p:last-child { margin-bottom: 0; }
+
+    /* Các bước */
+    .help-steps {
+      list-style: none;
+      counter-reset: step;
+      margin: 10px 0;
+    }
+    .help-steps li {
+      position: relative;
+      padding: 6px 0 6px 34px;
+      font-size: 0.87rem;
+      color: #444;
+      counter-increment: step;
+    }
+    .help-steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 6px;
+      width: 22px; height: 22px;
+      background: #eef2f7;
+      border: 1px solid #d5dde6;
+      border-radius: 50%;
+      color: #1e5b9c;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .help-steps li strong { color: #1e5b9c; }
+
+    /* Danh sách gạch đầu dòng */
+    .help-list {
+      list-style: none;
+      margin: 8px 0;
+    }
+    .help-list li {
+      position: relative;
+      padding: 4px 0 4px 20px;
+      font-size: 0.86rem;
+      color: #555;
+    }
+    .help-list li::before {
+      content: '105';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      color: #1e5b9c;
+      font-size: 0.78rem;
+    }
+
+    /* FAQ accordion */
+    .faq-list { margin-top: 4px; }
+    .faq-item {
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      margin-bottom: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .faq-item:last-child { margin-bottom: 0; }
+
+    .faq-question {
+      width: 100%;
+      text-align: left;
+      background: #fafbfc;
+      border: none;
+      padding: 11px 14px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      transition: background 0.15s;
+    }
+    .faq-question:hover { background: #f0f5fb; color: #1e5b9c; }
+    .faq-question .faq-icon {
+      font-size: 0.7rem;
+      color: #888;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .faq-item.open .faq-question {
+      background: #eef4fa;
+      color: #1e5b9c;
+    }
+    .faq-item.open .faq-question .faq-icon {
+      transform: rotate(90deg);
+      color: #1e5b9c;
+    }
+    .faq-answer {
+      display: none;
+      padding: 12px 14px;
+      font-size: 0.86rem;
+      color: #555;
+      border-top: 1px solid #e5e8ec;
+      background: #fff;
+      line-height: 1.65;
+    }
+    .faq-item.open .faq-answer { display: block; }
+    .faq-answer p { margin-bottom: 8px; }
+    .faq-answer p:last-child { margin-bottom: 0; }
+    .faq-answer code {
+      background: #f4f4f0;
+      border: 1px solid #e0e0d8;
+      border-radius: 2px;
+      padding: 1px 5px;
+      font-size: 0.8rem;
+      color: #c0392b;
+      font-family: Consolas, Monaco, monospace;
+    }
+
+    /* Bảng */
+    .help-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: 0.85rem;
+    }
+    .help-table th {
+      background: #e8e8e0;
+      border: 1px solid #ccc;
+      padding: 7px 10px;
+      text-align: left;
+      font-weight: 700;
+      color: #333;
+    }
+    .help-table td {
+      border: 1px solid #ddd;
+      padding: 7px 10px;
+      color: #555;
+    }
+    .help-table tr:nth-child(even) td { background: #fafbfc; }
+
+    /* Callout */
+    .callout {
+      display: flex;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 3px;
+      font-size: 0.85rem;
+      margin: 12px 0;
+    }
+    .callout i {
+      font-size: 1rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .callout.info {
+      background: #f0f5fb;
+      border: 1px solid #c9d9ec;
+      color: #2c4f7c;
+    }
+    .callout.info i { color: #1e5b9c; }
+    .callout.warn {
+      background: #fffbe6;
+      border: 1px solid #e6d8a0;
+      color: #6b5e2e;
+    }
+    .callout.warn i { color: #8a6d1f; }
+    .callout.success {
+      background: #f1faf4;
+      border: 1px solid #c6e5d0;
+      color: #1f5a35;
+    }
+    .callout.success i { color: #2c8a4a; }
+
+    /* Contact cards */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+    .contact-card {
+      background: #f7f9fc;
+      border: 1px solid #d5dde6;
+      border-radius: 3px;
+      padding: 16px;
+      text-align: center;
+    }
+    .contact-card .cc-icon {
+      width: 44px; height: 44px;
+      background: #eef2f7;
+      border: 1px solid #d5dde6;
+      border-radius: 3px;
+      color: #1e5b9c;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      margin: 0 auto 10px;
+    }
+    .contact-card h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 3px;
+    }
+    .contact-card p {
+      font-size: 0.8rem;
+      color: #777;
+      margin-bottom: 8px;
+    }
+    .contact-card a {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* ===== BACK TO TOP ===== */
+    .back-to-top {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      width: 42px; height: 42px;
+      background: #1e5b9c;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+      z-index: 500;
+      transition: background 0.15s;
+    }
+    .back-to-top:hover { background: #174a7e; }
+    .back-to-top.show { display: flex; }
+
+/* =========================================================
+   RESPONSIVE CHO TRANG TRỢ GIÚP (MOBILE & TABLET)
+   ========================================================= */
+@media (max-width: 860px) {
+  .help-layout {
+    flex-direction: column;
+    gap: 18px;
+    padding-bottom: 24px;
+  }
+  .help-sidebar {
+    width: 100%;
+    position: static;
+  }
+  .help-hero {
+    padding: 18px 14px;
+    margin: 12px 0 16px;
+  }
+  .help-hero h1 {
+    font-size: 1.25rem;
+  }
+  .help-hero p {
+    font-size: 0.82rem;
+    margin-bottom: 12px;
+  }
+  .help-search {
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .help-hero h1 {
+    font-size: 1.15rem;
+  }
+  .help-search input {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+  .help-search button {
+    padding: 0 14px;
+    font-size: 0.82rem;
+  }
+  .help-quick-links {
+    font-size: 0.75rem;
+  }
+  .help-quick-links a {
+    margin: 2px;
+    padding: 2px 8px;
+    font-size: 0.72rem;
+  }
+  .help-section-header {
+    padding: 9px 12px;
+    font-size: 0.88rem;
+  }
+  .help-section-body {
+    padding: 12px 14px;
+    font-size: 0.84rem;
+  }
+  .faq-question {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+  .faq-answer {
+    padding: 10px 12px;
+    font-size: 0.82rem;
+  }
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .contact-card {
+    padding: 12px;
+  }
+}

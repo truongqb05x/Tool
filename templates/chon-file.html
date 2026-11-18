@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToolHub - Chọn file & Xử lý</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- CSS LAYOUT DÙNG CHUNG -->
+  <link rel="stylesheet" href="../static/css/layout/layout.css">
+  
+  <!-- CSS TRANG CHỌN FILE -->
+  <link rel="stylesheet" href="../static/css/pages/chon-file.css">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo" style="text-decoration:none;">
+        <div class="logo-icon"><i class="fas fa-cubes"></i></div>
+        <div class="logo-text">ToolHub</div>
+      </a>
+
+      <div class="header-search-wrap">
+        <div class="header-search">
+          <input type="text" id="searchInput" placeholder="Tìm công cụ: nén PDF, ghép ảnh, chuyển đổi..."
+                 autocomplete="off" aria-autocomplete="list" aria-controls="searchSuggestions">
+          <button type="button" id="searchSubmitBtn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+
+      <div class="header-actions" id="headerActions">
+        <div id="guestActions" style="display:flex; gap:8px;">
+          <a href="index.html" class="btn btn-login">Đăng nhập</a>
+          <a href="index.html" class="btn btn-register">Đăng ký</a>
+        </div>
+
+        <div id="userActions" class="user-menu" style="display:none;">
+          <div class="user-menu-trigger" id="userMenuTrigger">
+            <div class="user-avatar" id="headerAvatar">U</div>
+            <span class="user-name" id="headerUserName">Người dùng</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-header">
+              <strong id="dropdownName">Người dùng</strong>
+              <span id="dropdownEmail">user@toolhub.vn</span>
+            </div>
+            <a href="index.html"><i class="fas fa-tachometer-alt"></i> Bảng điều khiển</a>
+            <a href="index.html"><i class="fas fa-user"></i> Hồ sơ cá nhân</a>
+            <a href="index.html"><i class="fas fa-cog"></i> Cài đặt</a>
+            <a href="index.html"><i class="fas fa-history"></i> Lịch sử dùng</a>
+            <a href="#" class="danger" onclick="logout(); return false;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="tool-content-wrap">
+      <!-- PANEL CHỌN FILE -->
+      <div class="panel">
+        <div class="panel-header">
+          <i class="fas fa-file-upload"></i> Chọn file cần xử lý
+        </div>
+        <div class="panel-body">
+
+          <!-- Thông tin công cụ đang dùng -->
+          <div class="tool-banner">
+            <div class="tb-icon"><i class="fas fa-compress-alt" id="toolIcon"></i></div>
+            <div class="tb-body">
+              <h2 id="toolTitle">Nén PDF</h2>
+              <p id="toolDesc">Giảm dung lượng file PDF mà vẫn giữ chất lượng tốt nhất.</p>
+            </div>
+          </div>
+
+          <!-- Vùng kéo thả / chọn file -->
+          <div class="drop-zone" id="dropZone">
+            <i class="fas fa-cloud-upload-alt dz-icon"></i>
+            <div class="dz-title">Kéo thả file vào đây</div>
+            <div class="dz-sub">hoặc nhấn nút bên dưới để chọn file từ máy tính</div>
+            <button type="button" class="dz-btn" onclick="document.getElementById('fileInput').click()">
+              <i class="fas fa-folder-open"></i> Chọn file
+            </button>
+            <div class="dz-note" id="dzNote">Hỗ trợ: PDF · Tối đa 50 MB</div>
+            <input type="file" id="fileInput">
+          </div>
+        </div>
+      </div>
+    
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-cols">
+        <div class="footer-col footer-about">
+          <div class="footer-logo">
+            <div class="footer-logo-icon"><i class="fas fa-cubes"></i></div>
+            <div class="footer-logo-text">ToolHub</div>
+          </div>
+          <p>ToolHub là nền tảng tổng hợp công cụ trực tuyến miễn phí, giúp bạn xử lý PDF, hình ảnh, văn bản và nhiều tiện ích khác ngay trên trình duyệt — không cần cài đặt.</p>
+          <p><i class="fas fa-shield-alt" style="color:#1e5b9c; font-size:0.75rem;"></i> File được xử lý bảo mật và tự động xóa sau 1 giờ.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Liên kết</h4>
+          <ul>
+            <li><a href="index.html"><i class="fas fa-angle-right"></i> Giới thiệu</a></li>
+            <li><a href="dieukhoan.html"><i class="fas fa-angle-right"></i> Điều khoản sử dụng</a></li>
+            <li><a href="dieukhoan.html"><i class="fas fa-angle-right"></i> Chính sách bảo mật</a></li>
+            <li><a href="trogiup.html"><i class="fas fa-angle-right"></i> Câu hỏi thường gặp</a></li>
+            <li><a href="index.html"><i class="fas fa-angle-right"></i> Sitemap</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Liên hệ</h4>
+          <ul class="footer-contact">
+            <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</li>
+            <li><i class="fas fa-phone-alt"></i> 0123 456 789</li>
+            <li><i class="fas fa-envelope"></i> hotro@toolhub.vn</li>
+            <li><i class="fas fa-clock"></i> Thứ 2 – Thứ 7: 8:00 – 17:30</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        © 2025 ToolHub — Công cụ tổng hợp miễn phí. Bảo lưu mọi quyền.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== THANH DƯỚI FOOTER (BOTTOM BAR) ===== -->
+  <div class="bottom-bar">
+    <div class="container">
+      <div>© 2025 ToolHub — Nền tảng tiện ích trực tuyến</div>
+      <div>
+        <a href="trogiup.html">Trợ giúp</a>
+        <a href="dieukhoan.html">Điều khoản</a>
+        <a href="#">Bảo mật</a>
+        <a href="#"><i class="fas fa-globe"></i> Ngôn ngữ: VI</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+       1) SEARCH SUGGESTIONS & TÌM KIẾM
+       ========================================================= */
+    const TOOL_DATA = [
+      { name: 'Nén PDF', key: 'nen-pdf', icon: 'fa-compress-alt', cat: 'Công cụ PDF' },
+      { name: 'Gộp nhiều PDF', key: 'gop-pdf', icon: 'fa-object-group', cat: 'Công cụ PDF' },
+      { name: 'Chuyển PDF sang Word', key: 'pdf-sang-word', icon: 'fa-file-signature', cat: 'Công cụ PDF' },
+      { name: 'Tách PDF', icon: 'fa-cut', cat: 'Công cụ PDF' },
+      { name: 'Bảo vệ PDF', icon: 'fa-lock', cat: 'Công cụ PDF' },
+      { name: 'Cắt & xoay ảnh', icon: 'fa-crop-alt', cat: 'Chỉnh sửa ảnh' },
+      { name: 'Ghép ảnh', key: 'ghep-anh', icon: 'fa-images', cat: 'Chỉnh sửa ảnh' },
+      { name: 'Xóa phông nền', key: 'xoa-phong-nen', icon: 'fa-magic', cat: 'Chỉnh sửa ảnh' },
+      { name: 'Chỉnh màu ảnh', icon: 'fa-adjust', cat: 'Chỉnh sửa ảnh' },
+      { name: 'Máy tính online', icon: 'fa-calculator', cat: 'Ứng dụng App' },
+      { name: 'Tạo mã QR', key: 'tao-ma-qr', icon: 'fa-qrcode', cat: 'Ứng dụng App' },
+      { name: 'Đồng hồ đếm ngược', icon: 'fa-clock', cat: 'Ứng dụng App' },
+      { name: 'Word sang PDF', icon: 'fa-file-word', cat: 'Chuyển đổi' },
+      { name: 'Excel sang PDF', icon: 'fa-file-excel', cat: 'Chuyển đổi' },
+      { name: 'Ảnh sang PDF', icon: 'fa-file-image', cat: 'Chuyển đổi' },
+      { name: 'Kiểm tra chính tả', icon: 'fa-spell-check', cat: 'Văn bản' },
+      { name: 'Đếm ký tự', icon: 'fa-text-width', cat: 'Văn bản' },
+      { name: 'Dịch văn bản', icon: 'fa-language', cat: 'Văn bản' }
+    ];
+
+    const searchInput = document.getElementById('searchInput');
+    const suggestionsBox = document.getElementById('searchSuggestions');
+    let activeSuggestionIndex = -1;
+    let currentSuggestions = [];
+
+    function removeDiacritics(str) {
+      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+    }
+
+    function highlightMatch(text, query) {
+      if (!query) return text;
+      const normText = removeDiacritics(text).toLowerCase();
+      const normQuery = removeDiacritics(query).toLowerCase();
+      const idx = normText.indexOf(normQuery);
+      if (idx === -1) return text;
+      return text.slice(0, idx) + '<mark>' + text.slice(idx, idx + query.length) + '</mark>' + text.slice(idx + query.length);
+    }
+
+    function buildSuggestions(query) {
+      const normQuery = removeDiacritics(query).toLowerCase().trim();
+      if (!normQuery) return [];
+      return TOOL_DATA.filter(function(tool) {
+        const n = removeDiacritics(tool.name).toLowerCase();
+        const c = removeDiacritics(tool.cat).toLowerCase();
+        return n.indexOf(normQuery) !== -1 || c.indexOf(normQuery) !== -1;
+      }).slice(0, 8);
+    }
+
+    function renderSuggestions(query) {
+      currentSuggestions = buildSuggestions(query);
+      activeSuggestionIndex = -1;
+
+      if (!query.trim()) {
+        suggestionsBox.classList.remove('show');
+        suggestionsBox.innerHTML = '';
+        return;
+      }
+
+      if (currentSuggestions.length === 0) {
+        suggestionsBox.innerHTML = '<div class="suggestion-empty"><i class="fas fa-search" style="margin-right:6px;"></i>Không tìm thấy công cụ phù hợp với "' + escapeHtml(query) + '"</div>';
+        suggestionsBox.classList.add('show');
+        return;
+      }
+
+      let html = '';
+      currentSuggestions.forEach(function(tool, i) {
+        html += '<div class="suggestion-item" data-index="' + i + '" data-name="' + escapeHtml(tool.name) + '" data-key="' + (tool.key || '') + '">'
+              +   '<div class="s-icon"><i class="fas ' + tool.icon + '"></i></div>'
+              +   '<div class="s-body">'
+              +     '<strong>' + highlightMatch(tool.name, query) + '</strong>'
+              +     '<span>' + escapeHtml(tool.cat) + '</span>'
+              +   '</div>'
+              +   '<i class="fas fa-arrow-right s-arrow"></i>'
+              + '</div>';
+      });
+      html += '<div class="suggestion-footer"><kbd>↑</kbd> <kbd>↓</kbd> để chọn · <kbd>Enter</kbd> để mở · <kbd>Esc</kbd> để đóng</div>';
+
+      suggestionsBox.innerHTML = html;
+      suggestionsBox.classList.add('show');
+
+      suggestionsBox.querySelectorAll('.suggestion-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+          selectSuggestion(this.getAttribute('data-name'), this.getAttribute('data-key'));
+        });
+      });
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function(c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    function selectSuggestion(name, key) {
+      searchInput.value = name;
+      suggestionsBox.classList.remove('show');
+      suggestionsBox.innerHTML = '';
+
+      if (key && TOOLS[key]) {
+        currentToolKey = key;
+        applyToolConfig(key);
+        resetAll();
+        const newUrl = window.location.pathname + '?tool=' + key;
+        window.history.pushState({ tool: key }, '', newUrl);
+      } else {
+        window.location.href = 'index.html?search=' + encodeURIComponent(name);
+      }
+    }
+
+    function updateActiveItem() {
+      const items = suggestionsBox.querySelectorAll('.suggestion-item');
+      items.forEach(function(it, i) {
+        it.classList.toggle('active', i === activeSuggestionIndex);
+      });
+      if (activeSuggestionIndex >= 0 && items[activeSuggestionIndex]) {
+        items[activeSuggestionIndex].scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', function() {
+        renderSuggestions(this.value);
+      });
+
+      searchInput.addEventListener('keydown', function(e) {
+        const isOpen = suggestionsBox.classList.contains('show');
+        const items = suggestionsBox.querySelectorAll('.suggestion-item');
+
+        if (e.key === 'ArrowDown') {
+          if (!isOpen) { renderSuggestions(this.value); return; }
+          e.preventDefault();
+          activeSuggestionIndex = (activeSuggestionIndex + 1) % items.length;
+          updateActiveItem();
+        } else if (e.key === 'ArrowUp') {
+          if (!isOpen) return;
+          e.preventDefault();
+          activeSuggestionIndex = (activeSuggestionIndex - 1 + items.length) % items.length;
+          updateActiveItem();
+        } else if (e.key === 'Enter') {
+          if (isOpen && activeSuggestionIndex >= 0 && items[activeSuggestionIndex]) {
+            e.preventDefault();
+            const it = items[activeSuggestionIndex];
+            selectSuggestion(it.getAttribute('data-name'), it.getAttribute('data-key'));
+          } else if (this.value.trim()) {
+            window.location.href = 'index.html?search=' + encodeURIComponent(this.value.trim());
+          }
+        } else if (e.key === 'Escape') {
+          suggestionsBox.classList.remove('show');
+          suggestionsBox.innerHTML = '';
+        }
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+          suggestionsBox.classList.remove('show');
+        }
+      });
+
+      const searchBtn = document.getElementById('searchSubmitBtn');
+      if (searchBtn) {
+        searchBtn.addEventListener('click', function() {
+          if (searchInput.value.trim()) {
+            window.location.href = 'index.html?search=' + encodeURIComponent(searchInput.value.trim());
+          }
+        });
+      }
+    }
+
+    /* =========================================================
+       2) QUẢN LÝ TRẠNG THÁI NGƯỜI DÙNG
+       ========================================================= */
+    const userMenuTrigger = document.getElementById('userMenuTrigger');
+    const userDropdown = document.getElementById('userDropdown');
+
+    if (userMenuTrigger && userDropdown) {
+      userMenuTrigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        userDropdown.classList.toggle('show');
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!userDropdown.contains(e.target) && !userMenuTrigger.contains(e.target)) {
+          userDropdown.classList.remove('show');
+        }
+      });
+    }
+
+    function applyLoggedInUI(user) {
+      const guest = document.getElementById('guestActions');
+      const userBox = document.getElementById('userActions');
+      if (guest) guest.style.display = 'none';
+      if (userBox) userBox.style.display = '';
+
+      const initial = (user.name || 'U').charAt(0).toUpperCase();
+      if (document.getElementById('headerAvatar')) document.getElementById('headerAvatar').textContent = initial;
+      if (document.getElementById('headerUserName')) document.getElementById('headerUserName').textContent = user.name;
+      if (document.getElementById('dropdownName')) document.getElementById('dropdownName').textContent = user.name;
+      if (document.getElementById('dropdownEmail')) document.getElementById('dropdownEmail').textContent = user.email;
+    }
+
+    function applyLoggedOutUI() {
+      const guest = document.getElementById('guestActions');
+      const userBox = document.getElementById('userActions');
+      if (guest) guest.style.display = 'flex';
+      if (userBox) userBox.style.display = 'none';
+    }
+
+    function logout() {
+      localStorage.removeItem('toolhub_current_user');
+      sessionStorage.removeItem('toolhub_current_user');
+      if (userDropdown) userDropdown.classList.remove('show');
+      applyLoggedOutUI();
+    }
+
+    // Kiểm tra đăng nhập
+    (function checkAuth() {
+      const saved = localStorage.getItem('toolhub_current_user')
+                 || sessionStorage.getItem('toolhub_current_user');
+      if (saved) {
+        try {
+          const user = JSON.parse(saved);
+          applyLoggedInUI(user);
+        } catch (err) {}
+      }
+    })();
+
+    /* =========================================================
+       3) CẤU HÌNH & CHỌN FILE
+       ========================================================= */
+    const TOOLS = {
+      'nen-pdf': {
+        title: 'Nén PDF',
+        desc: 'Giảm dung lượng file PDF mà vẫn giữ chất lượng tốt nhất.',
+        icon: 'fa-compress-alt',
+        accept: '.pdf,application/pdf',
+        acceptText: 'Hỗ trợ: PDF · Tối đa 50 MB'
+      },
+      'gop-pdf': {
+        title: 'Gộp nhiều PDF',
+        desc: 'Kết hợp nhiều file PDF thành một tài liệu duy nhất.',
+        icon: 'fa-object-group',
+        accept: '.pdf,application/pdf',
+        acceptText: 'Hỗ trợ: PDF · Tối đa 50 MB'
+      },
+      'pdf-sang-word': {
+        title: 'Chuyển PDF sang Word',
+        desc: 'Chuyển đổi PDF sang DOCX có thể chỉnh sửa.',
+        icon: 'fa-file-signature',
+        accept: '.pdf,application/pdf',
+        acceptText: 'Hỗ trợ: PDF · Tối đa 50 MB'
+      },
+      'ghep-anh': {
+        title: 'Ghép ảnh',
+        desc: 'Ghép nhiều ảnh thành một bức ảnh lớn theo bố cục.',
+        icon: 'fa-images',
+        accept: 'image/*',
+        acceptText: 'Hỗ trợ: JPG, PNG, GIF · Tối đa 20 MB'
+      },
+      'xoa-phong-nen': {
+        title: 'Xóa phông nền',
+        desc: 'Tự động tách nền ảnh chỉ trong vài giây.',
+        icon: 'fa-magic',
+        accept: 'image/*',
+        acceptText: 'Hỗ trợ: JPG, PNG · Tối đa 20 MB'
+      },
+      'tao-ma-qr': {
+        title: 'Tạo mã QR',
+        desc: 'Tạo mã QR cho văn bản, URL, email và nhiều hơn nữa.',
+        icon: 'fa-qrcode',
+        accept: 'image/*',
+        acceptText: 'Hỗ trợ: ảnh logo để chèn vào QR · Tối đa 5 MB'
+      }
+    };
+
+    let currentToolKey = 'nen-pdf';
+    let selectedFile = null;
+
+    /* KHỞI TẠO — Đọc tham số ?tool=... từ URL */
+    (function init() {
+      const params = new URLSearchParams(window.location.search);
+      const toolParam = params.get('tool');
+      if (toolParam && TOOLS[toolParam]) {
+        currentToolKey = toolParam;
+      }
+      applyToolConfig(currentToolKey);
+    })();
+
+    function applyToolConfig(key) {
+      const tool = TOOLS[key];
+      if (!tool) return;
+
+      // Tool banner
+      document.getElementById('toolIcon').className = 'fas ' + tool.icon;
+      document.getElementById('toolTitle').textContent = tool.title;
+      document.getElementById('toolDesc').textContent = tool.desc;
+
+      // Drop zone input
+      const input = document.getElementById('fileInput');
+      input.setAttribute('accept', tool.accept);
+      document.getElementById('dzNote').textContent = tool.acceptText;
+    }
+
+    /* CHỌN FILE — LƯU TÊN FILE VÀ ĐIỀU HƯỚNG SANG TRANG XỬ LÝ */
+    const fileInput = document.getElementById('fileInput');
+    const dropZone = document.getElementById('dropZone');
+
+    fileInput.addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+        handleFileSelected(this.files[0]);
+      }
+    });
+
+    // Kéo thả file
+    dropZone.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', function() {
+      dropZone.classList.remove('dragover');
+    });
+    dropZone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleFileSelected(e.dataTransfer.files[0]);
+      }
+    });
+
+    function handleFileSelected(file) {
+      selectedFile = file;
+      try {
+        sessionStorage.setItem('toolhub_selected_file_name', file.name);
+      } catch (err) {}
+
+      // Chuyển trực tiếp sang trang xử lý
+      window.location.href = 'xuly.html?tool=' + encodeURIComponent(currentToolKey);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+/* =========================================================
+   BASE & RESET STYLES (DÙNG CHUNG)
+   ========================================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #f4f4f0;
+  color: #333;
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+a {
+  color: #1e5b9c;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Các nút cơ bản dùng chung */
+.btn {
+  padding: 6px 14px;
+  border-radius: 3px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  display: inline-block;
+  transition: background 0.15s;
+  font-family: inherit;
+  text-decoration: none;
+}
+
+.btn-primary {
+  padding: 10px 24px;
+  background: #1e5b9c;
+  color: #fff;
+  border: 1px solid #1e5b9c;
+  border-radius: 3px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: background 0.15s;
+  text-decoration: none;
+}
+.btn-primary:hover {
+  background: #174a7e;
+  text-decoration: none;
+  color: #fff;
+}
+.btn-primary:disabled {
+  background: #7d9dc0;
+  border-color: #7d9dc0;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  padding: 10px 20px;
+  background: #fff;
+  color: #555;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+.btn-secondary:hover {
+  background: #f0f0f0;
+  text-decoration: none;
+  color: #333;
+}

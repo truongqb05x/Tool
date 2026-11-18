@@ -1,0 +1,7 @@
+/* =========================================================
+   TRANG XỬ LÝ - XULY.CSS
+   Kế thừa khung workspace, form controls và preview chuyên biệt
+   ========================================================= */
+@import "../layout/workspace.css";
+@import "../layout/form-options.css";
+@import "../layout/workspace-pdf.css";

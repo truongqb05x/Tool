@@ -1,0 +1,120 @@
+/* =========================================================
+   WORKSPACE LAYOUT (KHUNG GỘP DÙNG CHUNG CHO MỌI FILE XỬ LÝ)
+   - PDF, Image, Text,... đều có thể kế thừa khung này
+   ========================================================= */
+.main-layout,
+.workspace-layout {
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 82px);
+  background: #fafbfc;
+  align-items: stretch;
+  border-top: 1px solid #ccc;
+}
+
+/* Khu vực thao tác chính (Bên trái / Trung tâm) */
+.file-area,
+.workspace-main {
+  flex: 1;
+  min-width: 0;
+  background: #f4f4f0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.file-area-content,
+.workspace-main-content {
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+/* Cột bảng tùy chọn (Sát lề phải màn hình) */
+.options-area,
+.workspace-sidebar {
+  width: 320px;
+  flex-shrink: 0;
+  background: #fff;
+  border-left: 1px solid #ccc; /* Đường kẻ viền ngăn cách, cố định sát mép phải */
+  display: flex;
+  flex-direction: column;
+}
+
+.options-header,
+.workspace-sidebar-header {
+  background: #e8e8e0;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 18px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.options-body,
+.workspace-sidebar-body {
+  padding: 20px 18px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Khu vực nút bấm hành động cố định ở chân cột tùy chọn */
+.action-area,
+.workspace-sidebar-action {
+  padding: 16px 18px;
+  border-top: 1px solid #eee;
+  background: #fafbfc;
+}
+
+/* Responsive khi co màn hình */
+@media (max-width: 820px) {
+  .main-layout,
+  .workspace-layout {
+    flex-direction: column;
+    min-height: auto;
+  }
+  .options-area,
+  .workspace-sidebar {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #ccc;
+  }
+  .file-area,
+  .workspace-main {
+    width: 100%;
+  }
+  .file-area-content,
+  .workspace-main-content {
+    padding: 20px 12px;
+    min-height: 380px;
+  }
+}
+
+@media (max-width: 560px) {
+  .file-area-content,
+  .workspace-main-content {
+    padding: 14px 8px;
+    min-height: 260px;
+  }
+  .options-area,
+  .workspace-sidebar {
+    padding: 14px 12px;
+  }
+  .options-header h3 {
+    font-size: 0.88rem;
+  }
+  .action-area,
+  .workspace-sidebar-action {
+    padding: 12px;
+  }
+}

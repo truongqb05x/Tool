@@ -1,0 +1,42 @@
+/* =========================================================
+   WORKSPACE CHO CHỨC NĂNG VĂN BẢN (ĐẾM TỪ, DỊCH, CHÍNH TẢ...)
+   ========================================================= */
+.text-workspace-split {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  height: 100%;
+  min-height: 460px;
+}
+
+.text-editor-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.text-editor-box textarea {
+  flex: 1;
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 16px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: none;
+}
+
+.text-meta-bar {
+  background: #fafbfc;
+  border-top: 1px solid #eee;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  color: #777;
+  display: flex;
+  justify-content: space-between;
+}

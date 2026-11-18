@@ -1,0 +1,168 @@
+/* =========================================================
+   WORKSPACE CHO CHỨC NĂNG PDF / TÀI LIỆU
+   ========================================================= */
+.file-card-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.file-card {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 10px 10px 12px;
+  width: 200px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+.file-card:hover {
+  border-color: #1e5b9c;
+}
+
+/* Preview mô phỏng trang giấy tài liệu */
+.file-preview {
+  width: 100%;
+  height: 240px;
+  background: #fff;
+  border: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 8px;
+  position: relative;
+}
+.file-preview .paper-mockup {
+  width: 80%;
+  height: 90%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+}
+.paper-mockup .line {
+  height: 3px;
+  background: #e0e0e0;
+  margin-bottom: 6px;
+  border-radius: 2px;
+}
+.paper-mockup .line.title {
+  width: 50%;
+  background: #c0c0c0;
+  height: 5px;
+  margin-bottom: 12px;
+}
+.paper-mockup .line.short {
+  width: 70%;
+}
+.paper-mockup .line.block {
+  height: 24px;
+  background: #f5f5f5;
+  margin: 8px 0;
+  border: 1px solid #ebebeb;
+}
+
+.file-name {
+  font-size: 0.78rem;
+  color: #777;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 4px;
+}
+
+/* Nút xóa file */
+.btn-remove-file {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c0392b;
+  font-size: 0.75rem;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.file-card:hover .btn-remove-file {
+  opacity: 1;
+}
+.btn-remove-file:hover {
+  background: #fdf0f0;
+  border-color: #f5c6c6;
+}
+
+/* Nút thêm file */
+.btn-add-more {
+  background: #fff;
+  color: #1e5b9c;
+  border: 1px dashed #1e5b9c;
+  padding: 10px 20px;
+  border-radius: 3px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+  position: relative;
+}
+.btn-add-more:hover {
+  background: #f0f5fb;
+}
+.btn-add-more .badge {
+  background: #c0392b;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#fileInput {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  .file-card-wrap {
+    gap: 12px;
+  }
+  .file-card {
+    width: 140px;
+  }
+  .file-preview {
+    height: 180px;
+  }
+  .file-meta {
+    padding: 6px 8px;
+    font-size: 0.72rem;
+  }
+  .btn-add-more {
+    padding: 7px 12px;
+    font-size: 0.8rem;
+  }
+  .opt-grid {
+    flex-wrap: wrap;
+  }
+  .opt-btn {
+    flex: 1 1 40%;
+  }
+}
