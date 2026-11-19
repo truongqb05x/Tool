@@ -20,19 +20,64 @@
 d:\starup\web\Tools\
 │
 ├── PROJECT_OVERVIEW.md                    # File này (Tài liệu tổng quan hệ thống)
+├── app.py                                 # 🚀 Backend Entry Point: Khởi chạy Flask App từ package src
+├── .gitignore                             # Cấu hình bỏ qua cache, file tạm tải lên
+│
+├── src/                                   # 📦 TOÀN BỘ MÃ NGUỒN BACKEND
+│   ├── __init__.py                        # Factory Pattern: create_app() cấu hình Flask, nạp routes
+│   ├── config.py                          # ⚙️ Cấu hình Backend: Secret Key, Upload Folder, Max Content Length
+│   │
+│   ├── routes/                            # 🌐 TẦNG PAGE ROUTES & API BLUEPRINTS
+│   │   ├── __init__.py                    # Hàm register_routes(app) gom toàn bộ blueprints
+│   │   ├── main_routes.py                 # Route trang chủ (/), trợ giúp (/trogiup), điều khoản (/dieukhoan)
+│   │   ├── pdf_routes.py                  # Route 24 công cụ PDF (/pdf/<slug> & /pdf/<slug>.html) + API (/pdf/api/<action>)
+│   │   ├── image_routes.py                # Route chuyên mục Ảnh (/anh/cat-anh, /anh/xoa-phong-nen, ...)
+│   │   ├── utility_routes.py              # Route chuyên mục Tiện ích (/tien-ich/tao-ma-qr, ...)
+│   │   └── conversion_routes.py           # Route chuyên mục Chuyển đổi (/chuyen-doi/word-sang-pdf, ...)
+│   │
+│   ├── services/                          # ⚙️ TẦNG LOGIC NGHIỆP VỤ (SERVICE LAYER)
+│   │   ├── __init__.py
+│   │   ├── pdf_service.py                 # PdfService: Đầy đủ 24 method xử lý file PDF sẵn sàng tích hợp thư viện
+│   │   ├── image_service.py               # Xử lý cắt, ghép, xoay, tách nền ảnh (Pillow, rembg)
+│   │   └── qr_service.py                  # Sinh mã QR code, xuất file (qrcode)
+│   │
+│   └── utils/                             # 🛠️ TẦNG TIỆN ÍCH BACKEND
+│       ├── __init__.py
+│       └── file_handler.py                # Kiểm tra đuôi file (allowed_file), làm sạch tên file
+│
+├── uploads/                               # 📁 Thư mục lưu trữ tạm thời các file tải lên
 │
 ├── templates/                             # Thư mục giao diện HTML
-│   ├── index.html                         # Trang chủ (Sidebar danh mục, Bảng công cụ, Giao diện Dashboard thành viên)
-│   ├── trogiup.html                       # Trung tâm trợ giúp (FAQ accordion, scroll spy mục lục, tìm kiếm hướng dẫn)
-│   ├── dieukhoan.html                     # Điều khoản sử dụng & Chính sách bảo mật (Scroll spy, xác nhận chấp thuận)
-│   ├── chon-file.html                     # Trang chọn file cơ bản (dự phòng)
-│   ├── xuly.html                          # Trang xử lý workspace mẫu (dự phòng)
+│   ├── index.html                         # Trang chủ (Sidebar 24 công cụ PDF, Bảng công cụ, Dashboard)
+│   ├── trogiup.html                       # Trung tâm trợ giúp
+│   ├── dieukhoan.html                     # Điều khoản sử dụng & Chính sách bảo mật
 │   │
-│   ├── pdf/                               # 📁 CHUYÊN MỤC CÔNG CỤ PDF (Chuẩn SEO)
-│   │   ├── nen-pdf.html                   # Nén file PDF trực tuyến (1-Page Workflow)
-│   │   ├── gop-pdf.html                   # Gộp nhiều file PDF thành một tệp
-│   │   ├── tach-pdf.html                  # (Kế thừa template chuẩn)
-│   │   └── pdf-sang-word.html             # (Kế thừa template chuẩn)
+│   ├── pdf/                               # 📁 CHUYÊN MỤC CÔNG CỤ PDF (Trang danh mục + 24 file template chuẩn SEO 1-Page Workflow)
+│   │   ├── index.html                     # 🌟 Trang danh mục tất cả 24 công cụ PDF (Bộ lọc tìm kiếm, 5 nhóm chức năng)
+│   │   ├── nen-pdf.html                   # 1. Nén PDF
+│   │   ├── gop-pdf.html                   # 2. Gộp PDF
+│   │   ├── tach-pdf.html                  # 3. Tách PDF
+│   │   ├── xoay-pdf.html                  # 4. Xoay PDF
+│   │   ├── xoa-trang-pdf.html             # 5. Xóa trang PDF
+│   │   ├── sap-xep-trang-pdf.html         # 6. Sắp xếp trang PDF
+│   │   ├── trich-xuat-trang-pdf.html      # 7. Trích xuất trang PDF
+│   │   ├── pdf-sang-word.html             # 8. Chuyển PDF sang Word
+│   │   ├── pdf-sang-excel.html            # 9. Chuyển PDF sang Excel
+│   │   ├── pdf-sang-powerpoint.html       # 10. Chuyển PDF sang PowerPoint
+│   │   ├── word-sang-pdf.html             # 11. Chuyển Word sang PDF
+│   │   ├── excel-sang-pdf.html            # 12. Chuyển Excel sang PDF
+│   │   ├── powerpoint-sang-pdf.html       # 13. Chuyển PowerPoint sang PDF
+│   │   ├── pdf-sang-anh.html              # 14. PDF sang ảnh
+│   │   ├── anh-sang-pdf.html              # 15. Ảnh sang PDF
+│   │   ├── chinh-sua-pdf.html             # 16. Chỉnh sửa PDF
+│   │   ├── them-so-trang-pdf.html         # 17. Thêm số trang PDF
+│   │   ├── them-watermark-pdf.html        # 18. Thêm watermark PDF
+│   │   ├── bao-ve-pdf.html                # 19. Bảo vệ PDF bằng mật khẩu
+│   │   ├── mo-khoa-pdf.html               # 20. Mở khóa PDF
+│   │   ├── ky-pdf.html                    # 21. Ký PDF
+│   │   ├── so-sanh-pdf.html               # 22. So sánh PDF
+│   │   ├── ocr-pdf.html                   # 23. OCR PDF
+│   │   └── doc-thong-tin-pdf.html         # 24. Đọc thông tin PDF
 │   │
 │   ├── anh/                               # 📁 CHUYÊN MỤC CHỈNH SỬA ẢNH
 │   │   ├── cat-anh.html                   # Cắt & Xoay góc ảnh (Tỉ lệ 1:1, 16:9, 4:3)
@@ -49,41 +94,21 @@ d:\starup\web\Tools\
 │       └── anh-sang-pdf.html
 │
 └── static/
+    ├── img/
+    │   └── logo.png                       # 🖼️ Logo chính thức của ToolHub (Favicon & Brand Header/Footer)
+    │
     ├── css/
     │   ├── layout/                        # CSS bố cục dùng chung toàn hệ thống
-    │   │   ├── base.css                   # Reset, container, button và utility .sr-only
-    │   │   ├── header.css                 # Header đồng nhất, logo, search input, dropdown user
-    │   │   ├── footer.css                 # Footer 4 cột & bottom bar bản quyền
-    │   │   ├── modal.css                  # Modal auth + Classic System Dialog + Classic Toast
-    │   │   ├── topbar.css                 # Thanh thông báo trên cùng
-    │   │   └── workspace.css              # Khung chia 2 cột (File preview trái + Sidebar tùy chọn phải)
-    │   │
     │   ├── pages/                         # CSS riêng biệt cho từng trang tĩnh
-    │   │   ├── index.css                  # Bố cục trang chủ, sidebar menu, card công cụ
-    │   │   ├── trogiup.css                # Mục lục trợ giúp, callout ghi chú
-    │   │   └── dieukhoan.css              # Bảng biểu điều khoản, khung chấp thuận
-    │   │
     │   └── tools/                         # CSS chuyên dùng cho các trang công cụ
-    │       └── tool-page.css              # Breadcrumb, Hero, Drop zone, 1-Page Workspace, SEO sections
     │
     └── js/
-        ├── app.js                         # File điều phối trung tâm (Tự tính đường dẫn tương đối để nạp ultis)
-        │
-        ├── ultis/                         # Các module tiện ích dùng chung
-        │   ├── helpers.js                 # Chuẩn hóa tiếng Việt bỏ dấu (removeDiacritics), chống XSS (escapeHtml), fakeDownload
-        │   ├── sidebar.js                 # Accordion mở/đóng danh mục bên trái (initSidebar)
-        │   ├── search.js                  # Dữ liệu TOOL_DATA, gợi ý Autocomplete, resolveToolUrl
-        │   ├── auth.js                    # Quản lý Đăng nhập / Đăng ký / Quên mật khẩu / Classic Dialog / Live Toast
-        │   └── user.js                    # Quản lý phiên đăng nhập (LocalStorage/SessionStorage), avatar, dropdown
-        │
+        ├── app.js                         # File điều phối trung tâm
+        ├── ultis/                         # Helpers, sidebar, search (chứa TOOL_DATA 24 công cụ), auth, user
         └── tools/                         # Logic xử lý chuyên biệt cho từng công cụ
-            ├── pdf/
-            │   ├── nen-pdf.js             # Kéo thả file PDF, 3 mức nén, tính toán % giảm dung lượng, tải file
-            │   └── gop-pdf.js             # Quản lý mảng nhiều file, nút đổi thứ tự ↑/↓, xóa file, gộp PDF
+            ├── pdf/                       # 📁 Đầy đủ 24 file JS chuyên biệt cho 24 công cụ PDF
             ├── anh/
-            │   └── cat-anh.js             # Đọc ảnh FileReader, xem trước, xoay 90°, chọn tỉ lệ khung hình
             └── tien-ich/
-                └── tao-ma-qr.js           # Sinh mã QR SVG thời gian thực, bảng 4 màu, tải ảnh PNG
 ```
 
 ---
@@ -108,8 +133,27 @@ Trong `static/js/ultis/search.js`, danh sách `TOOL_DATA` định nghĩa đườ
 
 ### 3.4. Hệ thống thông báo cổ điển (Classic Notice System)
 * **Classic Dialog (`.classic-dialog-overlay`)**: Hộp thoại thông báo mô phỏng gửi email kích hoạt, khôi phục mật khẩu tạm thời `ToolHub@2025`.
-* **Classic Live Toast (`.classic-toast-container`)**: Thông báo nhỏ góc dưới bên phải màn hình trượt vào định kỳ (~32s) mô phỏng người dùng mới đăng ký, tăng tính sống động cho website.
 * **Đóng mở linh hoạt**: Hỗ trợ phím `Escape`, click vùng tối bên ngoài overlay hoặc nút bấm hành động.
+
+### 3.5. Quy chuẩn Header, Footer & Auth Modal đồng bộ
+Toàn bộ 32 trang HTML trong hệ thống tuân thủ 100% cấu trúc đồng nhất:
+1. **Header chuẩn (`.header`)**:
+   - Logo thương hiệu + Tên dự án ToolHub (tự tính đường dẫn tương đối `../` hoặc `../../` về trang chủ).
+   - Thanh tìm kiếm trung tâm (`#searchInput`) tích hợp gợi ý autocomplete toàn hệ thống.
+   - Khối người dùng: Trạng thái Khách (`#guestActions` - Đăng nhập/Đăng ký) và Người dùng (`#userActions` - Avatar, Name, Dropdown Lịch sử/Cài đặt/Đăng xuất).
+2. **Footer chuẩn 4 cột (`.footer`)**:
+   - Cột 1: Thông tin thương hiệu ToolHub, cam kết bảo mật & miễn phí.
+   - Cột 2: Danh mục Công cụ PDF tiêu biểu (Nén PDF, Gộp PDF, Tách PDF, PDF sang Word).
+   - Cột 3: Danh mục Chỉnh sửa ảnh & Tiện ích web.
+   - Cột 4: Hỗ trợ, Điều khoản, Bảo mật và FAQ.
+   - Thanh Bottom Bar: Bản quyền `© 2025 ToolHub` và liên kết ngôn ngữ/pháp lý.
+3. **Cơ chế xác thực tập trung (Centralized Auth Modal Architecture)**:
+   - Khối `#authModal` được tập trung duy nhất tại trang chủ [templates/index.html](file:///d:/starup/web/Tools/templates/index.html), giúp giảm tải dung lượng và tránh phân mảnh logic trên các trang con.
+   - Tại tất cả các trang con (31 template), các nút Đăng nhập / Đăng ký trong `#guestActions` là các liên kết thẻ `<a>` trỏ trực tiếp về trang chủ kèm cờ tham số:
+     + Trang cấp 1 (`trogiup.html`, `dieukhoan.html`,...): `href="index.html?auth=login"` / `href="index.html?auth=register"`.
+     + Trang con cấp 2 (`pdf/*.html`, `anh/*.html`,...): `href="../index.html?auth=login"` / `href="../index.html?auth=register"`.
+   - Hàm `initAuthModal()` trong [static/js/ultis/auth.js](file:///d:/starup/web/Tools/static/js/ultis/auth.js) khi khởi chạy tại `index.html` sẽ tự động đọc tham số URL (`?auth=login` hoặc `?auth=register`), mở ngay modal tương ứng và tự động dọn dẹp URL bằng `window.history.replaceState`.
+   - Hàm `openModal(mode)` trong `auth.js` cũng được lập trình an toàn: nếu được gọi tại bất kỳ trang con nào, nó tự động đọc đường dẫn logo để điều hướng về `index.html?auth=...`.
 
 ---
 
@@ -142,3 +186,69 @@ Khi cần tạo một công cụ mới trong tương lai (ví dụ: `templates/p
 
 4. **Bước 4: Kiểm tra tính hợp lệ thẻ HTML**:
    * Đảm bảo tất cả các thẻ mở đều có thẻ đóng tương ứng, không có lỗi cấu trúc (`Unclosed: [], Errors: 0`).
+
+---
+
+## 5. KIẾN TRÚC BACKEND & HƯỚNG DẪN PHÁT TRIỂN TIẾP THEO
+
+### 5.1. Mô hình Phân lớp (Layered Architecture trong `src/`)
+Hệ thống backend xây dựng trên nền tảng Flask theo mô hình kiến trúc sạch đặt trong package `src/`:
+1. **Entry Point (`app.py`)**:
+   - Khởi chạy ứng dụng từ `src.create_app()`.
+   - Giữ file ở thư mục gốc để thuận tiện chạy lệnh `python app.py`.
+2. **Application Factory (`src/__init__.py`)**:
+   - Chứa hàm `create_app()` để nạp cấu hình từ `src/config.py`.
+   - Cấu hình thư mục `templates` và `static` trỏ ra ngoài thư mục gốc.
+   - Tự động kiểm tra và tạo thư mục upload `uploads/`.
+   - Gọi `register_routes(app)` nạp toàn bộ Blueprints.
+3. **Page Routes Layer (`src/routes/`)**:
+   - Chia tách độc lập theo danh mục công cụ (`main_routes.py`, `pdf_routes.py`, `image_routes.py`, `utility_routes.py`, `conversion_routes.py`).
+   - Mỗi file định nghĩa Flask `Blueprint` kèm tiền tố URL chuẩn SEO (ví dụ `/pdf`, `/anh`, `/tien-ich`).
+   - Hỗ trợ cả 2 dạng URL: URL SEO sạch (`/pdf/nen-pdf`) và alias URL tĩnh (`/pdf/nen-pdf.html`) để tương thích tối đa.
+4. **Business Logic Layer (`src/services/`)**:
+   - Nơi chứa logic tính toán, xử lý file thực tế (chuyển đổi, nén, cắt ghép, bóc tách).
+   - Tách biệt hoàn toàn khỏi request/response của Flask để dễ dàng viết unit test hoặc tái sử dụng:
+     - `pdf_service.py`: Xử lý PDF với `pypdf`, `PyMuPDF`.
+     - `image_service.py`: Xử lý ảnh với `Pillow`, `rembg`.
+     - `qr_service.py`: Xử lý sinh mã QR với `qrcode`.
+5. **Utils Layer (`src/utils/`)**:
+   - Cung cấp các hàm kiểm tra định dạng file an toàn (`allowed_file`), làm sạch dữ liệu đầu vào.
+
+### 5.2. Quy trình khi thêm tính năng xử lý Backend thực tế
+Khi chuyển từ giao diện mô phỏng sang xử lý file thật bằng Backend:
+1. **Viết logic trong Services**: Thêm phương thức xử lý vào file service tương ứng tại `src/services/` (ví dụ `PdfService.compress_pdf(input_path, output_path, level)`).
+2. **Thêm API Route**: Trong file route tương ứng tại `src/routes/` (ví dụ `src/routes/pdf_routes.py`), thêm endpoint nhận file upload (`POST /pdf/api/nen-pdf`), gọi service và trả về file kết quả hoặc JSON.
+3. **Kết nối Frontend**: Cập nhật file JS tương ứng tại `static/js/tools/...` để gửi `FormData` qua `fetch('/pdf/api/nen-pdf')` thay vì dùng timeout giả lập.
+
+---
+
+## 5. KIẾN TRÚC BACKEND & HƯỚNG DẪN PHÁT TRIỂN TIẾP THEO
+
+### 5.1. Mô hình Phân lớp (Layered Architecture trong `src/`)
+Hệ thống backend xây dựng trên nền tảng Flask theo mô hình kiến trúc sạch đặt trong package `src/`:
+1. **Entry Point (`app.py`)**:
+   - Khởi chạy ứng dụng từ `src.create_app()`.
+   - Giữ file ở thư mục gốc để thuận tiện chạy lệnh `python app.py`.
+2. **Application Factory (`src/__init__.py`)**:
+   - Chứa hàm `create_app()` để nạp cấu hình từ `src/config.py`.
+   - Cấu hình thư mục `templates` và `static` trỏ ra ngoài thư mục gốc.
+   - Tự động kiểm tra và tạo thư mục upload `uploads/`.
+   - Gọi `register_routes(app)` nạp toàn bộ Blueprints.
+3. **Page Routes Layer (`src/routes/`)**:
+   - Chia tách độc lập theo danh mục công cụ (`main_routes.py`, `pdf_routes.py`, `image_routes.py`, `utility_routes.py`, `conversion_routes.py`).
+   - Mỗi file định nghĩa Flask `Blueprint` kèm tiền tố URL chuẩn SEO (ví dụ `/pdf`, `/anh`, `/tien-ich`).
+   - Hỗ trợ cả 2 dạng URL: URL SEO sạch (`/pdf/nen-pdf`) và alias URL tĩnh (`/pdf/nen-pdf.html`) để tương thích tối đa.
+4. **Business Logic Layer (`src/services/`)**:
+   - Nơi chứa logic tính toán, xử lý file thực tế (chuyển đổi, nén, cắt ghép, bóc tách).
+   - Tách biệt hoàn toàn khỏi request/response của Flask để dễ dàng viết unit test hoặc tái sử dụng:
+     - `pdf_service.py`: Xử lý PDF với `pypdf`, `PyMuPDF`.
+     - `image_service.py`: Xử lý ảnh với `Pillow`, `rembg`.
+     - `qr_service.py`: Xử lý sinh mã QR với `qrcode`.
+5. **Utils Layer (`src/utils/`)**:
+   - Cung cấp các hàm kiểm tra định dạng file an toàn (`allowed_file`), làm sạch dữ liệu đầu vào.
+
+### 5.2. Quy trình khi thêm tính năng xử lý Backend thực tế
+Khi chuyển từ giao diện mô phỏng sang xử lý file thật bằng Backend:
+1. **Viết logic trong Services**: Thêm phương thức xử lý vào file service tương ứng tại `src/services/` (ví dụ `PdfService.compress_pdf(input_path, output_path, level)`).
+2. **Thêm API Route**: Trong file route tương ứng tại `src/routes/` (ví dụ `src/routes/pdf_routes.py`), thêm endpoint nhận file upload (`POST /pdf/api/nen-pdf`), gọi service và trả về file kết quả hoặc JSON.
+3. **Kết nối Frontend**: Cập nhật file JS tương ứng tại `static/js/tools/...` để gửi `FormData` qua `fetch('/pdf/api/nen-pdf')` thay vì dùng timeout giả lập.

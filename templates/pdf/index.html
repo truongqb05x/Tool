@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tất Cả Công Cụ PDF Trực Tuyến — 24 Tiện Ích PDF Miễn Phí | ToolHub</title>
+  <meta name="description" content="Trọn bộ 24 công cụ xử lý file PDF trực tuyến miễn phí: Nén PDF, Gộp PDF, Tách trang, Chuyển PDF sang Word, Excel, PPT, Ký PDF, OCR... Nhanh chóng, an toàn và bảo mật 100%.">
+  <meta name="keywords" content="công cụ pdf, xử lý pdf trực tuyến, nén pdf, gộp pdf, tách pdf, chuyển pdf sang word, ký pdf, ocr pdf">
+
+  <!-- Font Awesome & CSS Layout -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../static/css/layout/base.css">
+  <link rel="stylesheet" href="../../static/css/layout/header.css">
+  <link rel="stylesheet" href="../../static/css/layout/footer.css">
+  <link rel="stylesheet" href="../../static/css/layout/modal.css">
+  <link rel="stylesheet" href="../../static/css/pages/pdf-list.css">
+  <link rel="icon" type="image/png" href="../../static/img/logo.png">
+</head>
+<body>
+
+    <!-- ===== HEADER CHUẨN ===== -->
+  <header class="header">
+    <div class="container">
+      <a href="../index.html" class="logo" style="text-decoration:none;">
+        <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+        <div class="logo-text">ToolHub</div>
+      </a>
+
+      <div class="header-search-wrap">
+        <div class="header-search">
+          <input type="text" id="searchInput" placeholder="Tìm công cụ: nén PDF, ghép ảnh, chuyển đổi..." autocomplete="off">
+          <button type="button" id="searchSubmitBtn" aria-label="Tìm kiếm"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+
+      <div class="header-actions" id="headerActions">
+        <div id="guestActions" style="display:flex; gap:8px;">
+          <a href="../index.html?auth=login" class="btn btn-login">Đăng nhập</a>
+          <a href="../index.html?auth=register" class="btn btn-register">Đăng ký</a>
+        </div>
+
+        <div id="userActions" class="user-menu" style="display:none;">
+          <div class="user-menu-trigger" id="userMenuTrigger">
+            <div class="user-avatar" id="headerAvatar">U</div>
+            <span class="user-name" id="headerUserName">Người dùng</span>
+            <i class="fas fa-chevron-down caret"></i>
+          </div>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-header">
+              <strong id="dropdownName">Người dùng</strong>
+              <small id="dropdownEmail">user@example.com</small>
+            </div>
+            <a href="../index.html" class="user-dropdown-item">
+              <i class="fas fa-history"></i> Lịch sử xử lý
+            </a>
+            <a href="../index.html" class="user-dropdown-item">
+              <i class="fas fa-cog"></i> Cài đặt tài khoản
+            </a>
+            <div class="user-dropdown-divider"></div>
+            <a href="#" class="user-dropdown-item danger" onclick="logout(); return false;">
+              <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== BREADCRUMB ===== -->
+  <div class="container">
+    <nav class="breadcrumb-nav" style="padding: 12px 0 8px; font-size: 0.82rem; color: #666; display: flex; gap: 8px; align-items: center;">
+      <a href="../index.html" style="color: #1e5b9c; text-decoration: none;"><i class="fas fa-home"></i> Trang chủ</a>
+      <span style="color: #999;">/</span>
+      <strong style="color: #333;">Công cụ PDF</strong>
+    </nav>
+  </div>
+
+  <!-- ===== NỘI DUNG DANH MỤC CÔNG CỤ PDF ===== -->
+  <div class="pdf-catalog-container">
+
+    <!-- HERO SECTION -->
+    <div class="pdf-catalog-hero">
+      <h1>Tất cả công cụ PDF trực tuyến</h1>
+      <p>Trọn bộ 24 công cụ xử lý file PDF chuyên nghiệp, hoạt động trực tiếp trên trình duyệt web. Không cần cài đặt phần mềm, bảo mật tối đa và hoàn toàn miễn phí.</p>
+      
+      <!-- BỘ LỌC TÌM KIẾM NHANH TRÊN TRANG -->
+      <div class="pdf-filter-bar">
+        <div class="pdf-filter-input-wrap">
+          <i class="fas fa-search"></i>
+          <input type="text" id="pdfCatalogFilter" class="pdf-filter-input" placeholder="Lọc nhanh công cụ: nén, gộp, tách, word, ocr, ký..." autocomplete="off">
+        </div>
+        <div class="pdf-count-badge" id="pdfCountBadge">24 công cụ</div>
+      </div>
+    </div>
+
+    <!-- THÔNG BÁO KHI KHÔNG TÌM THẤY KẾT QUẢ -->
+    <div class="pdf-empty-state" id="pdfEmptyState">
+      <i class="fas fa-search-minus"></i>
+      <h3>Không tìm thấy công cụ PDF phù hợp</h3>
+      <p>Vui lòng thử từ khóa khác như "nén", "tách", "chuyển đổi", "bảo vệ"...</p>
+    </div>
+
+    <!-- NHÓM 1: TỐI ƯU HÓA & QUẢN LÝ TRANG -->
+    <div class="pdf-group-section" data-group="manage">
+      <div class="pdf-group-header">
+        <span><i class="fas fa-layer-group"></i> Tối ưu hóa &amp; Quản lý trang PDF</span>
+        <span class="pdf-group-count">7 công cụ</span>
+      </div>
+      <div class="pdf-tools-grid">
+        <a href="nen-pdf.html" class="pdf-tool-card" data-title="Nén PDF" data-keywords="nen pdf giam dung luong compress">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-compress-alt"></i></div>
+            <div>
+              <div class="pdf-card-title">Nén PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Giảm dung lượng file PDF tối đa mà vẫn giữ nguyên độ nét của văn bản và hình ảnh.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="gop-pdf.html" class="pdf-tool-card" data-title="Gộp PDF" data-keywords="gop pdf merge ghep file noi pdf">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-object-group"></i></div>
+            <div>
+              <div class="pdf-card-title">Gộp PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Kết hợp nhiều file PDF thành một tệp duy nhất, dễ dàng kéo thả đổi thứ tự trang.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="tach-pdf.html" class="pdf-tool-card" data-title="Tách PDF" data-keywords="tach pdf split chia nho trich trang">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-cut"></i></div>
+            <div>
+              <div class="pdf-card-title">Tách PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Tách các trang hoặc chọn một khoảng trang cụ thể ra tài liệu PDF riêng biệt.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="xoay-pdf.html" class="pdf-tool-card" data-title="Xoay PDF" data-keywords="xoay pdf rotate doi chieu huong trang">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-redo"></i></div>
+            <div>
+              <div class="pdf-card-title">Xoay PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Xoay hướng các trang tài liệu PDF 90°, 180° hoặc 270° vĩnh viễn chuẩn xác.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="xoa-trang-pdf.html" class="pdf-tool-card" data-title="Xóa trang PDF" data-keywords="xoa trang pdf delete page loai bo trang">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-trash-alt"></i></div>
+            <div>
+              <div class="pdf-card-title">Xóa trang PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Loại bỏ các trang trắng hoặc trang thừa không mong muốn khỏi file PDF trực tuyến.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="sap-xep-trang-pdf.html" class="pdf-tool-card" data-title="Sắp xếp trang PDF" data-keywords="sap xep trang pdf reorder sort keo tha">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-sort-amount-down"></i></div>
+            <div>
+              <div class="pdf-card-title">Sắp xếp trang PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Kéo và thả các hình ảnh thu nhỏ để sắp xếp lại thứ tự các trang theo ý muốn.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="trich-xuat-trang-pdf.html" class="pdf-tool-card" data-title="Trích xuất trang PDF" data-keywords="trich xuat trang pdf extract pages lay trang">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-file-export"></i></div>
+            <div>
+              <div class="pdf-card-title">Trích xuất trang PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Trích xuất một hoặc nhiều trang quan trọng thành một file tài liệu PDF độc lập.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- NHÓM 2: CHUYỂN ĐỔI TỪ PDF -->
+    <div class="pdf-group-section" data-group="convert-from">
+      <div class="pdf-group-header">
+        <span><i class="fas fa-file-export"></i> Chuyển đổi từ PDF sang định dạng khác</span>
+        <span class="pdf-group-count">4 công cụ</span>
+      </div>
+      <div class="pdf-tools-grid">
+        <a href="pdf-sang-word.html" class="pdf-tool-card" data-title="Chuyển PDF sang Word" data-keywords="pdf sang word docx chuyen doi pdf to word">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-file-word"></i></div>
+            <div>
+              <div class="pdf-card-title">Chuyển PDF sang Word</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Chuyển đổi PDF sang file Word (.docx) có thể chỉnh sửa, giữ nguyên bố cục và bảng.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="pdf-sang-excel.html" class="pdf-tool-card" data-title="Chuyển PDF sang Excel" data-keywords="pdf sang excel xlsx bang tinh spreadsheet">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-file-excel"></i></div>
+            <div>
+              <div class="pdf-card-title">Chuyển PDF sang Excel</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Trích xuất chính xác bảng số liệu từ tài liệu PDF sang bảng tính Excel (.xlsx).</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="pdf-sang-powerpoint.html" class="pdf-tool-card" data-title="Chuyển PDF sang PowerPoint" data-keywords="pdf sang powerpoint ppt pptx slide thuyet trinh">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-file-powerpoint"></i></div>
+            <div>
+              <div class="pdf-card-title">Chuyển PDF sang PowerPoint</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Chuyển đổi từng trang PDF thành slide bài thuyết trình PowerPoint (.pptx).</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="pdf-sang-anh.html" class="pdf-tool-card" data-title="PDF sang ảnh" data-keywords="pdf sang anh jpg png image xuat hinh anh">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-file-image"></i></div>
+            <div>
+              <div class="pdf-card-title">PDF sang ảnh</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Chuyển đổi từng trang PDF thành các tệp ảnh JPG, PNG chất lượng cao, độ nét cao.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- NHÓM 3: CHUYỂN ĐỔI SANG PDF -->
+    <div class="pdf-group-section" data-group="convert-to">
+      <div class="pdf-group-header">
+        <span><i class="fas fa-file-import"></i> Chuyển đổi tài liệu sang định dạng PDF</span>
+        <span class="pdf-group-count">4 công cụ</span>
+      </div>
+      <div class="pdf-tools-grid">
+        <a href="word-sang-pdf.html" class="pdf-tool-card" data-title="Chuyển Word sang PDF" data-keywords="word sang pdf docx to pdf luu pdf">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-file-word"></i></div>
+            <div>
+              <div class="pdf-card-title">Chuyển Word sang PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Chuyển đổi tài liệu Word (.docx, .doc) sang định dạng PDF chuẩn hóa, chống lỗi font.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="excel-sang-pdf.html" class="pdf-tool-card" data-title="Chuyển Excel sang PDF" data-keywords="excel sang pdf xlsx to pdf bang tinh">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-file-excel"></i></div>
+            <div>
+              <div class="pdf-card-title">Chuyển Excel sang PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Chuyển bảng tính Excel thành file tài liệu PDF căn chỉnh trang ngay ngắn, dễ in ấn.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="powerpoint-sang-pdf.html" class="pdf-tool-card" data-title="Chuyển PowerPoint sang PDF" data-keywords="powerpoint sang pdf ppt to pdf slide">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-file-powerpoint"></i></div>
+            <div>
+              <div class="pdf-card-title">Chuyển PowerPoint sang PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Lưu bài thuyết trình PowerPoint sang định dạng PDF dễ dàng chia sẻ và xem trên điện thoại.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="anh-sang-pdf.html" class="pdf-tool-card" data-title="Ảnh sang PDF" data-keywords="anh sang pdf jpg to pdf png to pdf gop anh vao pdf">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-images"></i></div>
+            <div>
+              <div class="pdf-card-title">Ảnh sang PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Gộp nhiều hình ảnh JPG, PNG thành một tệp tài liệu PDF đồng bộ theo thứ tự.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- NHÓM 4: CHỈNH SỬA & BẢN QUYỀN -->
+    <div class="pdf-group-section" data-group="edit">
+      <div class="pdf-group-header">
+        <span><i class="fas fa-pen-nib"></i> Chỉnh sửa &amp; Bản quyền tài liệu PDF</span>
+        <span class="pdf-group-count">4 công cụ</span>
+      </div>
+      <div class="pdf-tools-grid">
+        <a href="chinh-sua-pdf.html" class="pdf-tool-card" data-title="Chỉnh sửa PDF" data-keywords="chinh sua pdf edit them chu ghi chu ve hinh">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-edit"></i></div>
+            <div>
+              <div class="pdf-card-title">Chỉnh sửa PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Thêm văn bản, ghi chú, chú thích, hình vẽ và biểu tượng trực tiếp lên file PDF.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="them-so-trang-pdf.html" class="pdf-tool-card" data-title="Thêm số trang PDF" data-keywords="them so trang pdf page number danh so trang">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-list-ol"></i></div>
+            <div>
+              <div class="pdf-card-title">Thêm số trang PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Tự động chèn số trang vào vị trí đầu hoặc cuối trang với nhiều kiểu định dạng số.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="them-watermark-pdf.html" class="pdf-tool-card" data-title="Thêm watermark PDF" data-keywords="them watermark pdf hinh mo dau ban quyen logo">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-stamp"></i></div>
+            <div>
+              <div class="pdf-card-title">Thêm watermark PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Chèn dấu bản quyền hình mờ dạng chữ hoặc logo để bảo vệ tài liệu chống sao chép.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="ky-pdf.html" class="pdf-tool-card" data-title="Ký PDF" data-keywords="ky pdf signature chu ky dien tu ky hop dong">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-signature"></i></div>
+            <div>
+              <div class="pdf-card-title">Ký PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Vẽ chữ ký tay, gõ chữ ký số hoặc tải ảnh con dấu để ký hợp đồng PDF trực tuyến.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- NHÓM 5: BẢO MẬT & NÂNG CAO -->
+    <div class="pdf-group-section" data-group="security">
+      <div class="pdf-group-header">
+        <span><i class="fas fa-shield-alt"></i>Bảo mật &amp; Tính năng nâng cao</span>
+        <span class="pdf-group-count">5 công cụ</span>
+      </div>
+      <div class="pdf-tools-grid">
+        <a href="bao-ve-pdf.html" class="pdf-tool-card" data-title="Bảo vệ PDF bằng mật khẩu" data-keywords="bao ve pdf dat mat khau ma hoa protect password">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-lock"></i></div>
+            <div>
+              <div class="pdf-card-title">Bảo vệ PDF bằng mật khẩu</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Mã hóa file PDF bằng mật khẩu bảo mật cao, ngăn chặn đọc hoặc in ấn trái phép.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="mo-khoa-pdf.html" class="pdf-tool-card" data-title="Mở khóa PDF" data-keywords="mo khoa pdf unlock password go bo mat khau">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-unlock-alt"></i></div>
+            <div>
+              <div class="pdf-card-title">Mở khóa PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Xóa mật khẩu và gỡ bỏ các quyền hạn chế chỉnh sửa khỏi file PDF đã biết mật khẩu.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="so-sanh-pdf.html" class="pdf-tool-card" data-title="So sánh PDF" data-keywords="so sanh pdf compare hai tai lieu tim diem khac nhau">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-columns"></i></div>
+            <div>
+              <div class="pdf-card-title">So sánh PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">So sánh hai phiên bản PDF và tự động làm nổi bật các điểm khác biệt về văn bản.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="ocr-pdf.html" class="pdf-tool-card" data-title="OCR PDF" data-keywords="ocr pdf nhan dang chu quet scan trich xuat van ban">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-eye"></i></div>
+            <div>
+              <div class="pdf-card-title">OCR PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Nhận dạng ký tự quang học (OCR) để trích xuất văn bản tiếng Việt từ tài liệu scan.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="doc-thong-tin-pdf.html" class="pdf-tool-card" data-title="Đọc thông tin PDF" data-keywords="doc thong tin pdf metadata tac gia ngay tao phien ban">
+          <div class="pdf-card-top">
+            <div class="pdf-card-icon"><i class="fas fa-info-circle"></i></div>
+            <div>
+              <div class="pdf-card-title">Đọc thông tin PDF</div>
+            </div>
+          </div>
+          <div class="pdf-card-desc">Xem đầy đủ thông số kỹ thuật: tác giả, tiêu đề, ngày tạo, số trang, phiên bản PDF.</div>
+          <div class="pdf-card-footer">
+            <span class="pdf-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== FOOTER CHUẨN ===== -->
+    <!-- ===== FOOTER CHUẨN ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-cols">
+        <div class="footer-col footer-about">
+          <div class="footer-logo">
+            <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img" style="width:26px; height:26px;">
+            <div class="footer-logo-text">ToolHub</div>
+          </div>
+          <p>ToolHub là nền tảng tổng hợp công cụ tiện ích trực tuyến miễn phí, giúp bạn xử lý PDF, hình ảnh và công cụ web ngay trên trình duyệt — an toàn và bảo mật 100%.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Công cụ PDF</h4>
+          <ul>
+            <li><a href="nen-pdf.html"><i class="fas fa-angle-right"></i> Nén PDF</a></li>
+            <li><a href="gop-pdf.html"><i class="fas fa-angle-right"></i> Gộp PDF</a></li>
+            <li><a href="tach-pdf.html"><i class="fas fa-angle-right"></i> Tách PDF</a></li>
+            <li><a href="pdf-sang-word.html"><i class="fas fa-angle-right"></i> PDF sang Word</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Chỉnh sửa ảnh &amp; Tiện ích</h4>
+          <ul>
+            <li><a href="../anh/cat-anh.html"><i class="fas fa-angle-right"></i> Cắt &amp; xoay ảnh</a></li>
+            <li><a href="../anh/ghep-anh.html"><i class="fas fa-angle-right"></i> Ghép ảnh</a></li>
+            <li><a href="../anh/xoa-phong-nen.html"><i class="fas fa-angle-right"></i> Xóa phông nền</a></li>
+            <li><a href="../tien-ich/tao-ma-qr.html"><i class="fas fa-angle-right"></i> Tạo mã QR</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Hỗ trợ &amp; Điều khoản</h4>
+          <ul>
+            <li><a href="../trogiup.html"><i class="fas fa-angle-right"></i> Trung tâm trợ giúp</a></li>
+            <li><a href="../dieukhoan.html"><i class="fas fa-angle-right"></i> Điều khoản sử dụng</a></li>
+            <li><a href="../dieukhoan.html"><i class="fas fa-angle-right"></i> Chính sách bảo mật</a></li>
+            <li><a href="../trogiup.html"><i class="fas fa-angle-right"></i> Câu hỏi thường gặp</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== THANH DƯỚI FOOTER (BOTTOM BAR) ===== -->
+  <div class="bottom-bar">
+    <div class="container">
+      <div>© 2025 ToolHub — Nền tảng tiện ích trực tuyến</div>
+      <div>
+        <a href="../trogiup.html">Trợ giúp</a>
+        <a href="../dieukhoan.html">Điều khoản</a>
+        <a href="../dieukhoan.html">Bảo mật</a>
+        <a href="#"><i class="fas fa-globe"></i> Ngôn ngữ: VI</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+
+<script src="../../static/js/app.js"></script>
+  <script>
+    // Logic tìm kiếm / lọc nhanh công cụ trên trang danh mục PDF
+    document.addEventListener('DOMContentLoaded', function() {
+      const filterInput = document.getElementById('pdfCatalogFilter');
+      const cards = document.querySelectorAll('.pdf-tool-card');
+      const groups = document.querySelectorAll('.pdf-group-section');
+      const emptyState = document.getElementById('pdfEmptyState');
+      const countBadge = document.getElementById('pdfCountBadge');
+
+      if (!filterInput) return;
+
+      filterInput.addEventListener('input', function() {
+        const query = this.value.trim().toLowerCase();
+        let visibleTotal = 0;
+
+        cards.forEach(function(card) {
+          const title = (card.getAttribute('data-title') || '').toLowerCase();
+          const desc = card.querySelector('.pdf-card-desc').textContent.toLowerCase();
+          const keywords = (card.getAttribute('data-keywords') || '').toLowerCase();
+
+          // Kiểm tra khớp từ khóa
+          const isMatch = !query || title.includes(query) || desc.includes(query) || keywords.includes(query);
+          if (isMatch) {
+            card.style.display = 'flex';
+            visibleTotal++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // Ẩn nhóm nếu không có card nào bên trong hiển thị
+        groups.forEach(function(group) {
+          const groupCards = group.querySelectorAll('.pdf-tool-card');
+          const hasVisible = Array.from(groupCards).some(c => c.style.display !== 'none');
+          group.style.display = hasVisible ? 'block' : 'none';
+        });
+
+        // Cập nhật số lượng đếm
+        if (countBadge) {
+          countBadge.textContent = visibleTotal + ' công cụ';
+        }
+
+        // Hiển thị trạng thái rỗng nếu 0 kết quả
+        if (emptyState) {
+          emptyState.style.display = visibleTotal === 0 ? 'block' : 'none';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

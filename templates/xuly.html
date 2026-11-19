@@ -9,37 +9,37 @@
   
   <!-- CSS RIÊNG CỦA TRANG XỬ LÝ -->
   <link rel="stylesheet" href="../static/css/pages/xuly.css">
+  <link rel="icon" type="image/png" href="../static/img/logo.png">
 </head>
 <body>
 
-    <!-- ===== HEADER ===== -->
+      <!-- ===== HEADER CHUẨN ===== -->
   <header class="header">
     <div class="container">
       <a href="index.html" class="logo" style="text-decoration:none;">
-        <div class="logo-icon"><i class="fas fa-cubes"></i></div>
+        <img src="../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
         <div class="logo-text">ToolHub</div>
       </a>
 
       <div class="header-search-wrap">
         <div class="header-search">
-          <input type="text" id="searchInput" placeholder="Tìm công cụ: nén PDF, ghép ảnh, chuyển đổi..."
-                 autocomplete="off" aria-autocomplete="list" aria-controls="searchSuggestions">
-          <button type="button" id="searchSubmitBtn"><i class="fas fa-search"></i></button>
+          <input type="text" id="searchInput" placeholder="Tìm công cụ: nén PDF, ghép ảnh, chuyển đổi..." autocomplete="off">
+          <button type="button" id="searchSubmitBtn" aria-label="Tìm kiếm"><i class="fas fa-search"></i></button>
         </div>
         <div class="search-suggestions" id="searchSuggestions"></div>
       </div>
 
       <div class="header-actions" id="headerActions">
         <div id="guestActions" style="display:flex; gap:8px;">
-          <a href="index.html" class="btn btn-login" onclick="if(typeof openModal==='function'){openModal('login'); return false;}">Đăng nhập</a>
-          <a href="index.html" class="btn btn-register" onclick="if(typeof openModal==='function'){openModal('register'); return false;}">Đăng ký</a>
+          <a href="index.html?auth=login" class="btn btn-login">Đăng nhập</a>
+          <a href="index.html?auth=register" class="btn btn-register">Đăng ký</a>
         </div>
 
         <div id="userActions" class="user-menu" style="display:none;">
           <div class="user-menu-trigger" id="userMenuTrigger">
             <div class="user-avatar" id="headerAvatar">U</div>
             <span class="user-name" id="headerUserName">Người dùng</span>
-            <i class="fas fa-chevron-down"></i>
+            <i class="fas fa-chevron-down caret"></i>
           </div>
           <div class="user-dropdown" id="userDropdown">
             <div class="user-dropdown-header">
@@ -171,7 +171,8 @@
   </div>
 
   <!-- ===== JAVASCRIPT CHÍNH ===== -->
-  <script src="../static/js/app.js"></script>
+
+<script src="../static/js/app.js"></script>
   <script src="../static/js/pages/xuly.js"></script>
 
 </body>

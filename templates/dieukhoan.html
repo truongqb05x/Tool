@@ -10,37 +10,37 @@
   <link rel="stylesheet" href="../static/css/layout/layout.css">
   <!-- CSS RIÊNG CỦA TRANG ĐIỀU KHOẢN -->
   <link rel="stylesheet" href="../static/css/pages/dieukhoan.css">
+  <link rel="icon" type="image/png" href="../static/img/logo.png">
 </head>
 <body>
 
-    <!-- ===== HEADER ===== -->
+      <!-- ===== HEADER CHUẨN ===== -->
   <header class="header">
     <div class="container">
       <a href="index.html" class="logo" style="text-decoration:none;">
-        <div class="logo-icon"><i class="fas fa-cubes"></i></div>
+        <img src="../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
         <div class="logo-text">ToolHub</div>
       </a>
 
       <div class="header-search-wrap">
         <div class="header-search">
-          <input type="text" id="searchInput" placeholder="Tìm công cụ: nén PDF, ghép ảnh, chuyển đổi..."
-                 autocomplete="off" aria-autocomplete="list" aria-controls="searchSuggestions">
-          <button type="button" id="searchSubmitBtn"><i class="fas fa-search"></i></button>
+          <input type="text" id="searchInput" placeholder="Tìm công cụ: nén PDF, ghép ảnh, chuyển đổi..." autocomplete="off">
+          <button type="button" id="searchSubmitBtn" aria-label="Tìm kiếm"><i class="fas fa-search"></i></button>
         </div>
         <div class="search-suggestions" id="searchSuggestions"></div>
       </div>
 
       <div class="header-actions" id="headerActions">
         <div id="guestActions" style="display:flex; gap:8px;">
-          <a href="index.html" class="btn btn-login" onclick="if(typeof openModal==='function'){openModal('login'); return false;}">Đăng nhập</a>
-          <a href="index.html" class="btn btn-register" onclick="if(typeof openModal==='function'){openModal('register'); return false;}">Đăng ký</a>
+          <a href="index.html?auth=login" class="btn btn-login">Đăng nhập</a>
+          <a href="index.html?auth=register" class="btn btn-register">Đăng ký</a>
         </div>
 
         <div id="userActions" class="user-menu" style="display:none;">
           <div class="user-menu-trigger" id="userMenuTrigger">
             <div class="user-avatar" id="headerAvatar">U</div>
             <span class="user-name" id="headerUserName">Người dùng</span>
-            <i class="fas fa-chevron-down"></i>
+            <i class="fas fa-chevron-down caret"></i>
           </div>
           <div class="user-dropdown" id="userDropdown">
             <div class="user-dropdown-header">
@@ -490,42 +490,47 @@
   </button>
 
   <!-- FOOTER -->
+    <!-- ===== FOOTER CHUẨN ===== -->
   <footer class="footer">
     <div class="container">
       <div class="footer-cols">
         <div class="footer-col footer-about">
           <div class="footer-logo">
-            <div class="footer-logo-icon"><i class="fas fa-cubes"></i></div>
+            <img src="../static/img/logo.png" alt="ToolHub Logo" class="logo-img" style="width:26px; height:26px;">
             <div class="footer-logo-text">ToolHub</div>
           </div>
-          <p>ToolHub là nền tảng tổng hợp công cụ trực tuyến miễn phí, giúp bạn xử lý PDF, hình ảnh, văn bản và nhiều tiện ích khác ngay trên trình duyệt — không cần cài đặt.</p>
-          <p><i class="fas fa-shield-alt" style="color:#1e5b9c; font-size:0.75rem;"></i> File được xử lý bảo mật và tự động xóa sau 1 giờ.</p>
+          <p>ToolHub là nền tảng tổng hợp công cụ tiện ích trực tuyến miễn phí, giúp bạn xử lý PDF, hình ảnh và công cụ web ngay trên trình duyệt — an toàn và bảo mật 100%.</p>
         </div>
 
         <div class="footer-col">
-          <h4>Liên kết</h4>
+          <h4>Công cụ PDF</h4>
           <ul>
-            <li><a href="#"><i class="fas fa-angle-right"></i> Giới thiệu</a></li>
-            <li><a href="#"><i class="fas fa-angle-right"></i> Điều khoản sử dụng</a></li>
-            <li><a href="#"><i class="fas fa-angle-right"></i> Chính sách bảo mật</a></li>
-            <li><a href="#"><i class="fas fa-angle-right"></i> Câu hỏi thường gặp</a></li>
-            <li><a href="#"><i class="fas fa-angle-right"></i> Sitemap</a></li>
+            <li><a href="pdf/nen-pdf.html"><i class="fas fa-angle-right"></i> Nén PDF</a></li>
+            <li><a href="pdf/gop-pdf.html"><i class="fas fa-angle-right"></i> Gộp PDF</a></li>
+            <li><a href="pdf/tach-pdf.html"><i class="fas fa-angle-right"></i> Tách PDF</a></li>
+            <li><a href="pdf/pdf-sang-word.html"><i class="fas fa-angle-right"></i> PDF sang Word</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
-          <h4>Liên hệ</h4>
-          <ul class="footer-contact">
-            <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</li>
-            <li><i class="fas fa-phone-alt"></i> 0123 456 789</li>
-            <li><i class="fas fa-envelope"></i> hotro@toolhub.vn</li>
-            <li><i class="fas fa-clock"></i> Thứ 2 – Thứ 7: 8:00 – 17:30</li>
+          <h4>Chỉnh sửa ảnh &amp; Tiện ích</h4>
+          <ul>
+            <li><a href="anh/cat-anh.html"><i class="fas fa-angle-right"></i> Cắt &amp; xoay ảnh</a></li>
+            <li><a href="anh/ghep-anh.html"><i class="fas fa-angle-right"></i> Ghép ảnh</a></li>
+            <li><a href="anh/xoa-phong-nen.html"><i class="fas fa-angle-right"></i> Xóa phông nền</a></li>
+            <li><a href="tien-ich/tao-ma-qr.html"><i class="fas fa-angle-right"></i> Tạo mã QR</a></li>
           </ul>
         </div>
-      </div>
 
-      <div class="footer-bottom">
-        © 2025 ToolHub — Công cụ tổng hợp miễn phí. Bảo lưu mọi quyền.
+        <div class="footer-col">
+          <h4>Hỗ trợ &amp; Điều khoản</h4>
+          <ul>
+            <li><a href="trogiup.html"><i class="fas fa-angle-right"></i> Trung tâm trợ giúp</a></li>
+            <li><a href="dieukhoan.html"><i class="fas fa-angle-right"></i> Điều khoản sử dụng</a></li>
+            <li><a href="dieukhoan.html"><i class="fas fa-angle-right"></i> Chính sách bảo mật</a></li>
+            <li><a href="trogiup.html"><i class="fas fa-angle-right"></i> Câu hỏi thường gặp</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </footer>
@@ -544,7 +549,8 @@
   </div>
 
   <!-- ===== JAVASCRIPT CHÍNH ===== -->
-  <script src="../static/js/app.js"></script>
+
+<script src="../static/js/app.js"></script>
   <script src="../static/js/pages/dieukhoan.js"></script>
 
 </body>

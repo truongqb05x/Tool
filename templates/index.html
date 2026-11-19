@@ -11,38 +11,37 @@
   <link rel="stylesheet" href="../static/css/layout/modal.css">
   <!-- CSS RIÊNG CỦA TRANG CHỦ -->
   <link rel="stylesheet" href="../static/css/pages/index.css">
+  <link rel="icon" type="image/png" href="../static/img/logo.png">
 </head>
 <body>
 
-  <!-- ===== HEADER ===== -->
-    <!-- ===== HEADER ===== -->
+    <!-- ===== HEADER CHUẨN ===== -->
   <header class="header">
     <div class="container">
       <a href="index.html" class="logo" style="text-decoration:none;">
-        <div class="logo-icon"><i class="fas fa-cubes"></i></div>
+        <img src="../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
         <div class="logo-text">ToolHub</div>
       </a>
 
       <div class="header-search-wrap">
         <div class="header-search">
-          <input type="text" id="searchInput" placeholder="Tìm công cụ: nén PDF, ghép ảnh, chuyển đổi..."
-                 autocomplete="off" aria-autocomplete="list" aria-controls="searchSuggestions">
-          <button type="button" id="searchSubmitBtn"><i class="fas fa-search"></i></button>
+          <input type="text" id="searchInput" placeholder="Tìm công cụ: nén PDF, ghép ảnh, chuyển đổi..." autocomplete="off">
+          <button type="button" id="searchSubmitBtn" aria-label="Tìm kiếm"><i class="fas fa-search"></i></button>
         </div>
         <div class="search-suggestions" id="searchSuggestions"></div>
       </div>
 
       <div class="header-actions" id="headerActions">
         <div id="guestActions" style="display:flex; gap:8px;">
-          <a href="index.html" class="btn btn-login" onclick="if(typeof openModal==='function'){openModal('login'); return false;}">Đăng nhập</a>
-          <a href="index.html" class="btn btn-register" onclick="if(typeof openModal==='function'){openModal('register'); return false;}">Đăng ký</a>
+          <button type="button" class="btn btn-login" onclick="openModal('login')">Đăng nhập</button>
+          <button type="button" class="btn btn-register" onclick="openModal('register')">Đăng ký</button>
         </div>
 
         <div id="userActions" class="user-menu" style="display:none;">
           <div class="user-menu-trigger" id="userMenuTrigger">
             <div class="user-avatar" id="headerAvatar">U</div>
             <span class="user-name" id="headerUserName">Người dùng</span>
-            <i class="fas fa-chevron-down"></i>
+            <i class="fas fa-chevron-down caret"></i>
           </div>
           <div class="user-dropdown" id="userDropdown">
             <div class="user-dropdown-header">
@@ -94,11 +93,31 @@
                   <i class="fas fa-chevron-right arrow"></i>
                 </a>
                 <ul class="submenu">
+                  <li><a href="pdf/index.html" style="font-weight:700; color:#1e5b9c;"><i class="fas fa-th-list"></i> Xem tất cả công cụ PDF</a></li>
                   <li><a href="pdf/nen-pdf.html"><i class="fas fa-compress-alt"></i> Nén PDF</a></li>
                   <li><a href="pdf/gop-pdf.html"><i class="fas fa-object-group"></i> Gộp PDF</a></li>
-                  <li><a href="pdf/nen-pdf.html"><i class="fas fa-file-signature"></i> PDF sang Word</a></li>
-                  <li><a href="pdf/nen-pdf.html"><i class="fas fa-cut"></i> Tách PDF</a></li>
-                  <li><a href="pdf/nen-pdf.html"><i class="fas fa-lock"></i> Bảo vệ PDF</a></li>
+                  <li><a href="pdf/tach-pdf.html"><i class="fas fa-cut"></i> Tách PDF</a></li>
+                  <li><a href="pdf/xoay-pdf.html"><i class="fas fa-redo"></i> Xoay PDF</a></li>
+                  <li><a href="pdf/xoa-trang-pdf.html"><i class="fas fa-trash-alt"></i> Xóa trang PDF</a></li>
+                  <li><a href="pdf/sap-xep-trang-pdf.html"><i class="fas fa-sort-amount-down"></i> Sắp xếp trang PDF</a></li>
+                  <li><a href="pdf/trich-xuat-trang-pdf.html"><i class="fas fa-file-export"></i> Trích xuất trang PDF</a></li>
+                  <li><a href="pdf/pdf-sang-word.html"><i class="fas fa-file-word"></i> PDF sang Word</a></li>
+                  <li><a href="pdf/pdf-sang-excel.html"><i class="fas fa-file-excel"></i> PDF sang Excel</a></li>
+                  <li><a href="pdf/pdf-sang-powerpoint.html"><i class="fas fa-file-powerpoint"></i> PDF sang PowerPoint</a></li>
+                  <li><a href="pdf/word-sang-pdf.html"><i class="fas fa-file-word"></i> Word sang PDF</a></li>
+                  <li><a href="pdf/excel-sang-pdf.html"><i class="fas fa-file-excel"></i> Excel sang PDF</a></li>
+                  <li><a href="pdf/powerpoint-sang-pdf.html"><i class="fas fa-file-powerpoint"></i> PowerPoint sang PDF</a></li>
+                  <li><a href="pdf/pdf-sang-anh.html"><i class="fas fa-file-image"></i> PDF sang ảnh</a></li>
+                  <li><a href="pdf/anh-sang-pdf.html"><i class="fas fa-images"></i> Ảnh sang PDF</a></li>
+                  <li><a href="pdf/chinh-sua-pdf.html"><i class="fas fa-edit"></i> Chỉnh sửa PDF</a></li>
+                  <li><a href="pdf/them-so-trang-pdf.html"><i class="fas fa-list-ol"></i> Thêm số trang PDF</a></li>
+                  <li><a href="pdf/them-watermark-pdf.html"><i class="fas fa-stamp"></i> Thêm watermark PDF</a></li>
+                  <li><a href="pdf/bao-ve-pdf.html"><i class="fas fa-lock"></i> Bảo vệ PDF</a></li>
+                  <li><a href="pdf/mo-khoa-pdf.html"><i class="fas fa-unlock-alt"></i> Mở khóa PDF</a></li>
+                  <li><a href="pdf/ky-pdf.html"><i class="fas fa-signature"></i> Ký PDF</a></li>
+                  <li><a href="pdf/so-sanh-pdf.html"><i class="fas fa-columns"></i> So sánh PDF</a></li>
+                  <li><a href="pdf/ocr-pdf.html"><i class="fas fa-eye"></i> OCR PDF</a></li>
+                  <li><a href="pdf/doc-thong-tin-pdf.html"><i class="fas fa-info-circle"></i> Đọc thông tin PDF</a></li>
                 </ul>
               </li>
               <li>
@@ -190,36 +209,54 @@
 
           <div class="section-bar">
             <span><i class="fas fa-file-pdf" style="margin-right:6px;"></i> Công cụ PDF</span>
+            <a href="pdf/index.html">Xem tất cả &raquo;</a>
           </div>
           <div class="tool-table">
             <div class="tool-row">
               <div class="tr-icon"><i class="fas fa-compress-alt"></i></div>
               <div class="tr-body">
                 <h4>Nén PDF</h4>
-                <p>Giảm dung lượng file PDF mà vẫn giữ chất lượng tốt nhất.</p>
+                <p>Giảm dung lượng file PDF tối đa mà vẫn giữ nguyên chất lượng.</p>
               </div>
               <div class="tr-action"><a href="pdf/nen-pdf.html">Sử dụng</a></div>
             </div>
             <div class="tool-row">
               <div class="tr-icon"><i class="fas fa-object-group"></i></div>
               <div class="tr-body">
-                <h4>Gộp nhiều PDF</h4>
-                <p>Kết hợp nhiều file PDF thành một tài liệu duy nhất.</p>
+                <h4>Gộp PDF</h4>
+                <p>Kết hợp nhiều file PDF thành một tài liệu duy nhất theo thứ tự mong muốn.</p>
               </div>
               <div class="tr-action"><a href="pdf/gop-pdf.html">Sử dụng</a></div>
             </div>
             <div class="tool-row">
-              <div class="tr-icon"><i class="fas fa-file-signature"></i></div>
+              <div class="tr-icon"><i class="fas fa-cut"></i></div>
+              <div class="tr-body">
+                <h4>Tách PDF</h4>
+                <p>Tách các trang hoặc chọn khoảng trang cụ thể ra tài liệu riêng biệt.</p>
+              </div>
+              <div class="tr-action"><a href="pdf/tach-pdf.html">Sử dụng</a></div>
+            </div>
+            <div class="tool-row">
+              <div class="tr-icon"><i class="fas fa-file-word"></i></div>
               <div class="tr-body">
                 <h4>Chuyển PDF sang Word</h4>
-                <p>Chuyển đổi PDF sang DOCX có thể chỉnh sửa.</p>
+                <p>Chuyển đổi PDF sang DOCX có thể chỉnh sửa, giữ nguyên font và bảng.</p>
               </div>
-              <div class="tr-action"><a href="pdf/nen-pdf.html">Sử dụng</a></div>
+              <div class="tr-action"><a href="pdf/pdf-sang-word.html">Sử dụng</a></div>
+            </div>
+            <div class="tool-row">
+              <div class="tr-icon"><i class="fas fa-file-word"></i></div>
+              <div class="tr-body">
+                <h4>Chuyển Word sang PDF</h4>
+                <p>Chuyển tài liệu Word (.docx, .doc) sang định dạng PDF chuẩn hóa.</p>
+              </div>
+              <div class="tr-action"><a href="pdf/word-sang-pdf.html">Sử dụng</a></div>
             </div>
           </div>
 
           <div class="section-bar">
             <span><i class="fas fa-image" style="margin-right:6px;"></i> Chỉnh sửa hình ảnh</span>
+            <a href="anh/cat-anh.html">Xem tất cả &raquo;</a>
           </div>
           <div class="tool-table">
             <div class="tool-row">
@@ -250,6 +287,7 @@
 
           <div class="section-bar">
             <span><i class="fas fa-mobile-alt" style="margin-right:6px;"></i> Ứng dụng &amp; Tiện ích</span>
+            <a href="tien-ich/tao-ma-qr.html">Xem tất cả &raquo;</a>
           </div>
           <div class="tool-table">
             <div class="tool-row">
@@ -456,39 +494,48 @@
     </div>
   </div>
 
-  <!-- ===== FOOTER ===== -->
+  <!-- ===== FOOTER CHUẨN ===== -->
   <footer class="footer">
     <div class="container">
       <div class="footer-cols">
         <div class="footer-col footer-about">
           <div class="footer-logo">
-            <div class="footer-logo-icon"><i class="fas fa-cubes"></i></div>
+            <img src="../static/img/logo.png" alt="ToolHub Logo" class="logo-img" style="width:26px; height:26px;">
             <div class="footer-logo-text">ToolHub</div>
           </div>
-          <p>ToolHub là nền tảng tổng hợp công cụ trực tuyến miễn phí, giúp bạn xử lý PDF, hình ảnh, văn bản và nhiều tiện ích khác ngay trên trình duyệt — không cần cài đặt.</p>
+          <p>ToolHub là nền tảng tổng hợp công cụ tiện ích trực tuyến miễn phí, giúp bạn xử lý PDF, hình ảnh và công cụ web ngay trên trình duyệt — an toàn và bảo mật 100%.</p>
         </div>
 
         <div class="footer-col">
-          <h4>Liên kết</h4>
+          <h4>Công cụ PDF</h4>
           <ul>
-            <li><a href="#"><i class="fas fa-angle-right"></i> Giới thiệu</a></li>
+            <li><a href="pdf/nen-pdf.html"><i class="fas fa-angle-right"></i> Nén PDF</a></li>
+            <li><a href="pdf/gop-pdf.html"><i class="fas fa-angle-right"></i> Gộp PDF</a></li>
+            <li><a href="pdf/tach-pdf.html"><i class="fas fa-angle-right"></i> Tách PDF</a></li>
+            <li><a href="pdf/pdf-sang-word.html"><i class="fas fa-angle-right"></i> PDF sang Word</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Chỉnh sửa ảnh &amp; Tiện ích</h4>
+          <ul>
+            <li><a href="anh/cat-anh.html"><i class="fas fa-angle-right"></i> Cắt &amp; xoay ảnh</a></li>
+            <li><a href="anh/ghep-anh.html"><i class="fas fa-angle-right"></i> Ghép ảnh</a></li>
+            <li><a href="anh/xoa-phong-nen.html"><i class="fas fa-angle-right"></i> Xóa phông nền</a></li>
+            <li><a href="tien-ich/tao-ma-qr.html"><i class="fas fa-angle-right"></i> Tạo mã QR</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Hỗ trợ &amp; Điều khoản</h4>
+          <ul>
+            <li><a href="trogiup.html"><i class="fas fa-angle-right"></i> Trung tâm trợ giúp</a></li>
             <li><a href="dieukhoan.html"><i class="fas fa-angle-right"></i> Điều khoản sử dụng</a></li>
-            <li><a href="#"><i class="fas fa-angle-right"></i> Chính sách bảo mật</a></li>
+            <li><a href="dieukhoan.html"><i class="fas fa-angle-right"></i> Chính sách bảo mật</a></li>
             <li><a href="trogiup.html"><i class="fas fa-angle-right"></i> Câu hỏi thường gặp</a></li>
           </ul>
         </div>
-
-        <div class="footer-col">
-          <h4>Liên hệ</h4>
-          <ul class="footer-contact">
-            <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</li>
-            <li><i class="fas fa-phone-alt"></i> 0123 456 789</li>
-            <li><i class="fas fa-envelope"></i> hotro@toolhub.vn</li>
-            <li><i class="fas fa-clock"></i> Thứ 2 – Thứ 7: 8:00 – 17:30</li>
-          </ul>
-        </div>
       </div>
-
     </div>
   </footer>
 
@@ -499,7 +546,7 @@
       <div>
         <a href="trogiup.html">Trợ giúp</a>
         <a href="dieukhoan.html">Điều khoản</a>
-        <a href="#">Bảo mật</a>
+        <a href="dieukhoan.html">Bảo mật</a>
         <a href="#"><i class="fas fa-globe"></i> Ngôn ngữ: VI</a>
       </div>
     </div>

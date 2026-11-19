@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thêm Watermark PDF — Chèn Dấu Bản Quyền Trực Tuyến | ToolHub</title>
+  <meta name="description" content="Chèn hình mờ (watermark) dạng chữ hoặc logo để bảo vệ bản quyền. Tiện lợi, không cần cài đặt phần mềm, bảo mật an toàn 100% tại ToolHub.">
+  <meta name="keywords" content="Thêm watermark PDF, công cụ pdf, xử lý pdf trực tuyến, toolhub pdf">
+
+  <!-- Font Awesome & CSS Layout -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../static/css/layout/base.css">
+  <link rel="stylesheet" href="../../static/css/layout/header.css">
+  <link rel="stylesheet" href="../../static/css/layout/footer.css">
+  <link rel="stylesheet" href="../../static/css/layout/modal.css">
+  <link rel="stylesheet" href="../../static/css/tools/tool-page.css">
+  <link rel="icon" type="image/png" href="../../static/img/logo.png">
+</head>
+<body>
+
+    <!-- ===== HEADER CHUẨN ===== -->
+  <header class="header">
+    <div class="container">
+      <a href="../index.html" class="logo" style="text-decoration:none;">
+        <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+        <div class="logo-text">ToolHub</div>
+      </a>
+
+      <div class="header-search-wrap">
+        <div class="header-search">
+          <input type="text" id="searchInput" placeholder="Tìm công cụ: nén PDF, ghép ảnh, chuyển đổi..." autocomplete="off">
+          <button type="button" id="searchSubmitBtn" aria-label="Tìm kiếm"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+
+      <div class="header-actions" id="headerActions">
+        <div id="guestActions" style="display:flex; gap:8px;">
+          <a href="../index.html?auth=login" class="btn btn-login">Đăng nhập</a>
+          <a href="../index.html?auth=register" class="btn btn-register">Đăng ký</a>
+        </div>
+
+        <div id="userActions" class="user-menu" style="display:none;">
+          <div class="user-menu-trigger" id="userMenuTrigger">
+            <div class="user-avatar" id="headerAvatar">U</div>
+            <span class="user-name" id="headerUserName">Người dùng</span>
+            <i class="fas fa-chevron-down caret"></i>
+          </div>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-header">
+              <strong id="dropdownName">Người dùng</strong>
+              <small id="dropdownEmail">user@example.com</small>
+            </div>
+            <a href="../index.html" class="user-dropdown-item">
+              <i class="fas fa-history"></i> Lịch sử xử lý
+            </a>
+            <a href="../index.html" class="user-dropdown-item">
+              <i class="fas fa-cog"></i> Cài đặt tài khoản
+            </a>
+            <div class="user-dropdown-divider"></div>
+            <a href="#" class="user-dropdown-item danger" onclick="logout(); return false;">
+              <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== BREADCRUMB & HERO ===== -->
+  <div class="container">
+    <nav class="breadcrumb-nav">
+      <a href="../index.html"><i class="fas fa-home"></i> Trang chủ</a>
+      <span>/</span>
+      <a href="../index.html">Công cụ PDF</a>
+      <span>/</span>
+      <strong>Thêm watermark PDF</strong>
+    </nav>
+  </div>
+
+  <div class="tool-hero">
+    <div class="tool-hero-badge"><i class="fas fa-bolt"></i> Miễn phí 100% · Trực tuyến</div>
+    <h1>Thêm watermark PDF trực tuyến</h1>
+    <p>Chèn hình mờ (watermark) dạng chữ hoặc logo để bảo vệ bản quyền.</p>
+  </div>
+
+  <div class="tool-container">
+
+    <!-- BƯỚC 1: KHUNG TẢI FILE (UPLOAD PANEL) -->
+    <div class="upload-panel" id="uploadPanel">
+      <div class="upload-panel-header">
+        <i class="fas fa-stamp"></i> Tải tệp lên để thực hiện Thêm watermark PDF
+      </div>
+      <div class="drop-zone" id="dropZone">
+        <div class="dz-icon"><i class="fas fa-stamp"></i></div>
+        <h3>Kéo &amp; thả file vào đây</h3>
+        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
+        <label for="fileInput" class="btn-file-select">
+          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
+        </label>
+        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
+        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+      </div>
+    </div>
+
+    <!-- BƯỚC 2: KHÔNG GIAN LÀM VIỆC (WORKSPACE) -->
+    <div class="tool-workspace" id="toolWorkspace">
+      <div class="ws-grid">
+        <!-- Cột trái: Xem trước file -->
+        <div class="ws-preview-card">
+          <div class="ws-preview-header">
+            <span><i class="fas fa-file-alt"></i> Thông tin tài liệu</span>
+            <button type="button" class="btn-change-file" onclick="resetFileSelection()">
+              <i class="fas fa-exchange-alt"></i> Đổi tệp
+            </button>
+          </div>
+          <div class="ws-file-meta">
+            <div class="ws-file-icon"><i class="fas fa-stamp"></i></div>
+            <div class="ws-file-info">
+              <strong id="selectedFileName">tai_lieu.pdf</strong>
+              <span id="selectedFileSize">Dung lượng: 0 KB</span>
+            </div>
+          </div>
+          <div class="ws-page-counter">
+            <i class="fas fa-check-circle" style="color:#27ae60;"></i> File đã sẵn sàng để xử lý
+          </div>
+        </div>
+
+        <!-- Cột phải: Cấu hình tùy chọn -->
+        <div class="ws-options-card">
+          <div class="ws-options-header">
+            <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+          </div>
+
+          <div class="ws-option-group">
+            <div class="ws-option-label">Chế độ thực hiện</div>
+            <label class="ws-radio-box selected">
+              <input type="radio" name="toolMode" value="standard" checked>
+              <div class="ws-radio-text">
+                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
+                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
+              </div>
+            </label>
+            <label class="ws-radio-box">
+              <input type="radio" name="toolMode" value="advanced">
+              <div class="ws-radio-text">
+                <strong>Chế độ nâng cao</strong>
+                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
+              </div>
+            </label>
+          </div>
+
+          <button type="button" class="btn-execute" id="btnExecute" onclick="executeToolAction()">
+            Chèn Watermark ngay <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <div class="download-card" id="downloadCard">
+      <div class="download-card-icon"><i class="fas fa-check"></i></div>
+      <h3>Đã chèn dấu bản quyền watermark vào file PDF!</h3>
+      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <button type="button" class="btn-download-result" onclick="downloadResultFile()">
+        <i class="fas fa-download"></i> Tải xuống PDF có watermark
+      </button>
+      <div>
+        <button type="button" class="btn-redo" onclick="resetFileSelection()">
+          <i class="fas fa-redo"></i> Xử lý tệp khác
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== NỘI DUNG CHUẨN SEO ===== -->
+    <section class="seo-section">
+      <h2><i class="fas fa-list-ol"></i> Hướng dẫn sử dụng Thêm watermark PDF trực tuyến trong 3 bước</h2>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h4>Tải file lên</h4>
+          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h4>Tùy chỉnh thông số</h4>
+          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h4>Lưu file kết quả</h4>
+          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="seo-section">
+      <h2><i class="fas fa-shield-alt"></i> Bảo mật tài liệu &amp; Quyền riêng tư tối đa</h2>
+      <p>ToolHub cam kết bảo vệ dữ liệu người dùng ở mức cao nhất:</p>
+      <div class="security-features">
+        <div class="sec-item">
+          <i class="fas fa-lock"></i>
+          <div>
+            <strong>Mã hóa SSL 256-bit</strong>
+            <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức HTTPS.</span>
+          </div>
+        </div>
+        <div class="sec-item">
+          <i class="fas fa-trash-alt"></i>
+          <div>
+            <strong>Tự động xóa sau 1 giờ</strong>
+            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút.</span>
+          </div>
+        </div>
+        <div class="sec-item">
+          <i class="fas fa-user-secret"></i>
+          <div>
+            <strong>Bảo mật thông tin</strong>
+            <span>Không chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seo-section">
+      <h2><i class="fas fa-question-circle"></i> Câu hỏi thường gặp về Thêm watermark PDF (FAQ)</h2>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Sử dụng công cụ Thêm watermark PDF tại ToolHub có mất phí không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ===== FOOTER CHUẨN ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-cols">
+        <div class="footer-col footer-about">
+          <div class="footer-logo">
+            <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img" style="width:26px; height:26px;">
+            <div class="footer-logo-text">ToolHub</div>
+          </div>
+          <p>ToolHub là nền tảng tổng hợp công cụ tiện ích trực tuyến miễn phí, giúp bạn xử lý PDF, hình ảnh và công cụ web ngay trên trình duyệt — an toàn và bảo mật 100%.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Công cụ PDF</h4>
+          <ul>
+            <li><a href="nen-pdf.html"><i class="fas fa-angle-right"></i> Nén PDF</a></li>
+            <li><a href="gop-pdf.html"><i class="fas fa-angle-right"></i> Gộp PDF</a></li>
+            <li><a href="tach-pdf.html"><i class="fas fa-angle-right"></i> Tách PDF</a></li>
+            <li><a href="pdf-sang-word.html"><i class="fas fa-angle-right"></i> PDF sang Word</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Chỉnh sửa ảnh &amp; Tiện ích</h4>
+          <ul>
+            <li><a href="../anh/cat-anh.html"><i class="fas fa-angle-right"></i> Cắt &amp; xoay ảnh</a></li>
+            <li><a href="../anh/ghep-anh.html"><i class="fas fa-angle-right"></i> Ghép ảnh</a></li>
+            <li><a href="../anh/xoa-phong-nen.html"><i class="fas fa-angle-right"></i> Xóa phông nền</a></li>
+            <li><a href="../tien-ich/tao-ma-qr.html"><i class="fas fa-angle-right"></i> Tạo mã QR</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Hỗ trợ &amp; Điều khoản</h4>
+          <ul>
+            <li><a href="../trogiup.html"><i class="fas fa-angle-right"></i> Trung tâm trợ giúp</a></li>
+            <li><a href="../dieukhoan.html"><i class="fas fa-angle-right"></i> Điều khoản sử dụng</a></li>
+            <li><a href="../dieukhoan.html"><i class="fas fa-angle-right"></i> Chính sách bảo mật</a></li>
+            <li><a href="../trogiup.html"><i class="fas fa-angle-right"></i> Câu hỏi thường gặp</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== THANH DƯỚI FOOTER (BOTTOM BAR) ===== -->
+  <div class="bottom-bar">
+    <div class="container">
+      <div>© 2025 ToolHub — Nền tảng tiện ích trực tuyến</div>
+      <div>
+        <a href="../trogiup.html">Trợ giúp</a>
+        <a href="../dieukhoan.html">Điều khoản</a>
+        <a href="../dieukhoan.html">Bảo mật</a>
+        <a href="#"><i class="fas fa-globe"></i> Ngôn ngữ: VI</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+
+<script src="../../static/js/app.js"></script>
+  <script src="../../static/js/tools/pdf/them-watermark-pdf.js"></script>
+
+</body>
+</html>

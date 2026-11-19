@@ -1,0 +1,20 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Uploads directory (keep directory and static brand assets, ignore dynamic uploads)
+uploads/*
+!uploads/.gitkeep
+!uploads/logo.png
+
+# Operating System Files
+.DS_Store
+Thumbs.db

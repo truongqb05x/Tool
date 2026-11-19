@@ -11,8 +11,14 @@ function openModal(mode) {
     switchTab(mode || 'login');
     clearError();
   } else {
-    // Nếu trang hiện tại chưa có authModal, chuyển hướng về trang chủ kèm tham số để tự mở modal
-    window.location.href = 'index.html?auth=' + encodeURIComponent(mode || 'login');
+    // Nếu trang hiện tại chưa có authModal, xác định đường dẫn về index.html và chuyển hướng
+    let target = 'index.html';
+    const logoLink = document.querySelector('header .logo');
+    if (logoLink && logoLink.getAttribute('href')) {
+      target = logoLink.getAttribute('href');
+    }
+    const sep = target.includes('?') ? '&' : '?';
+    window.location.href = target + sep + 'auth=' + encodeURIComponent(mode || 'login');
   }
 }
 
@@ -469,7 +475,4 @@ function initAuthModal() {
       closeClassicDialog();
     }
   });
-
-  // Khởi chạy thông báo giả lập thành viên mới (Live Social Proof phong cách cổ điển)
-  initLiveSimulatedRegistrations();
 }

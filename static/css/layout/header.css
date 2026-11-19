@@ -41,6 +41,13 @@
   font-size: 1.1rem;
   border-radius: 3px;
 }
+.logo-img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  border-radius: 4px;
+  display: block;
+}
 .logo-text {
   font-size: 1.4rem;
   font-weight: 700;
@@ -379,6 +386,10 @@
     width: 30px;
     height: 30px;
     font-size: 0.95rem;
+  }
+  .logo-img {
+    width: 28px;
+    height: 28px;
   }
   .logo-text {
     font-size: 1.2rem;
