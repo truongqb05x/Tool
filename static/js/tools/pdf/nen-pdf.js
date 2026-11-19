@@ -53,6 +53,21 @@ function handlePdfSelected(file) {
   if (nameEl) nameEl.textContent = file.name;
   if (sizeEl) sizeEl.textContent = `Dung lượng: ${sizeMb} MB`;
 
+  // Hiển thị bản xem trước trang đầu của file PDF
+  if (typeof renderPdfFirstPageThumbnail === 'function') {
+    renderPdfFirstPageThumbnail(file, 'filePreview');
+  }
+
+  // Hiển thị tooltip 10s rồi tự động ẩn dòng chữ
+  const tooltip = document.getElementById('floatingAddTooltip');
+  if (tooltip) {
+    tooltip.classList.remove('fade-out');
+    clearTimeout(window._floatingTooltipTimer);
+    window._floatingTooltipTimer = setTimeout(function() {
+      tooltip.classList.add('fade-out');
+    }, 10000);
+  }
+
   // Ẩn phần giới thiệu hero nhưng vẫn giữ nguyên SEO bằng class sr-only
   const toolHero = document.getElementById('toolHero') || document.querySelector('.tool-hero');
   if (toolHero) toolHero.classList.add('sr-only');
@@ -139,6 +154,16 @@ function resetFileSelection() {
   currentPdfFile = null;
   const fileInput = document.getElementById('fileInput');
   if (fileInput) fileInput.value = '';
+
+  if (typeof restoreDefaultMockup === 'function') {
+    restoreDefaultMockup('filePreview');
+  }
+
+  const tooltip = document.getElementById('floatingAddTooltip');
+  if (tooltip) {
+    tooltip.classList.remove('fade-out');
+    clearTimeout(window._floatingTooltipTimer);
+  }
 
   // Khôi phục hiển thị của phần giới thiệu hero và vị trí căn giữa các div bên dưới
   const toolHero = document.getElementById('toolHero') || document.querySelector('.tool-hero');

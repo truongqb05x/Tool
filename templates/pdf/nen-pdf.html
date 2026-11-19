@@ -256,12 +256,33 @@
   <div class="tool-workspace full-bleed" id="toolWorkspace">
     <!-- Cột trái: Khu vực xem trước file đã chọn -->
     <div class="file-area">
+      <!-- Nút nổi thêm / đổi file (theo chuẩn demo) -->
+      <div class="floating-add-wrap">
+        <div class="floating-add-tooltip" id="floatingAddTooltip" onclick="document.getElementById('fileInput').click()">Chọn file khác</div>
+        <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Chọn file khác">
+          <span class="floating-badge" id="floatingBadge">1</span>
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+
       <div class="file-area-content">
         <div class="file-card-wrap" id="fileCardWrap">
           <div class="file-card" id="fileCard">
+            <!-- Nút xóa file -->
             <button type="button" class="btn-remove-file" onclick="resetFileSelection()" title="Xóa file">
               <i class="fas fa-times"></i>
             </button>
+
+            <!-- Tùy chọn khi hover: Xoay 90 độ & Phóng to (Zoom) -->
+            <div class="file-card-actions">
+              <button type="button" class="btn-card-action" onclick="rotatePreview(90)" title="Xoay 90 độ">
+                <i class="fas fa-redo"></i>
+              </button>
+              <button type="button" class="btn-card-action" onclick="openPdfZoomModal()" title="Phóng to xem trước">
+                <i class="fas fa-search-plus"></i>
+              </button>
+            </div>
+
             <div class="file-preview" id="filePreview">
               <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
                 <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
@@ -275,14 +296,8 @@
               </div>
             </div>
             <div class="file-name" id="selectedFileName">tailieu_baocao.pdf</div>
-            <div class="file-meta" id="selectedFileSize" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 15.4 MB</div>
           </div>
         </div>
-
-        <!-- Nút chọn file khác -->
-        <button type="button" class="btn-add-more" onclick="resetFileSelection()">
-          <i class="fas fa-sync-alt"></i> Chọn file khác
-        </button>
       </div>
     </div>
 
@@ -320,11 +335,6 @@
               </div>
             </div>
           </div>
-        </div>
-
-        <div style="padding:12px; background:#f9fafb; border:1px dashed #d5dde6; border-radius:3px; font-size:0.82rem; color:#666; margin-top:16px;">
-          <i class="fas fa-info-circle" style="color:#1e5b9c; margin-right:4px;"></i>
-          Thuật toán tối ưu sẽ tự động nén hình ảnh nhúng, loại bỏ font thừa và tối ưu hóa cấu trúc luồng PDF.
         </div>
       </div>
 
@@ -372,7 +382,7 @@
 
     <!-- ===== NỘI DUNG CHUẨN SEO (SEO ARTICLE) ===== -->
     <section class="seo-section">
-      <h2><i class="fas fa-list-ol"></i> Cách nén file PDF trực tuyến chỉ trong 3 bước</h2>
+      <h2>Cách nén file PDF trực tuyến chỉ trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
@@ -397,21 +407,18 @@
       <p>ToolHub cam kết bảo vệ dữ liệu người dùng ở mức cao nhất:</p>
       <div class="security-features">
         <div class="sec-item">
-          <i class="fas fa-lock"></i>
           <div>
             <strong>Mã hóa SSL 256-bit</strong>
             <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức HTTPS.</span>
           </div>
         </div>
         <div class="sec-item">
-          <i class="fas fa-trash-alt"></i>
           <div>
             <strong>Tự động xóa sau 1 giờ</strong>
             <span>File của bạn được xóa vĩnh viễn khỏi máy chủ sau 60 phút, không lưu trữ dài hạn.</span>
           </div>
         </div>
         <div class="sec-item">
-          <i class="fas fa-user-secret"></i>
           <div>
             <strong>Không ai xem file của bạn</strong>
             <span>Quá trình nén hoàn toàn tự động bởi thuật toán, không nhân viên nào có quyền xem.</span>
@@ -421,7 +428,7 @@
     </section>
 
     <section class="seo-section">
-      <h2><i class="fas fa-question-circle"></i> Câu hỏi thường gặp về Nén PDF (FAQ)</h2>
+      <h2>Câu hỏi thường gặp về Nén PDF (FAQ)</h2>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
           Nén file PDF có làm mờ chữ hoặc hình ảnh không?
@@ -453,47 +460,7 @@
 
     <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
     <section class="seo-section seo-article">
-      <h2><i class="fas fa-file-alt"></i> Giới thiệu công cụ Nén file PDF trực tuyến tại ToolHub</h2>
-
-      <p>Trong công việc văn phòng, học tập và giao dịch điện tử hàng ngày, định dạng tài liệu <strong>PDF (Portable Document Format)</strong> là tiêu chuẩn phổ biến nhất nhờ khả năng giữ nguyên cấu trúc, font chữ và hình ảnh trên mọi thiết bị. Tuy nhiên, các tệp PDF chứa nhiều hình ảnh độ phân giải cao, tài liệu scan hoặc đồ họa vector phức tạp thường có dung lượng rất lớn (lên tới hàng chục hay hàng trăm Megabyte), gây khó khăn khi đính kèm gửi qua Email, chia sẻ qua Zalo, Messenger hoặc tải lên các cổng thông tin tuyển dụng và dịch vụ công trực tuyến.</p>
-
-      <p>Hiểu được nhu cầu đó, <strong>ToolHub</strong> phát triển công cụ <em>Nén PDF trực tuyến miễn phí</em>, ứng dụng công nghệ nén thuật toán thế hệ mới giúp giảm kích thước file PDF tới 70-80% một cách nhanh chóng mà vẫn bảo toàn độ nét của văn bản và chất lượng hình ảnh hiển thị.</p>
-
-      <div class="seo-grid-cols">
-        <div class="seo-col-card">
-          <h4><i class="fas fa-compress-arrows-alt"></i> Giảm dung lượng tới 80%</h4>
-          <p>Thuật toán tối ưu hóa luồng dữ liệu nhúng, nén ảnh thông minh và loại bỏ siêu dữ liệu (metadata) dư thừa giúp file giảm kích thước tối đa mà mắt thường khó nhận ra sự khác biệt.</p>
-        </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-bolt"></i> Xử lý tức thì trên trình duyệt</h4>
-          <p>Hoạt động trực tiếp trên nền tảng web bằng công nghệ tối ưu hóa tài nguyên. Bạn không cần cài đặt thêm bất kỳ phần mềm nặng nề hay tiện ích mở rộng nào vào máy tính.</p>
-        </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-lock"></i> An toàn &amp; Bảo mật 100%</h4>
-          <p>Mã hóa dữ liệu đầu cuối qua giao thức HTTPS (SSL 256-bit). Hệ thống tự động xóa sạch file của bạn khỏi máy chủ sau 60 phút, cam kết không xem hoặc chia sẻ tệp của người dùng.</p>
-        </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-mobile-alt"></i> Tương thích mọi thiết bị</h4>
-          <p>Sử dụng mượt mà trên mọi hệ điều hành: Windows, macOS, Linux, Android và iOS. Bạn có thể nén tài liệu PDF dễ dàng từ máy tính để bàn, laptop, tablet hoặc smartphone.</p>
-        </div>
-      </div>
-
-      <h3>Khi nào bạn nên sử dụng công cụ nén file PDF?</h3>
-      <ul>
-        <li><strong>Đính kèm file PDF vào Email:</strong> Hầu hết các dịch vụ thư điện tử như Gmail, Outlook hay Yahoo đều giới hạn kích thước tệp đính kèm ở mức 20MB - 25MB. Nén PDF giúp bạn gửi hồ sơ, báo cáo tài chính hay hợp đồng mà không bị báo lỗi vượt quá dung lượng cho phép.</li>
-        <li><strong>Nộp hồ sơ xin việc, học bổng &amp; thi cử:</strong> Các cổng tuyển dụng trực tuyến, trang web xét tuyển đại học thường yêu cầu CV, hồ sơ scan hoặc chứng chỉ PDF dưới 2MB hoặc 5MB để đảm bảo hệ thống tiếp nhận thông suốt.</li>
-        <li><strong>Nộp hồ sơ cổng dịch vụ công trực tuyến:</strong> Các thủ tục hành chính công, kê khai thuế điện tử, bảo hiểm xã hội yêu cầu tệp đính kèm PDF dung lượng nhỏ để thuận tiện lưu trữ và duyệt hồ sơ nhanh chóng.</li>
-        <li><strong>Tiết kiệm dung lượng lưu trữ &amp; Tăng tốc truyền tải:</strong> Tệp PDF nhẹ hơn giúp tiết kiệm dung lượng quý giá trên Google Drive, Dropbox, ổ cứng cá nhân và giúp đối tác, khách hàng tải tài liệu về xem nhanh hơn nhiều lần.</li>
-      </ul>
-
-      <div class="seo-highlight-box">
-        <strong><i class="fas fa-lightbulb"></i> Mẹo nén PDF đạt hiệu quả cao nhất:</strong> Đối với tài liệu văn phòng hoặc bài giảng thông thường, hãy chọn chế độ <em>"Nén khuyến nghị"</em> để có sự cân bằng hoàn hảo giữa dung lượng và độ nét. Nếu bạn cần gửi file dung lượng cực nhỏ qua mạng di động 3G/4G, hãy chọn <em>"Nén cực đại"</em> để tối ưu kích thước tối đa.
-      </div>
-    </section>
-
-    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
-    <section class="seo-section seo-article">
-      <h2><i class="fas fa-file-alt"></i> Giới thiệu công cụ Nén file PDF trực tuyến tại ToolHub</h2>
+      <h2>Giới thiệu công cụ Nén file PDF trực tuyến tại ToolHub</h2>
 
       <p>Trong công việc văn phòng, học tập và giao dịch điện tử hàng ngày, định dạng tài liệu <strong>PDF (Portable Document Format)</strong> là tiêu chuẩn phổ biến nhất nhờ khả năng giữ nguyên cấu trúc, font chữ và hình ảnh trên mọi thiết bị. Tuy nhiên, các tệp PDF chứa nhiều hình ảnh độ phân giải cao, tài liệu scan hoặc đồ họa vector phức tạp thường có dung lượng rất lớn (lên tới hàng chục hay hàng trăm Megabyte), gây khó khăn khi đính kèm gửi qua Email, chia sẻ qua Zalo, Messenger hoặc tải lên các cổng thông tin tuyển dụng và dịch vụ công trực tuyến.</p>
 
@@ -592,8 +559,9 @@
   </div>
 
   <!-- SCRIPTS -->
-
-<script src="../../static/js/app.js"></script>
+  <script src="../../static/vendor/pdfjs/pdf.min.js"></script>
+  <script src="../../static/js/ultis/pdf-preview.js"></script>
+  <script src="../../static/js/app.js"></script>
   <script src="../../static/js/tools/pdf/nen-pdf.js"></script>
 
 </body>
