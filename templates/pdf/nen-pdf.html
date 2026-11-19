@@ -9,9 +9,7 @@
 
   <!-- Font Awesome & CSS Layout -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="../../static/css/layout/base.css">
-  <link rel="stylesheet" href="../../static/css/layout/header.css">
-  <link rel="stylesheet" href="../../static/css/layout/footer.css">
+  <link rel="stylesheet" href="../../static/css/layout/layout.css">
   <link rel="stylesheet" href="../../static/css/layout/modal.css">
   <link rel="stylesheet" href="../../static/css/tools/tool-page.css">
   <link rel="icon" type="image/png" href="../../static/img/logo.png">
@@ -40,6 +38,10 @@
           <a href="../index.html?auth=register" class="btn btn-register">Đăng ký</a>
         </div>
 
+        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu công cụ">
+          <i class="fas fa-bars"></i>
+        </button>
+
         <div id="userActions" class="user-menu" style="display:none;">
           <div class="user-menu-trigger" id="userMenuTrigger">
             <div class="user-avatar" id="headerAvatar">U</div>
@@ -67,74 +69,232 @@
     </div>
   </header>
 
-  <!-- ===== BREADCRUMB & HERO ===== -->
-  <div class="container">
-    <nav class="breadcrumb-nav">
-      <a href="../index.html"><i class="fas fa-home"></i> Trang chủ</a>
+  <!-- Lớp phủ màn hình khi mở Menu Drawer trên Mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Drawer Menu dành riêng cho Mobile trên các trang con -->
+  <aside class="sidebar drawer-only" id="sidebar">
+    <!-- Header Drawer dành riêng cho Mobile -->
+    <div class="sidebar-drawer-header">
+      <div class="sidebar-drawer-brand">
+        <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+        <span>Danh mục công cụ</span>
+      </div>
+      <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng menu">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Auth Box bên trong Mobile Drawer -->
+    <div class="sidebar-auth-box">
+      <div id="drawerGuestActions" class="drawer-guest-actions">
+        <a href="../index.html?auth=login" class="btn btn-login">
+          <i class="fas fa-sign-in-alt"></i> Đăng nhập
+        </a>
+        <a href="../index.html?auth=register" class="btn btn-register">
+          <i class="fas fa-user-plus"></i> Đăng ký
+        </a>
+      </div>
+      <div id="drawerUserActions" class="drawer-user-actions" style="display:none;">
+        <div class="drawer-user-info">
+          <div class="user-avatar" id="drawerAvatar">U</div>
+          <div class="drawer-user-details">
+            <strong id="drawerUserName">Người dùng</strong>
+            <small id="drawerUserEmail">user@example.com</small>
+          </div>
+        </div>
+        <a href="#" class="drawer-logout-btn" onclick="logout(); closeMobileSidebar(); return false;">
+          <i class="fas fa-sign-out-alt"></i> Đăng xuất
+        </a>
+      </div>
+    </div>
+
+    <div class="side-box">
+          <div class="side-box-header"><i class="fas fa-list" style="margin-right:6px;"></i> Danh mục công cụ</div>
+          <div class="side-box-body">
+            <ul class="side-menu">
+              <li>
+                <a href="#" class="menu-toggle active">
+                  <i class="fas fa-th-large"></i>
+                  <span>Tất cả công cụ</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-star"></i> Mới nhất</a></li>
+                  <li><a href="#"><i class="fas fa-fire"></i> Phổ biến</a></li>
+                  <li><a href="#"><i class="fas fa-clock"></i> Dùng gần đây</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-file-pdf"></i>
+                  <span>Công cụ PDF</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="../pdf/index.html" style="font-weight:700; color:#1e5b9c;"><i class="fas fa-th-list"></i> Xem tất cả công cụ PDF</a></li>
+                  <li><a href="../pdf/nen-pdf.html"><i class="fas fa-compress-alt"></i> Nén PDF</a></li>
+                  <li><a href="../pdf/gop-pdf.html"><i class="fas fa-object-group"></i> Gộp PDF</a></li>
+                  <li><a href="../pdf/tach-pdf.html"><i class="fas fa-cut"></i> Tách PDF</a></li>
+                  <li><a href="../pdf/xoay-pdf.html"><i class="fas fa-redo"></i> Xoay PDF</a></li>
+                  <li><a href="../pdf/xoa-trang-pdf.html"><i class="fas fa-trash-alt"></i> Xóa trang PDF</a></li>
+                  <li><a href="../pdf/sap-xep-trang-pdf.html"><i class="fas fa-sort-amount-down"></i> Sắp xếp trang PDF</a></li>
+                  <li><a href="../pdf/trich-xuat-trang-pdf.html"><i class="fas fa-file-export"></i> Trích xuất trang PDF</a></li>
+                  <li><a href="../pdf/pdf-sang-word.html"><i class="fas fa-file-word"></i> PDF sang Word</a></li>
+                  <li><a href="../pdf/pdf-sang-excel.html"><i class="fas fa-file-excel"></i> PDF sang Excel</a></li>
+                  <li><a href="../pdf/pdf-sang-powerpoint.html"><i class="fas fa-file-powerpoint"></i> PDF sang PowerPoint</a></li>
+                  <li><a href="../pdf/word-sang-pdf.html"><i class="fas fa-file-word"></i> Word sang PDF</a></li>
+                  <li><a href="../pdf/excel-sang-pdf.html"><i class="fas fa-file-excel"></i> Excel sang PDF</a></li>
+                  <li><a href="../pdf/powerpoint-sang-pdf.html"><i class="fas fa-file-powerpoint"></i> PowerPoint sang PDF</a></li>
+                  <li><a href="../pdf/pdf-sang-anh.html"><i class="fas fa-file-image"></i> PDF sang ảnh</a></li>
+                  <li><a href="../pdf/anh-sang-pdf.html"><i class="fas fa-images"></i> Ảnh sang PDF</a></li>
+                  <li><a href="../pdf/chinh-sua-pdf.html"><i class="fas fa-edit"></i> Chỉnh sửa PDF</a></li>
+                  <li><a href="../pdf/them-so-trang-pdf.html"><i class="fas fa-list-ol"></i> Thêm số trang PDF</a></li>
+                  <li><a href="../pdf/them-watermark-pdf.html"><i class="fas fa-stamp"></i> Thêm watermark PDF</a></li>
+                  <li><a href="../pdf/bao-ve-pdf.html"><i class="fas fa-lock"></i> Bảo vệ PDF</a></li>
+                  <li><a href="../pdf/mo-khoa-pdf.html"><i class="fas fa-unlock-alt"></i> Mở khóa PDF</a></li>
+                  <li><a href="../pdf/ky-pdf.html"><i class="fas fa-signature"></i> Ký PDF</a></li>
+                  <li><a href="../pdf/so-sanh-pdf.html"><i class="fas fa-columns"></i> So sánh PDF</a></li>
+                  <li><a href="../pdf/ocr-pdf.html"><i class="fas fa-eye"></i> OCR PDF</a></li>
+                  <li><a href="../pdf/doc-thong-tin-pdf.html"><i class="fas fa-info-circle"></i> Đọc thông tin PDF</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-image"></i>
+                  <span>Chỉnh sửa ảnh</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="../anh/cat-anh.html"><i class="fas fa-crop-alt"></i> Cắt &amp; xoay ảnh</a></li>
+                  <li><a href="../anh/cat-anh.html"><i class="fas fa-images"></i> Ghép ảnh</a></li>
+                  <li><a href="../anh/cat-anh.html"><i class="fas fa-magic"></i> Xóa phông nền</a></li>
+                  <li><a href="../anh/cat-anh.html"><i class="fas fa-adjust"></i> Chỉnh màu</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-mobile-alt"></i>
+                  <span>Ứng dụng App</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-calculator"></i> Máy tính online</a></li>
+                  <li><a href="../tien-ich/tao-ma-qr.html"><i class="fas fa-qrcode"></i> Tạo mã QR</a></li>
+                  <li><a href="#"><i class="fas fa-clock"></i> Đồng hồ đếm ngược</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-exchange-alt"></i>
+                  <span>Chuyển đổi</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-file-word"></i> Word sang PDF</a></li>
+                  <li><a href="#"><i class="fas fa-file-excel"></i> Excel sang PDF</a></li>
+                  <li><a href="#"><i class="fas fa-file-image"></i> Ảnh sang PDF</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-file-alt"></i>
+                  <span>Văn bản</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-spell-check"></i> Kiểm tra chính tả</a></li>
+                  <li><a href="#"><i class="fas fa-text-width"></i> Đếm ký tự</a></li>
+                  <li><a href="#"><i class="fas fa-language"></i> Dịch văn bản</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-video"></i>
+                  <span>Video</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-cut"></i> Cắt video</a></li>
+                  <li><a href="#"><i class="fas fa-compress"></i> Nén video</a></li>
+                  <li><a href="#"><i class="fas fa-exchange-alt"></i> Chuyển đổi định dạng</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-tools"></i>
+                  <span>Tiện ích khác</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-ruler"></i> Chuyển đổi đơn vị</a></li>
+                  <li><a href="#"><i class="fas fa-key"></i> Tạo mật khẩu</a></li>
+                  <li><a href="#"><i class="fas fa-random"></i> Tạo số ngẫu nhiên</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+  </aside>
+
+
+    <!-- ===== BREADCRUMB (SEO) ===== -->
+  <nav class="breadcrumb-nav sr-only" aria-label="Breadcrumb">
+    <a href="../index.html"><i class="fas fa-home"></i> Trang chủ</a>
       <span>/</span>
       <a href="../index.html">Công cụ PDF</a>
       <span>/</span>
       <strong>Nén PDF</strong>
-    </nav>
-  </div>
+  </nav>
 
-  <div class="tool-hero">
-    <div class="tool-hero-badge"><i class="fas fa-bolt"></i> Miễn phí 100% · Trực tuyến</div>
+  <div class="tool-hero" id="toolHero">
     <h1>Nén file PDF trực tuyến</h1>
     <p>Giảm dung lượng file PDF nhanh chóng, duy trì độ phân giải và chất lượng tốt nhất để gửi email hoặc tải lên mạng.</p>
   </div>
 
-  <div class="tool-container">
+  <!-- BƯỚC 2: WORKSPACE XỬ LÝ TOÀN CHIỀU RỘNG (SÁT LỀ PHẢI THEO CHUẨN XULY.HTML) -->
+  <div class="tool-workspace full-bleed" id="toolWorkspace">
+    <!-- Cột trái: Khu vực xem trước file đã chọn -->
+    <div class="file-area">
+      <div class="file-area-content">
+        <div class="file-card-wrap" id="fileCardWrap">
+          <div class="file-card" id="fileCard">
+            <button type="button" class="btn-remove-file" onclick="resetFileSelection()" title="Xóa file">
+              <i class="fas fa-times"></i>
+            </button>
+            <div class="file-preview" id="filePreview">
+              <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
+                <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
+                <div class="line title"></div>
+                <div class="line"></div>
+                <div class="line short"></div>
+                <div class="line"></div>
+                <div class="line block"></div>
+                <div class="line"></div>
+                <div class="line short"></div>
+              </div>
+            </div>
+            <div class="file-name" id="selectedFileName">tailieu_baocao.pdf</div>
+            <div class="file-meta" id="selectedFileSize" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 15.4 MB</div>
+          </div>
+        </div>
 
-    <!-- BƯỚC 1: KHUNG TẢI FILE (UPLOAD PANEL) -->
-    <div class="upload-panel" id="uploadPanel">
-      <div class="upload-panel-header">
-        <i class="fas fa-compress-alt"></i> Tải tệp PDF lên để nén
-      </div>
-      <div class="drop-zone" id="dropZone">
-        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
-        <h3>Kéo &amp; thả file PDF vào đây</h3>
-        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
-        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
-          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        <!-- Nút chọn file khác -->
+        <button type="button" class="btn-add-more" onclick="resetFileSelection()">
+          <i class="fas fa-sync-alt"></i> Chọn file khác
         </button>
-        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
-        <div class="dz-note"><i class="fas fa-shield-alt"></i> Hỗ trợ file PDF tối đa 50 MB · Tự động xóa vĩnh viễn sau 1 giờ</div>
       </div>
     </div>
 
-    <!-- BƯỚC 2: WORKSPACE XỬ LÝ (XUẤT HIỆN KHI ĐÃ CÓ FILE) -->
-    <div class="tool-workspace" id="toolWorkspace">
-      <!-- Cột trái: Xem trước file -->
-      <div class="workspace-left">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-          <strong style="color:#333; font-size:0.95rem;">File đã chọn:</strong>
-          <button type="button" class="btn-redo" onclick="resetFileSelection()" style="margin:0;">
-            <i class="fas fa-sync-alt"></i> Chọn file khác
-          </button>
-        </div>
-
-        <div class="selected-file-card" id="selectedFileCard">
-          <div class="sfc-icon"><i class="fas fa-file-pdf"></i></div>
-          <div class="sfc-body">
-            <div class="sfc-name" id="selectedFileName">tailieu_baocao.pdf</div>
-            <div class="sfc-meta" id="selectedFileSize">Dung lượng gốc: 15.4 MB</div>
-          </div>
-          <button type="button" class="sfc-remove" onclick="resetFileSelection()" title="Xóa file">&times;</button>
-        </div>
-
-        <div style="margin-top:auto; padding:12px; background:#fff; border:1px dashed #d5dde6; border-radius:3px; font-size:0.82rem; color:#666;">
-          <i class="fas fa-info-circle" style="color:#1e5b9c; margin-right:4px;"></i>
-          Thuật toán tối ưu sẽ tự động nén hình ảnh nhúng, loại bỏ font thừa và tối ưu hóa cấu trúc luồng PDF.
-        </div>
+    <!-- Cột phải: Bảng tùy chọn nén PDF sát lề bên phải màn hình -->
+    <aside class="options-area">
+      <div class="options-header">
+        <i class="fas fa-sliders-h"></i> Tùy chọn nén PDF
       </div>
 
-      <!-- Cột phải: Bảng tùy chọn nén -->
-      <div class="workspace-right">
-        <div class="ws-options-head">
-          <i class="fas fa-sliders-h" style="margin-right:6px;"></i> Mức độ nén
-        </div>
-        <div class="ws-options-body">
+      <div class="options-body">
+        <div class="form-group">
+          <label class="form-label">Chọn mức độ nén phù hợp</label>
           <div class="ws-option-group">
             <div class="ws-radio-box" onclick="selectCompressionLevel(this, 'extreme')">
               <input type="radio" name="compLevel" id="optExtreme">
@@ -162,11 +322,36 @@
           </div>
         </div>
 
-        <div class="ws-options-action">
-          <button type="button" class="btn-execute" id="btnCompress" onclick="startCompression()">
-            Nén PDF ngay <i class="fas fa-arrow-right"></i>
-          </button>
+        <div style="padding:12px; background:#f9fafb; border:1px dashed #d5dde6; border-radius:3px; font-size:0.82rem; color:#666; margin-top:16px;">
+          <i class="fas fa-info-circle" style="color:#1e5b9c; margin-right:4px;"></i>
+          Thuật toán tối ưu sẽ tự động nén hình ảnh nhúng, loại bỏ font thừa và tối ưu hóa cấu trúc luồng PDF.
         </div>
+      </div>
+
+      <div class="action-area">
+        <button type="button" class="btn-convert" id="btnCompress" onclick="startCompression()">
+          Nén PDF ngay <i class="fas fa-arrow-circle-right"></i>
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="tool-container" id="toolContainer">
+
+    <!-- BƯỚC 1: KHUNG TẢI FILE (UPLOAD PANEL) -->
+    <div class="upload-panel" id="uploadPanel">
+      <div class="upload-panel-header">
+        <i class="fas fa-compress-alt"></i> Tải tệp PDF lên để nén
+      </div>
+      <div class="drop-zone" id="dropZone">
+        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>Kéo &amp; thả file PDF vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Hỗ trợ file PDF tối đa 50 MB</div>
       </div>
     </div>
 
@@ -208,7 +393,7 @@
     </section>
 
     <section class="seo-section">
-      <h2><i class="fas fa-shield-alt"></i> Bảo mật tài liệu &amp; Quyền riêng tư tối đa</h2>
+      <h2>Bảo mật tài liệu &amp; Quyền riêng tư tối đa</h2>
       <p>ToolHub cam kết bảo vệ dữ liệu người dùng ở mức cao nhất:</p>
       <div class="security-features">
         <div class="sec-item">
@@ -263,6 +448,86 @@
         <div class="tool-faq-a">
           Có. ToolHub chạy trực tiếp trên nền tảng web, tương thích 100% với trình duyệt Safari, Chrome trên mọi thiết bị máy tính, máy tính bảng và điện thoại di động.
         </div>
+      </div>
+    </section>
+
+    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
+    <section class="seo-section seo-article">
+      <h2><i class="fas fa-file-alt"></i> Giới thiệu công cụ Nén file PDF trực tuyến tại ToolHub</h2>
+
+      <p>Trong công việc văn phòng, học tập và giao dịch điện tử hàng ngày, định dạng tài liệu <strong>PDF (Portable Document Format)</strong> là tiêu chuẩn phổ biến nhất nhờ khả năng giữ nguyên cấu trúc, font chữ và hình ảnh trên mọi thiết bị. Tuy nhiên, các tệp PDF chứa nhiều hình ảnh độ phân giải cao, tài liệu scan hoặc đồ họa vector phức tạp thường có dung lượng rất lớn (lên tới hàng chục hay hàng trăm Megabyte), gây khó khăn khi đính kèm gửi qua Email, chia sẻ qua Zalo, Messenger hoặc tải lên các cổng thông tin tuyển dụng và dịch vụ công trực tuyến.</p>
+
+      <p>Hiểu được nhu cầu đó, <strong>ToolHub</strong> phát triển công cụ <em>Nén PDF trực tuyến miễn phí</em>, ứng dụng công nghệ nén thuật toán thế hệ mới giúp giảm kích thước file PDF tới 70-80% một cách nhanh chóng mà vẫn bảo toàn độ nét của văn bản và chất lượng hình ảnh hiển thị.</p>
+
+      <div class="seo-grid-cols">
+        <div class="seo-col-card">
+          <h4><i class="fas fa-compress-arrows-alt"></i> Giảm dung lượng tới 80%</h4>
+          <p>Thuật toán tối ưu hóa luồng dữ liệu nhúng, nén ảnh thông minh và loại bỏ siêu dữ liệu (metadata) dư thừa giúp file giảm kích thước tối đa mà mắt thường khó nhận ra sự khác biệt.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-bolt"></i> Xử lý tức thì trên trình duyệt</h4>
+          <p>Hoạt động trực tiếp trên nền tảng web bằng công nghệ tối ưu hóa tài nguyên. Bạn không cần cài đặt thêm bất kỳ phần mềm nặng nề hay tiện ích mở rộng nào vào máy tính.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-lock"></i> An toàn &amp; Bảo mật 100%</h4>
+          <p>Mã hóa dữ liệu đầu cuối qua giao thức HTTPS (SSL 256-bit). Hệ thống tự động xóa sạch file của bạn khỏi máy chủ sau 60 phút, cam kết không xem hoặc chia sẻ tệp của người dùng.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-mobile-alt"></i> Tương thích mọi thiết bị</h4>
+          <p>Sử dụng mượt mà trên mọi hệ điều hành: Windows, macOS, Linux, Android và iOS. Bạn có thể nén tài liệu PDF dễ dàng từ máy tính để bàn, laptop, tablet hoặc smartphone.</p>
+        </div>
+      </div>
+
+      <h3>Khi nào bạn nên sử dụng công cụ nén file PDF?</h3>
+      <ul>
+        <li><strong>Đính kèm file PDF vào Email:</strong> Hầu hết các dịch vụ thư điện tử như Gmail, Outlook hay Yahoo đều giới hạn kích thước tệp đính kèm ở mức 20MB - 25MB. Nén PDF giúp bạn gửi hồ sơ, báo cáo tài chính hay hợp đồng mà không bị báo lỗi vượt quá dung lượng cho phép.</li>
+        <li><strong>Nộp hồ sơ xin việc, học bổng &amp; thi cử:</strong> Các cổng tuyển dụng trực tuyến, trang web xét tuyển đại học thường yêu cầu CV, hồ sơ scan hoặc chứng chỉ PDF dưới 2MB hoặc 5MB để đảm bảo hệ thống tiếp nhận thông suốt.</li>
+        <li><strong>Nộp hồ sơ cổng dịch vụ công trực tuyến:</strong> Các thủ tục hành chính công, kê khai thuế điện tử, bảo hiểm xã hội yêu cầu tệp đính kèm PDF dung lượng nhỏ để thuận tiện lưu trữ và duyệt hồ sơ nhanh chóng.</li>
+        <li><strong>Tiết kiệm dung lượng lưu trữ &amp; Tăng tốc truyền tải:</strong> Tệp PDF nhẹ hơn giúp tiết kiệm dung lượng quý giá trên Google Drive, Dropbox, ổ cứng cá nhân và giúp đối tác, khách hàng tải tài liệu về xem nhanh hơn nhiều lần.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo nén PDF đạt hiệu quả cao nhất:</strong> Đối với tài liệu văn phòng hoặc bài giảng thông thường, hãy chọn chế độ <em>"Nén khuyến nghị"</em> để có sự cân bằng hoàn hảo giữa dung lượng và độ nét. Nếu bạn cần gửi file dung lượng cực nhỏ qua mạng di động 3G/4G, hãy chọn <em>"Nén cực đại"</em> để tối ưu kích thước tối đa.
+      </div>
+    </section>
+
+    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
+    <section class="seo-section seo-article">
+      <h2><i class="fas fa-file-alt"></i> Giới thiệu công cụ Nén file PDF trực tuyến tại ToolHub</h2>
+
+      <p>Trong công việc văn phòng, học tập và giao dịch điện tử hàng ngày, định dạng tài liệu <strong>PDF (Portable Document Format)</strong> là tiêu chuẩn phổ biến nhất nhờ khả năng giữ nguyên cấu trúc, font chữ và hình ảnh trên mọi thiết bị. Tuy nhiên, các tệp PDF chứa nhiều hình ảnh độ phân giải cao, tài liệu scan hoặc đồ họa vector phức tạp thường có dung lượng rất lớn (lên tới hàng chục hay hàng trăm Megabyte), gây khó khăn khi đính kèm gửi qua Email, chia sẻ qua Zalo, Messenger hoặc tải lên các cổng thông tin tuyển dụng và dịch vụ công trực tuyến.</p>
+
+      <p>Hiểu được nhu cầu đó, <strong>ToolHub</strong> phát triển công cụ <em>Nén PDF trực tuyến miễn phí</em>, ứng dụng công nghệ nén thuật toán thế hệ mới giúp giảm kích thước file PDF tới 70-80% một cách nhanh chóng mà vẫn bảo toàn độ nét của văn bản và chất lượng hình ảnh hiển thị.</p>
+
+      <div class="seo-grid-cols">
+        <div class="seo-col-card">
+          <h4><i class="fas fa-compress-arrows-alt"></i> Giảm dung lượng tới 80%</h4>
+          <p>Thuật toán tối ưu hóa luồng dữ liệu nhúng, nén ảnh thông minh và loại bỏ siêu dữ liệu (metadata) dư thừa giúp file giảm kích thước tối đa mà mắt thường khó nhận ra sự khác biệt.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-bolt"></i> Xử lý tức thì trên trình duyệt</h4>
+          <p>Hoạt động trực tiếp trên nền tảng web bằng công nghệ tối ưu hóa tài nguyên. Bạn không cần cài đặt thêm bất kỳ phần mềm nặng nề hay tiện ích mở rộng nào vào máy tính.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-lock"></i> An toàn &amp; Bảo mật 100%</h4>
+          <p>Mã hóa dữ liệu đầu cuối qua giao thức HTTPS (SSL 256-bit). Hệ thống tự động xóa sạch file của bạn khỏi máy chủ sau 60 phút, cam kết không xem hoặc chia sẻ tệp của người dùng.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-mobile-alt"></i> Tương thích mọi thiết bị</h4>
+          <p>Sử dụng mượt mà trên mọi hệ điều hành: Windows, macOS, Linux, Android và iOS. Bạn có thể nén tài liệu PDF dễ dàng từ máy tính để bàn, laptop, tablet hoặc smartphone.</p>
+        </div>
+      </div>
+
+      <h3>Khi nào bạn nên sử dụng công cụ nén file PDF?</h3>
+      <ul>
+        <li><strong>Đính kèm file PDF vào Email:</strong> Hầu hết các dịch vụ thư điện tử như Gmail, Outlook hay Yahoo đều giới hạn kích thước tệp đính kèm ở mức 20MB - 25MB. Nén PDF giúp bạn gửi hồ sơ, báo cáo tài chính hay hợp đồng mà không bị báo lỗi vượt quá dung lượng cho phép.</li>
+        <li><strong>Nộp hồ sơ xin việc, học bổng &amp; thi cử:</strong> Các cổng tuyển dụng trực tuyến, trang web xét tuyển đại học thường yêu cầu CV, hồ sơ scan hoặc chứng chỉ PDF dưới 2MB hoặc 5MB để đảm bảo hệ thống tiếp nhận thông suốt.</li>
+        <li><strong>Nộp hồ sơ cổng dịch vụ công trực tuyến:</strong> Các thủ tục hành chính công, kê khai thuế điện tử, bảo hiểm xã hội yêu cầu tệp đính kèm PDF dung lượng nhỏ để thuận tiện lưu trữ và duyệt hồ sơ nhanh chóng.</li>
+        <li><strong>Tiết kiệm dung lượng lưu trữ &amp; Tăng tốc truyền tải:</strong> Tệp PDF nhẹ hơn giúp tiết kiệm dung lượng quý giá trên Google Drive, Dropbox, ổ cứng cá nhân và giúp đối tác, khách hàng tải tài liệu về xem nhanh hơn nhiều lần.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo nén PDF đạt hiệu quả cao nhất:</strong> Đối với tài liệu văn phòng hoặc bài giảng thông thường, hãy chọn chế độ <em>"Nén khuyến nghị"</em> để có sự cân bằng hoàn hảo giữa dung lượng và độ nét. Nếu bạn cần gửi file dung lượng cực nhỏ qua mạng di động 3G/4G, hãy chọn <em>"Nén cực đại"</em> để tối ưu kích thước tối đa.
       </div>
     </section>
 

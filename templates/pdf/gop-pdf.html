@@ -9,9 +9,7 @@
 
   <!-- Font Awesome & CSS Layout -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="../../static/css/layout/base.css">
-  <link rel="stylesheet" href="../../static/css/layout/header.css">
-  <link rel="stylesheet" href="../../static/css/layout/footer.css">
+  <link rel="stylesheet" href="../../static/css/layout/layout.css">
   <link rel="stylesheet" href="../../static/css/layout/modal.css">
   <link rel="stylesheet" href="../../static/css/tools/tool-page.css">
   <link rel="icon" type="image/png" href="../../static/img/logo.png">
@@ -40,6 +38,10 @@
           <a href="../index.html?auth=register" class="btn btn-register">Đăng ký</a>
         </div>
 
+        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu công cụ">
+          <i class="fas fa-bars"></i>
+        </button>
+
         <div id="userActions" class="user-menu" style="display:none;">
           <div class="user-menu-trigger" id="userMenuTrigger">
             <div class="user-avatar" id="headerAvatar">U</div>
@@ -67,24 +69,227 @@
     </div>
   </header>
 
-  <!-- ===== BREADCRUMB & HERO ===== -->
-  <div class="container">
-    <nav class="breadcrumb-nav">
-      <a href="../index.html"><i class="fas fa-home"></i> Trang chủ</a>
+  <!-- Lớp phủ màn hình khi mở Menu Drawer trên Mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Drawer Menu dành riêng cho Mobile trên các trang con -->
+  <aside class="sidebar drawer-only" id="sidebar">
+    <!-- Header Drawer dành riêng cho Mobile -->
+    <div class="sidebar-drawer-header">
+      <div class="sidebar-drawer-brand">
+        <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+        <span>Danh mục công cụ</span>
+      </div>
+      <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng menu">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Auth Box bên trong Mobile Drawer -->
+    <div class="sidebar-auth-box">
+      <div id="drawerGuestActions" class="drawer-guest-actions">
+        <a href="../index.html?auth=login" class="btn btn-login">
+          <i class="fas fa-sign-in-alt"></i> Đăng nhập
+        </a>
+        <a href="../index.html?auth=register" class="btn btn-register">
+          <i class="fas fa-user-plus"></i> Đăng ký
+        </a>
+      </div>
+      <div id="drawerUserActions" class="drawer-user-actions" style="display:none;">
+        <div class="drawer-user-info">
+          <div class="user-avatar" id="drawerAvatar">U</div>
+          <div class="drawer-user-details">
+            <strong id="drawerUserName">Người dùng</strong>
+            <small id="drawerUserEmail">user@example.com</small>
+          </div>
+        </div>
+        <a href="#" class="drawer-logout-btn" onclick="logout(); closeMobileSidebar(); return false;">
+          <i class="fas fa-sign-out-alt"></i> Đăng xuất
+        </a>
+      </div>
+    </div>
+
+    <div class="side-box">
+          <div class="side-box-header"><i class="fas fa-list" style="margin-right:6px;"></i> Danh mục công cụ</div>
+          <div class="side-box-body">
+            <ul class="side-menu">
+              <li>
+                <a href="#" class="menu-toggle active">
+                  <i class="fas fa-th-large"></i>
+                  <span>Tất cả công cụ</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-star"></i> Mới nhất</a></li>
+                  <li><a href="#"><i class="fas fa-fire"></i> Phổ biến</a></li>
+                  <li><a href="#"><i class="fas fa-clock"></i> Dùng gần đây</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-file-pdf"></i>
+                  <span>Công cụ PDF</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="../pdf/index.html" style="font-weight:700; color:#1e5b9c;"><i class="fas fa-th-list"></i> Xem tất cả công cụ PDF</a></li>
+                  <li><a href="../pdf/nen-pdf.html"><i class="fas fa-compress-alt"></i> Nén PDF</a></li>
+                  <li><a href="../pdf/gop-pdf.html"><i class="fas fa-object-group"></i> Gộp PDF</a></li>
+                  <li><a href="../pdf/tach-pdf.html"><i class="fas fa-cut"></i> Tách PDF</a></li>
+                  <li><a href="../pdf/xoay-pdf.html"><i class="fas fa-redo"></i> Xoay PDF</a></li>
+                  <li><a href="../pdf/xoa-trang-pdf.html"><i class="fas fa-trash-alt"></i> Xóa trang PDF</a></li>
+                  <li><a href="../pdf/sap-xep-trang-pdf.html"><i class="fas fa-sort-amount-down"></i> Sắp xếp trang PDF</a></li>
+                  <li><a href="../pdf/trich-xuat-trang-pdf.html"><i class="fas fa-file-export"></i> Trích xuất trang PDF</a></li>
+                  <li><a href="../pdf/pdf-sang-word.html"><i class="fas fa-file-word"></i> PDF sang Word</a></li>
+                  <li><a href="../pdf/pdf-sang-excel.html"><i class="fas fa-file-excel"></i> PDF sang Excel</a></li>
+                  <li><a href="../pdf/pdf-sang-powerpoint.html"><i class="fas fa-file-powerpoint"></i> PDF sang PowerPoint</a></li>
+                  <li><a href="../pdf/word-sang-pdf.html"><i class="fas fa-file-word"></i> Word sang PDF</a></li>
+                  <li><a href="../pdf/excel-sang-pdf.html"><i class="fas fa-file-excel"></i> Excel sang PDF</a></li>
+                  <li><a href="../pdf/powerpoint-sang-pdf.html"><i class="fas fa-file-powerpoint"></i> PowerPoint sang PDF</a></li>
+                  <li><a href="../pdf/pdf-sang-anh.html"><i class="fas fa-file-image"></i> PDF sang ảnh</a></li>
+                  <li><a href="../pdf/anh-sang-pdf.html"><i class="fas fa-images"></i> Ảnh sang PDF</a></li>
+                  <li><a href="../pdf/chinh-sua-pdf.html"><i class="fas fa-edit"></i> Chỉnh sửa PDF</a></li>
+                  <li><a href="../pdf/them-so-trang-pdf.html"><i class="fas fa-list-ol"></i> Thêm số trang PDF</a></li>
+                  <li><a href="../pdf/them-watermark-pdf.html"><i class="fas fa-stamp"></i> Thêm watermark PDF</a></li>
+                  <li><a href="../pdf/bao-ve-pdf.html"><i class="fas fa-lock"></i> Bảo vệ PDF</a></li>
+                  <li><a href="../pdf/mo-khoa-pdf.html"><i class="fas fa-unlock-alt"></i> Mở khóa PDF</a></li>
+                  <li><a href="../pdf/ky-pdf.html"><i class="fas fa-signature"></i> Ký PDF</a></li>
+                  <li><a href="../pdf/so-sanh-pdf.html"><i class="fas fa-columns"></i> So sánh PDF</a></li>
+                  <li><a href="../pdf/ocr-pdf.html"><i class="fas fa-eye"></i> OCR PDF</a></li>
+                  <li><a href="../pdf/doc-thong-tin-pdf.html"><i class="fas fa-info-circle"></i> Đọc thông tin PDF</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-image"></i>
+                  <span>Chỉnh sửa ảnh</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="../anh/cat-anh.html"><i class="fas fa-crop-alt"></i> Cắt &amp; xoay ảnh</a></li>
+                  <li><a href="../anh/cat-anh.html"><i class="fas fa-images"></i> Ghép ảnh</a></li>
+                  <li><a href="../anh/cat-anh.html"><i class="fas fa-magic"></i> Xóa phông nền</a></li>
+                  <li><a href="../anh/cat-anh.html"><i class="fas fa-adjust"></i> Chỉnh màu</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-mobile-alt"></i>
+                  <span>Ứng dụng App</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-calculator"></i> Máy tính online</a></li>
+                  <li><a href="../tien-ich/tao-ma-qr.html"><i class="fas fa-qrcode"></i> Tạo mã QR</a></li>
+                  <li><a href="#"><i class="fas fa-clock"></i> Đồng hồ đếm ngược</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-exchange-alt"></i>
+                  <span>Chuyển đổi</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-file-word"></i> Word sang PDF</a></li>
+                  <li><a href="#"><i class="fas fa-file-excel"></i> Excel sang PDF</a></li>
+                  <li><a href="#"><i class="fas fa-file-image"></i> Ảnh sang PDF</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-file-alt"></i>
+                  <span>Văn bản</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-spell-check"></i> Kiểm tra chính tả</a></li>
+                  <li><a href="#"><i class="fas fa-text-width"></i> Đếm ký tự</a></li>
+                  <li><a href="#"><i class="fas fa-language"></i> Dịch văn bản</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-video"></i>
+                  <span>Video</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-cut"></i> Cắt video</a></li>
+                  <li><a href="#"><i class="fas fa-compress"></i> Nén video</a></li>
+                  <li><a href="#"><i class="fas fa-exchange-alt"></i> Chuyển đổi định dạng</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-tools"></i>
+                  <span>Tiện ích khác</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-ruler"></i> Chuyển đổi đơn vị</a></li>
+                  <li><a href="#"><i class="fas fa-key"></i> Tạo mật khẩu</a></li>
+                  <li><a href="#"><i class="fas fa-random"></i> Tạo số ngẫu nhiên</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+  </aside>
+
+
+    <!-- ===== BREADCRUMB (SEO) ===== -->
+  <nav class="breadcrumb-nav sr-only" aria-label="Breadcrumb">
+    <a href="../index.html"><i class="fas fa-home"></i> Trang chủ</a>
       <span>/</span>
       <a href="../index.html">Công cụ PDF</a>
       <span>/</span>
       <strong>Gộp nhiều PDF</strong>
-    </nav>
-  </div>
+  </nav>
 
-  <div class="tool-hero">
-    <div class="tool-hero-badge"><i class="fas fa-object-group"></i> Ghép nối nhanh chóng</div>
+  <div class="tool-hero" id="toolHero">
     <h1>Gộp nhiều file PDF trực tuyến</h1>
     <p>Nối và kết hợp nhiều tài liệu PDF thành một file duy nhất theo thứ tự mong muốn trong chớp mắt.</p>
   </div>
 
-  <div class="tool-container">
+  <!-- BƯỚC 2: WORKSPACE SẮP XẾP VÀ GHÉP NỐI TOÀN CHIỀU RỘNG (SÁT LỀ PHẢI) -->
+  <div class="tool-workspace full-bleed" id="toolWorkspace">
+    <div class="file-area" style="padding: 24px; overflow-y: auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <strong style="color:#333; font-size:0.95rem;">Danh sách file ghép nối (<span id="fileCountText">0</span> file):</strong>
+        <button type="button" class="btn-add-more" onclick="document.getElementById('fileInput').click()" style="margin:0;">
+          <i class="fas fa-plus"></i> Thêm file khác
+        </button>
+      </div>
+
+      <div id="fileListContainer">
+        <!-- Render dynamically by gop-pdf.js -->
+      </div>
+    </div>
+
+    <aside class="options-area">
+      <div class="options-header">
+        <i class="fas fa-cog" style="margin-right:6px;"></i> Thiết lập file gộp
+      </div>
+      <div class="options-body">
+        <div class="form-group">
+          <label class="form-label" for="outputFileName">Tên file kết quả:</label>
+          <input type="text" id="outputFileName" value="tailieu_da_gop.pdf" style="width:100%; padding:8px 10px; border:1px solid #ccc; border-radius:3px; font-size:0.88rem;">
+        </div>
+        <div style="padding:10px; background:#f4f7fb; border:1px solid #d5dde6; border-radius:3px; font-size:0.82rem; color:#555; margin-top:16px;">
+          <i class="fas fa-info-circle" style="color:#1e5b9c;"></i> Các file sẽ được nối theo thứ tự từ trên xuống dưới trong danh sách bên trái.
+        </div>
+      </div>
+
+      <div class="action-area">
+        <button type="button" class="btn-convert" id="btnMerge" onclick="startMergePdf()">
+          Gộp các file PDF <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="tool-container" id="toolContainer">
 
     <!-- BƯỚC 1: TẢI NHIỀU FILE PDF -->
     <div class="upload-panel" id="uploadPanel">
@@ -99,44 +304,7 @@
           <i class="fas fa-folder-open"></i> Chọn các tệp PDF
         </button>
         <input type="file" id="fileInput" accept=".pdf,application/pdf" multiple style="display:none;">
-        <div class="dz-note"><i class="fas fa-shield-alt"></i> Có thể chọn nhiều file cùng lúc · Tối đa 20 file mỗi lần</div>
-      </div>
-    </div>
-
-    <!-- BƯỚC 2: WORKSPACE SẮP XẾP VÀ GHÉP NỐI -->
-    <div class="tool-workspace" id="toolWorkspace">
-      <div class="workspace-left">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-          <strong style="color:#333; font-size:0.95rem;">Danh sách file ghép nối (<span id="fileCountText">0</span> file):</strong>
-          <button type="button" class="btn-redo" onclick="document.getElementById('fileInput').click()" style="margin:0;">
-            <i class="fas fa-plus"></i> Thêm file khác
-          </button>
-        </div>
-
-        <div id="fileListContainer">
-          <!-- Render dynamically by gop-pdf.js -->
-        </div>
-      </div>
-
-      <div class="workspace-right">
-        <div class="ws-options-head">
-          <i class="fas fa-cog" style="margin-right:6px;"></i> Thiết lập file gộp
-        </div>
-        <div class="ws-options-body">
-          <div class="ws-option-group">
-            <label class="ws-option-label" for="outputFileName">Tên file kết quả:</label>
-            <input type="text" id="outputFileName" value="tailieu_da_gop.pdf" style="width:100%; padding:8px 10px; border:1px solid #ccc; border-radius:3px; font-size:0.88rem;">
-          </div>
-          <div style="padding:10px; background:#f4f7fb; border:1px solid #d5dde6; border-radius:3px; font-size:0.82rem; color:#555;">
-            <i class="fas fa-info-circle" style="color:#1e5b9c;"></i> Các file sẽ được nối theo thứ tự từ trên xuống dưới trong danh sách bên trái.
-          </div>
-        </div>
-
-        <div class="ws-options-action">
-          <button type="button" class="btn-execute" id="btnMerge" onclick="startMergePdf()">
-            Gộp các file PDF <i class="fas fa-arrow-right"></i>
-          </button>
-        </div>
+        <div class="dz-note">Có thể chọn nhiều file cùng lúc · Tối đa 20 file mỗi lần</div>
       </div>
     </div>
 
@@ -174,6 +342,38 @@
           <h4>Bấm gộp &amp; Tải về</h4>
           <p>Nhấn nút "Gộp các file PDF" và lưu tệp hoàn chỉnh về máy tính ngay lập tức.</p>
         </div>
+      </div>
+    </section>
+
+    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
+    <section class="seo-section seo-article">
+      <h2><i class="fas fa-file-alt"></i> Giới thiệu công cụ Gộp nhiều file PDF tại ToolHub</h2>
+
+      <p>Trong quá trình làm việc, học tập hoặc chuẩn bị hồ sơ dự thầu, hồ sơ du học và thủ tục hành chính, bạn thường phải scan hoặc thu thập nhiều tài liệu rời rạc dưới dạng nhiều tệp PDF độc lập. Việc gửi hàng chục tệp lẻ khiến đối tác, khách hàng khó theo dõi và dễ thất lạc tài liệu quan trọng.</p>
+
+      <p>Công cụ <strong>Gộp PDF trực tuyến ToolHub</strong> cho phép bạn nối và ghép không giới hạn số lượng file PDF thành một tệp tài liệu hoàn chỉnh, liền mạch chỉ với vài cú nhấp chuột mà vẫn giữ nguyên 100% định dạng, độ phân giải và chất lượng trang in.</p>
+
+      <div class="seo-grid-cols">
+        <div class="seo-col-card">
+          <h4><i class="fas fa-sort-amount-down"></i> Tùy chỉnh thứ tự linh hoạt</h4>
+          <p>Dễ dàng kéo thả, sắp xếp vị trí các file theo đúng trình tự bạn muốn trước khi tiến hành kết hợp.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-bolt"></i> Xử lý thần tốc</h4>
+          <p>Công nghệ ghép file hiện đại trên trình duyệt giúp hoàn tất quá trình gộp chỉ trong vài giây.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4>Bảo mật an toàn 100%</h4>
+          <p>Kết nối mã hóa SSL 256-bit, tệp của bạn tự động xóa vĩnh viễn khỏi hệ thống sau 60 phút.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-laptop-code"></i> Không cần cài phần mềm</h4>
+          <p>Hoạt động trực tiếp trên web, tương thích hoàn hảo với mọi trình duyệt trên Windows, Mac, iOS và Android.</p>
+        </div>
+      </div>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo quản lý tài liệu:</strong> Sau khi gộp các file PDF thành công, nếu kích thước tệp quá lớn để gửi email, bạn có thể tiếp tục sử dụng ngay công cụ <a href="nen-pdf.html" style="color:#1e5b9c; font-weight:700;">Nén PDF</a> để giảm dung lượng tệp nhanh chóng.
       </div>
     </section>
 

@@ -1,0 +1,385 @@
+/* =========================================================
+   TOOLHUB - SIDEBAR & MOBILE DRAWER (LAYOUT DÙNG CHUNG)
+   Thành phần danh mục công cụ, accordion và ngăn kéo Mobile
+   Đồng bộ 100% trên toàn bộ các trang HTML của ToolHub
+   ========================================================= */
+
+/* --- SIDEBAR CONTAINER (DESKTOP) --- */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+}
+
+/* --- HỘP THÀNH PHẦN (SIDE-BOX) --- */
+.side-box {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.side-box-header {
+  background: #e8e8e0;
+  border-bottom: 1px solid #ccc;
+  padding: 8px 14px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+.side-box-body {
+  padding: 6px 0;
+}
+
+/* --- MENU DANH MỤC (ACCORDION) --- */
+.side-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.side-menu li {
+  border-bottom: 1px dotted #e0e0e0;
+  position: relative;
+}
+.side-menu li:last-child {
+  border-bottom: none;
+}
+
+.side-menu a.menu-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  font-size: 0.88rem;
+  color: #444;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.side-menu a.menu-toggle:hover {
+  background: #f0f5fb;
+  color: #1e5b9c;
+  text-decoration: none;
+}
+.side-menu a.menu-toggle i:first-child {
+  width: 16px;
+  text-align: center;
+  color: #888;
+  font-size: 0.8rem;
+}
+.side-menu a.menu-toggle:hover i:first-child {
+  color: #1e5b9c;
+}
+.side-menu a.menu-toggle .arrow {
+  margin-left: auto;
+  font-size: 0.65rem;
+  color: #aaa;
+  transition: transform 0.2s;
+}
+.side-menu a.menu-toggle.open .arrow {
+  transform: rotate(90deg);
+  color: #1e5b9c;
+}
+.side-menu a.menu-toggle.active {
+  background: #1e5b9c;
+  color: #fff;
+  font-weight: 600;
+}
+.side-menu a.menu-toggle.active i:first-child,
+.side-menu a.menu-toggle.active .arrow {
+  color: #fff;
+}
+
+/* --- SUBMENU CON --- */
+.submenu {
+  list-style: none;
+  display: none;
+  background: #f9fafc;
+  border-top: 1px solid #e5e8ec;
+  padding: 4px 0;
+  margin: 0;
+}
+.submenu.show {
+  display: block;
+}
+.submenu li {
+  border-bottom: none;
+}
+.submenu a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px 5px 36px;
+  font-size: 0.82rem;
+  color: #555;
+  text-decoration: none;
+  transition: background 0.1s, color 0.1s;
+}
+.submenu a:hover {
+  background: #e9f0f8;
+  color: #1e5b9c;
+  text-decoration: none;
+}
+.submenu a i {
+  font-size: 0.7rem;
+  color: #999;
+  width: 14px;
+  text-align: center;
+}
+.submenu a:hover i {
+  color: #1e5b9c;
+}
+
+/* --- HỘP THỐNG KÊ --- */
+.side-stats {
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  color: #666;
+  line-height: 1.7;
+}
+.side-stats strong {
+  color: #1e5b9c;
+}
+
+/* --- CẤU HÌNH THÀNH PHẦN MOBILE TRÊN MÀN HÌNH LỚN (DESKTOP > 992px) --- */
+@media (min-width: 993px) {
+  /* Ẩn hoàn toàn drawer-only trên Desktop của các trang con */
+  .sidebar.drawer-only {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  /* Ẩn thanh header drawer trên Desktop */
+  .sidebar-drawer-header {
+    display: none !important;
+  }
+  /* Ẩn lớp phủ overlay trên Desktop */
+  .sidebar-overlay {
+    display: none !important;
+  }
+  /* Tuyệt đối không hiển thị box đăng nhập/đăng ký trong sidebar ở Desktop */
+  .sidebar-auth-box {
+    display: none !important;
+  }
+  /* Sidebar trang chủ hiển thị dạng cột bình thường */
+  .sidebar {
+    display: block;
+    visibility: visible;
+    position: static;
+    transform: none;
+  }
+}
+
+/* Base style cho các nút trong drawer auth box */
+.drawer-guest-actions {
+  display: flex;
+  gap: 8px;
+}
+.drawer-guest-actions .btn {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.drawer-user-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+.drawer-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.drawer-user-details {
+  min-width: 0;
+}
+.drawer-user-details strong {
+  display: block;
+  font-size: 0.88rem;
+  color: #1e5b9c;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.drawer-user-details small {
+  display: block;
+  font-size: 0.74rem;
+  color: #777;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.drawer-logout-btn {
+  font-size: 0.8rem;
+  color: #c0392b;
+  padding: 5px 8px;
+  border: 1px solid #f0c9c4;
+  border-radius: 3px;
+  background: #fdf3f2;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.drawer-logout-btn:hover {
+  background: #fadbd8;
+  text-decoration: none;
+}
+
+/* Cuộn mượt thanh cuộn của sidebar */
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+/* =========================================================
+   RESPONSIVE MOBILE DRAWER (MÀN HÌNH <= 992px)
+   Áp dụng đồng nhất cho trang chủ và tất cả các trang con
+   ========================================================= */
+@media (max-width: 992px) {
+  /* Overlay mờ nền */
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 9998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .sidebar-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Drawer cố định trượt từ bên PHẢI (Áp dụng cho cả .sidebar và .sidebar.drawer-only) */
+  .sidebar,
+  .sidebar.drawer-only {
+    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+    bottom: 0 !important;
+    width: 310px !important;
+    max-width: 86vw !important;
+    height: 100vh !important;
+    background: #f4f4ee !important;
+    border-left: 1px solid #ccc !important;
+    border-right: none !important;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.22) !important;
+    z-index: 9999 !important;
+    transform: translateX(105%) !important;
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.28s !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    margin: 0 !important;
+    padding: 0 0 40px 0 !important;
+  }
+
+  /* Trạng thái Drawer khi mở */
+  .sidebar.mobile-open,
+  .sidebar.drawer-only.mobile-open {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  /* Thanh tiêu đề Drawer */
+  .sidebar-drawer-header {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: #1e5b9c;
+    color: #fff;
+    border-bottom: 1px solid #174a7e;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .sidebar-drawer-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.98rem;
+    color: #fff;
+    letter-spacing: 0.2px;
+  }
+  .sidebar-drawer-brand .logo-img {
+    width: 24px;
+    height: 24px;
+    border-radius: 3px;
+    background: #fff;
+    padding: 2px;
+  }
+  .sidebar-close-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.15rem;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    padding: 0;
+  }
+  .sidebar-close-btn:hover,
+  .sidebar-close-btn:active {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Khối Auth Box bên trong Mobile Drawer */
+  .sidebar-auth-box {
+    display: block !important;
+    padding: 12px 12px 8px 12px;
+    background: #fff;
+    border-bottom: 1px solid #e0e0dc;
+    margin-bottom: 8px;
+  }
+
+  /* Tinh chỉnh hộp menu bên trong drawer mobile */
+  .sidebar .side-box {
+    margin: 10px 12px 14px 12px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  .side-menu a.menu-toggle {
+    padding: 9px 12px;
+    font-size: 0.9rem;
+  }
+  .submenu a {
+    padding: 7px 12px 7px 36px;
+    font-size: 0.85rem;
+  }
+}

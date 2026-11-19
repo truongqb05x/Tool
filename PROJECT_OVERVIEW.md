@@ -98,7 +98,7 @@ d:\starup\web\Tools\
     │   └── logo.png                       # 🖼️ Logo chính thức của ToolHub (Favicon & Brand Header/Footer)
     │
     ├── css/
-    │   ├── layout/                        # CSS bố cục dùng chung toàn hệ thống
+    │   ├── layout/                        # CSS bố cục dùng chung: base.css (nút login/register chuẩn), header.css, sidebar.css (Drawer mobile), footer.css, modal.css, layout.css
     │   ├── pages/                         # CSS riêng biệt cho từng trang tĩnh
     │   └── tools/                         # CSS chuyên dùng cho các trang công cụ
     │
@@ -138,22 +138,26 @@ Trong `static/js/ultis/search.js`, danh sách `TOOL_DATA` định nghĩa đườ
 ### 3.5. Quy chuẩn Header, Footer & Auth Modal đồng bộ
 Toàn bộ 32 trang HTML trong hệ thống tuân thủ 100% cấu trúc đồng nhất:
 1. **Header chuẩn (`.header`)**:
-   - Logo thương hiệu + Tên dự án ToolHub (tự tính đường dẫn tương đối `../` hoặc `../../` về trang chủ).
-   - Thanh tìm kiếm trung tâm (`#searchInput`) tích hợp gợi ý autocomplete toàn hệ thống.
-   - Khối người dùng: Trạng thái Khách (`#guestActions` - Đăng nhập/Đăng ký) và Người dùng (`#userActions` - Avatar, Name, Dropdown Lịch sử/Cài đặt/Đăng xuất).
+   - Bên trái: Logo thương hiệu ToolHub (tự tính đường dẫn tương đối `../` hoặc `../../` về trang chủ).
+   - Ở giữa: Thanh tìm kiếm trung tâm (`#searchInput`) tích hợp gợi ý autocomplete toàn hệ thống.
+   - Bên phải (`.header-actions`): Nút menu 3 gạch (`#mobileMenuBtn`) khi ở mobile/tablet (`<= 992px`), nút Đăng nhập / Đăng ký (`#guestActions`) khi ở máy tính (`> 992px`), và menu người dùng khi đăng nhập (`#userActions`). Trên giao diện điện thoại, các nút bên ngoài tự động ẩn đi và xuất hiện nổi bật bên trong ngăn kéo Menu Drawer trượt từ bên phải.
 2. **Footer chuẩn 4 cột (`.footer`)**:
    - Cột 1: Thông tin thương hiệu ToolHub, cam kết bảo mật & miễn phí.
    - Cột 2: Danh mục Công cụ PDF tiêu biểu (Nén PDF, Gộp PDF, Tách PDF, PDF sang Word).
    - Cột 3: Danh mục Chỉnh sửa ảnh & Tiện ích web.
    - Cột 4: Hỗ trợ, Điều khoản, Bảo mật và FAQ.
    - Thanh Bottom Bar: Bản quyền `© 2025 ToolHub` và liên kết ngôn ngữ/pháp lý.
-3. **Cơ chế xác thực tập trung (Centralized Auth Modal Architecture)**:
+3. **Cơ chế xác thực tập trung & Tinh giản Header (Centralized Auth Architecture)**:
    - Khối `#authModal` được tập trung duy nhất tại trang chủ [templates/index.html](file:///d:/starup/web/Tools/templates/index.html), giúp giảm tải dung lượng và tránh phân mảnh logic trên các trang con.
-   - Tại tất cả các trang con (31 template), các nút Đăng nhập / Đăng ký trong `#guestActions` là các liên kết thẻ `<a>` trỏ trực tiếp về trang chủ kèm cờ tham số:
-     + Trang cấp 1 (`trogiup.html`, `dieukhoan.html`,...): `href="index.html?auth=login"` / `href="index.html?auth=register"`.
-     + Trang con cấp 2 (`pdf/*.html`, `anh/*.html`,...): `href="../index.html?auth=login"` / `href="../index.html?auth=register"`.
-   - Hàm `initAuthModal()` trong [static/js/ultis/auth.js](file:///d:/starup/web/Tools/static/js/ultis/auth.js) khi khởi chạy tại `index.html` sẽ tự động đọc tham số URL (`?auth=login` hoặc `?auth=register`), mở ngay modal tương ứng và tự động dọn dẹp URL bằng `window.history.replaceState`.
-   - Hàm `openModal(mode)` trong `auth.js` cũng được lập trình an toàn: nếu được gọi tại bất kỳ trang con nào, nó tự động đọc đường dẫn logo để điều hướng về `index.html?auth=...`.
+   - Nút Đăng nhập & Đăng ký được tích hợp sẵn ở vị trí đầu tiên bên trong ngăn kéo Menu (`.sidebar-auth-box` / `#drawerGuestActions`), giúp Header bên ngoài luôn rộng rãi, hiện đại và không bị rối mắt.
+   - Khi nhấn Đăng nhập hoặc Đăng ký từ Menu ngăn kéo ở bất kỳ trang con nào, người dùng được điều hướng về `index.html?auth=login` hoặc `index.html?auth=register`.
+   - Hàm `initAuthModal()` trong [static/js/ultis/auth.js](file:///d:/starup/web/Tools/static/js/ultis/auth.js) tại `index.html` tự động mở modal tương ứng và làm sạch thanh địa chỉ bằng `window.history.replaceState`.
+4. **Giao diện di động & Menu ngăn kéo dùng chung toàn hệ thống (Universal Mobile Responsive Drawer)**:
+   - Hiện diện đầy đủ trên toàn bộ 32 trang HTML: Nút hamburger 3 gạch (`#mobileMenuBtn`) nằm ở góc phải Header trong `.header-actions`.
+   - Khi nhấn nút 3 gạch, ngăn kéo danh mục công cụ (`#sidebar`) trượt mượt mà từ cạnh phải ra màn hình (`mobile-open`) kèm lớp phủ mờ nền (`#sidebarOverlay`).
+   - Trên các trang con (31 template), drawer được gán class `drawer-only` (ẩn hoàn toàn trên máy tính `display: none !important;`, chỉ kích hoạt khi ở chế độ mobile `display: block !important;`), đảm bảo bố cục desktop 1-Page Workflow luôn tinh gọn 100%.
+   - Bên trong Drawer tích hợp sẵn khối Đăng nhập / Đăng ký (`#drawerGuestActions`) tự động chuyển sang Avatar + Tên + Đăng xuất (`#drawerUserActions`) khi đăng nhập.
+   - Hỗ trợ đóng ngăn kéo linh hoạt: nút `×` trên thanh tiêu đề drawer, bấm vào lớp nền phủ mờ, phím `Escape`, hoặc tự động khôi phục khi xoay màn hình lớn.
 
 ---
 

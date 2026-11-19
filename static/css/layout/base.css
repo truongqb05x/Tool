@@ -7,12 +7,17 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   background-color: #f4f4f0;
   color: #333;
   font-size: 14.5px;
   line-height: 1.55;
+  overflow-x: hidden;
 }
 
 a {
@@ -38,10 +43,46 @@ a:hover {
   font-weight: 500;
   cursor: pointer;
   border: 1px solid transparent;
-  display: inline-block;
-  transition: background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s ease;
   font-family: inherit;
   text-decoration: none;
+  line-height: 1.4;
+}
+
+/* Nút Đăng nhập & Đăng ký dùng chung toàn hệ thống */
+.btn-login {
+  background: #fff;
+  border: 1px solid #bbb;
+  color: #333;
+}
+.btn-login:hover {
+  background: #f0f0f0;
+  border-color: #999;
+  color: #1e5b9c;
+  text-decoration: none;
+}
+
+.btn-register {
+  background: #1e5b9c;
+  color: #fff;
+  border: 1px solid #1e5b9c;
+}
+.btn-register:hover {
+  background: #174a7e;
+  border-color: #174a7e;
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn-block {
+  display: flex !important;
+  width: 100% !important;
+  text-align: center;
+  justify-content: center;
 }
 
 .btn-primary {

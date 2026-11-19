@@ -51,7 +51,15 @@ function handlePdfSelected(file) {
   const nameEl = document.getElementById('selectedFileName');
   const sizeEl = document.getElementById('selectedFileSize');
   if (nameEl) nameEl.textContent = file.name;
-  if (sizeEl) sizeEl.textContent = `Dung lượng gốc: ${sizeMb} MB`;
+  if (sizeEl) sizeEl.textContent = `Dung lượng: ${sizeMb} MB`;
+
+  // Ẩn phần giới thiệu hero nhưng vẫn giữ nguyên SEO bằng class sr-only
+  const toolHero = document.getElementById('toolHero') || document.querySelector('.tool-hero');
+  if (toolHero) toolHero.classList.add('sr-only');
+
+  // Căn sát lề trái các khối bên dưới cho đồng bộ với vùng làm việc
+  const toolContainer = document.getElementById('toolContainer') || document.querySelector('.tool-container');
+  if (toolContainer) toolContainer.classList.add('aligned-left');
 
   // Ẩn upload panel và hiển thị workspace
   const uploadPanel = document.getElementById('uploadPanel');
@@ -106,6 +114,8 @@ function startCompression() {
     // Chuyển sang màn hình tải file kết quả
     const toolWorkspace = document.getElementById('toolWorkspace');
     const downloadCard = document.getElementById('downloadCard');
+    const toolContainer = document.getElementById('toolContainer') || document.querySelector('.tool-container');
+    if (toolContainer) toolContainer.classList.remove('aligned-left');
     if (toolWorkspace) toolWorkspace.classList.remove('active');
     if (downloadCard) {
       downloadCard.classList.add('show');
@@ -129,6 +139,13 @@ function resetFileSelection() {
   currentPdfFile = null;
   const fileInput = document.getElementById('fileInput');
   if (fileInput) fileInput.value = '';
+
+  // Khôi phục hiển thị của phần giới thiệu hero và vị trí căn giữa các div bên dưới
+  const toolHero = document.getElementById('toolHero') || document.querySelector('.tool-hero');
+  if (toolHero) toolHero.classList.remove('sr-only');
+
+  const toolContainer = document.getElementById('toolContainer') || document.querySelector('.tool-container');
+  if (toolContainer) toolContainer.classList.remove('aligned-left');
 
   const uploadPanel = document.getElementById('uploadPanel');
   const toolWorkspace = document.getElementById('toolWorkspace');

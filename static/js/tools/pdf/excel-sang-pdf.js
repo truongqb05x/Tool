@@ -51,7 +51,11 @@ function handleFileSelected(file) {
   const uploadPanel = document.getElementById('uploadPanel');
   const toolWorkspace = document.getElementById('toolWorkspace');
   const downloadCard = document.getElementById('downloadCard');
+  const toolHero = document.getElementById('toolHero');
+  const toolContainer = document.getElementById('toolContainer');
 
+  if (toolHero) toolHero.classList.add('sr-only');
+  if (toolContainer) toolContainer.classList.add('aligned-left');
   if (uploadPanel) uploadPanel.style.display = 'none';
   if (downloadCard) downloadCard.classList.remove('show');
   if (toolWorkspace) {
@@ -78,6 +82,8 @@ function executeToolAction() {
 
     const toolWorkspace = document.getElementById('toolWorkspace');
     const downloadCard = document.getElementById('downloadCard');
+    const toolContainer = document.getElementById('toolContainer');
+    if (toolContainer) toolContainer.classList.remove('aligned-left');
 
     if (toolWorkspace) toolWorkspace.classList.remove('active');
     if (downloadCard) {
@@ -110,6 +116,10 @@ function resetFileSelection() {
   const toolWorkspace = document.getElementById('toolWorkspace');
   const downloadCard = document.getElementById('downloadCard');
 
+  const toolHero = document.getElementById('toolHero');
+  const toolContainer = document.getElementById('toolContainer');
+  if (toolHero) toolHero.classList.remove('sr-only');
+  if (toolContainer) toolContainer.classList.remove('aligned-left');
   if (downloadCard) downloadCard.classList.remove('show');
   if (toolWorkspace) toolWorkspace.classList.remove('active');
   if (uploadPanel) uploadPanel.style.display = 'block';

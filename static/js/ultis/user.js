@@ -31,6 +31,11 @@ function applyLoggedInUI(user) {
   if (guestActions) guestActions.style.display = 'none';
   if (userActions) userActions.style.display = '';
 
+  const drawerGuestActions = document.getElementById('drawerGuestActions');
+  const drawerUserActions = document.getElementById('drawerUserActions');
+  if (drawerGuestActions) drawerGuestActions.style.display = 'none';
+  if (drawerUserActions) drawerUserActions.style.display = 'flex';
+
   const initial = (user.name || 'U').charAt(0).toUpperCase();
   const headerAvatar = document.getElementById('headerAvatar');
   const headerUserName = document.getElementById('headerUserName');
@@ -38,6 +43,9 @@ function applyLoggedInUI(user) {
   const dropdownEmail = document.getElementById('dropdownEmail');
   const pageAvatar = document.getElementById('pageAvatar');
   const pageUserName = document.getElementById('pageUserName');
+  const drawerAvatar = document.getElementById('drawerAvatar');
+  const drawerUserName = document.getElementById('drawerUserName');
+  const drawerUserEmail = document.getElementById('drawerUserEmail');
 
   if (headerAvatar) headerAvatar.textContent = initial;
   if (headerUserName) headerUserName.textContent = user.name;
@@ -46,6 +54,10 @@ function applyLoggedInUI(user) {
 
   if (pageAvatar) pageAvatar.textContent = initial;
   if (pageUserName) pageUserName.textContent = 'Xin chào, ' + user.name + '!';
+
+  if (drawerAvatar) drawerAvatar.textContent = initial;
+  if (drawerUserName) drawerUserName.textContent = user.name;
+  if (drawerUserEmail) drawerUserEmail.textContent = user.email;
 }
 
 function applyLoggedOutUI() {
@@ -53,6 +65,11 @@ function applyLoggedOutUI() {
   const userActions = document.getElementById('userActions');
   if (guestActions) guestActions.style.display = 'flex';
   if (userActions) userActions.style.display = 'none';
+
+  const drawerGuestActions = document.getElementById('drawerGuestActions');
+  const drawerUserActions = document.getElementById('drawerUserActions');
+  if (drawerGuestActions) drawerGuestActions.style.display = 'flex';
+  if (drawerUserActions) drawerUserActions.style.display = 'none';
 }
 
 function showUserPage() {

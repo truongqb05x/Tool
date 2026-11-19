@@ -2,6 +2,9 @@
    TOOL PAGE STYLES - TOOL-PAGE.CSS
    Dùng chung cho tất cả các trang công cụ chuyên biệt (SEO + Workspace)
    ========================================================= */
+@import "../layout/workspace.css";
+@import "../layout/form-options.css";
+@import "../layout/workspace-pdf.css";
 
 /* --- BREADCRUMB --- */
 .breadcrumb-nav {
@@ -27,21 +30,6 @@
   padding: 24px 15px 28px;
   max-width: 800px;
   margin: 0 auto;
-}
-.tool-hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #eef4fa;
-  color: #1e5b9c;
-  border: 1px solid #c9dcf0;
-  border-radius: 20px;
-  padding: 4px 14px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  margin-bottom: 12px;
 }
 .tool-hero h1 {
   font-size: 1.85rem;
@@ -153,6 +141,51 @@
 }
 .tool-workspace.active {
   display: flex;
+}
+.tool-workspace.full-bleed {
+  width: 100%;
+  min-height: calc(100vh - 100px);
+  background: #fafbfc;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+  margin: 18px 0 40px 0;
+  align-items: stretch;
+}
+.tool-workspace.full-bleed.active {
+  display: flex;
+}
+.tool-workspace.full-bleed .file-area {
+  flex: 1;
+  min-width: 0;
+  background: #f4f4f0;
+  display: flex;
+  flex-direction: column;
+}
+.tool-workspace.full-bleed .options-area {
+  width: 330px;
+  flex-shrink: 0;
+  background: #fff;
+  border-left: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- CĂN SÁT LỀ TRÁI VÀ KHÔNG GIỚI HẠN BỀ NGANG KHI ĐÃ CHỌN FILE --- */
+.tool-container.aligned-left {
+  max-width: 100% !important;
+  width: 100%;
+  margin: 0 0 40px 0;
+  padding: 0 30px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .tool-container.aligned-left {
+    padding: 0 16px;
+  }
 }
 .workspace-left {
   flex: 1;
@@ -499,12 +532,78 @@
   transform: rotate(180deg);
 }
 
+/* --- SEO ARTICLE CONTENT STYLING --- */
+.seo-article h3 {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #222;
+  margin: 22px 0 10px;
+}
+.seo-article p {
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.seo-article ul {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+.seo-article ul li {
+  font-size: 0.88rem;
+  color: #555;
+  line-height: 1.65;
+  margin-bottom: 8px;
+}
+.seo-article strong {
+  color: #222;
+}
+.seo-highlight-box {
+  background: #f7f9fc;
+  border: 1px solid #dbe4ef;
+  padding: 14px 18px;
+  border-radius: 4px;
+  margin: 18px 0;
+  font-size: 0.88rem;
+  color: #444;
+  line-height: 1.6;
+}
+.seo-grid-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.seo-col-card {
+  background: #fafaf8;
+  border: 1px solid #e2e2dc;
+  border-radius: 4px;
+  padding: 16px;
+}
+.seo-col-card h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e5b9c;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.seo-col-card p {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.55;
+  margin-bottom: 0;
+}
+
 @media (max-width: 768px) {
   .tool-workspace {
     flex-direction: column;
   }
-  .workspace-right {
+  .workspace-right,
+  .options-area {
     width: 100%;
+    border-left: none;
     border-top: 1px solid #ccc;
   }
 }

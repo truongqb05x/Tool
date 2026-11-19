@@ -51,6 +51,10 @@ function addFilesToList(files) {
   const toolWorkspace = document.getElementById('toolWorkspace');
   const downloadCard = document.getElementById('downloadCard');
 
+  const toolHero = document.getElementById('toolHero');
+  const toolContainer = document.getElementById('toolContainer');
+  if (toolHero) toolHero.classList.add('sr-only');
+  if (toolContainer) toolContainer.classList.add('aligned-left');
   if (uploadPanel) uploadPanel.style.display = 'none';
   if (downloadCard) downloadCard.classList.remove('show');
   if (toolWorkspace) {
@@ -140,6 +144,8 @@ function startMergePdf() {
 
     const toolWorkspace = document.getElementById('toolWorkspace');
     const downloadCard = document.getElementById('downloadCard');
+    const toolContainer = document.getElementById('toolContainer');
+    if (toolContainer) toolContainer.classList.remove('aligned-left');
     if (toolWorkspace) toolWorkspace.classList.remove('active');
     if (downloadCard) {
       downloadCard.classList.add('show');
@@ -169,6 +175,10 @@ function resetMergeSelection() {
   const toolWorkspace = document.getElementById('toolWorkspace');
   const downloadCard = document.getElementById('downloadCard');
 
+  const toolHero = document.getElementById('toolHero');
+  const toolContainer = document.getElementById('toolContainer');
+  if (toolHero) toolHero.classList.remove('sr-only');
+  if (toolContainer) toolContainer.classList.remove('aligned-left');
   if (uploadPanel) uploadPanel.style.display = '';
   if (toolWorkspace) toolWorkspace.classList.remove('active');
   if (downloadCard) downloadCard.classList.remove('show');

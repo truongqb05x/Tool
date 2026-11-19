@@ -19,9 +19,9 @@
   <header class="header">
     <div class="container">
       <a href="index.html" class="logo" style="text-decoration:none;">
-        <img src="../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
-        <div class="logo-text">ToolHub</div>
-      </a>
+          <img src="../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+          <div class="logo-text">ToolHub</div>
+        </a>
 
       <div class="header-search-wrap">
         <div class="header-search">
@@ -36,6 +36,10 @@
           <button type="button" class="btn btn-login" onclick="openModal('login')">Đăng nhập</button>
           <button type="button" class="btn btn-register" onclick="openModal('register')">Đăng ký</button>
         </div>
+
+        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu công cụ">
+          <i class="fas fa-bars"></i>
+        </button>
 
         <div id="userActions" class="user-menu" style="display:none;">
           <div class="user-menu-trigger" id="userMenuTrigger">
@@ -65,11 +69,48 @@
   </header>
 
   <!-- ===== LAYOUT ===== -->
+  <!-- Lớp phủ màn hình khi mở Menu Drawer trên Mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
   <div class="container">
     <div class="layout">
 
       <!-- ===== SIDEBAR ===== -->
-      <aside class="sidebar">
+      <aside class="sidebar" id="sidebar">
+        <!-- Header Drawer dành riêng cho Mobile -->
+        <div class="sidebar-drawer-header">
+          <div class="sidebar-drawer-brand">
+            <img src="../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+            <span>Danh mục công cụ</span>
+          </div>
+          <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng menu">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <!-- Auth Box bên trong Mobile Drawer -->
+        <div class="sidebar-auth-box">
+          <div id="drawerGuestActions" class="drawer-guest-actions">
+            <button type="button" class="btn btn-login" onclick="closeMobileSidebar(); openModal('login');">
+              <i class="fas fa-sign-in-alt"></i> Đăng nhập
+            </button>
+            <button type="button" class="btn btn-register" onclick="closeMobileSidebar(); openModal('register');">
+              <i class="fas fa-user-plus"></i> Đăng ký
+            </button>
+          </div>
+          <div id="drawerUserActions" class="drawer-user-actions" style="display:none;">
+            <div class="drawer-user-info">
+              <div class="user-avatar" id="drawerAvatar">U</div>
+              <div class="drawer-user-details">
+                <strong id="drawerUserName">Người dùng</strong>
+                <small id="drawerUserEmail">user@example.com</small>
+              </div>
+            </div>
+            <a href="#" class="drawer-logout-btn" onclick="logout(); closeMobileSidebar(); return false;">
+              <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </a>
+          </div>
+        </div>
         <div class="side-box">
           <div class="side-box-header"><i class="fas fa-list" style="margin-right:6px;"></i> Danh mục công cụ</div>
           <div class="side-box-body">
@@ -614,7 +655,12 @@
             </div>
           </div>
           <div class="form-row">
-            <label><input type="checkbox" id="agreeTerms"> Tôi đồng ý với <a href="#" onclick="return false;" style="display:inline;">điều khoản</a></label>
+            <label class="terms-label">
+                <input type="checkbox" id="agreeTerms">
+                Tôi đã đọc và đồng ý với
+                <a href="/terms-of-service" target="_blank">Điều khoản sử dụng</a>
+                của dịch vụ.
+            </label>          
           </div>
           <button type="submit" class="btn-submit" id="registerSubmitBtn">Tạo tài khoản</button>
         </form>

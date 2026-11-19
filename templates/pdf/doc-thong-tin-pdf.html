@@ -9,9 +9,7 @@
 
   <!-- Font Awesome & CSS Layout -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="../../static/css/layout/base.css">
-  <link rel="stylesheet" href="../../static/css/layout/header.css">
-  <link rel="stylesheet" href="../../static/css/layout/footer.css">
+  <link rel="stylesheet" href="../../static/css/layout/layout.css">
   <link rel="stylesheet" href="../../static/css/layout/modal.css">
   <link rel="stylesheet" href="../../static/css/tools/tool-page.css">
   <link rel="icon" type="image/png" href="../../static/img/logo.png">
@@ -40,6 +38,10 @@
           <a href="../index.html?auth=register" class="btn btn-register">Đăng ký</a>
         </div>
 
+        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu công cụ">
+          <i class="fas fa-bars"></i>
+        </button>
+
         <div id="userActions" class="user-menu" style="display:none;">
           <div class="user-menu-trigger" id="userMenuTrigger">
             <div class="user-avatar" id="headerAvatar">U</div>
@@ -67,24 +69,266 @@
     </div>
   </header>
 
-  <!-- ===== BREADCRUMB & HERO ===== -->
-  <div class="container">
-    <nav class="breadcrumb-nav">
-      <a href="../index.html"><i class="fas fa-home"></i> Trang chủ</a>
+  <!-- Lớp phủ màn hình khi mở Menu Drawer trên Mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Drawer Menu dành riêng cho Mobile trên các trang con -->
+  <aside class="sidebar drawer-only" id="sidebar">
+    <!-- Header Drawer dành riêng cho Mobile -->
+    <div class="sidebar-drawer-header">
+      <div class="sidebar-drawer-brand">
+        <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+        <span>Danh mục công cụ</span>
+      </div>
+      <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng menu">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Auth Box bên trong Mobile Drawer -->
+    <div class="sidebar-auth-box">
+      <div id="drawerGuestActions" class="drawer-guest-actions">
+        <a href="../index.html?auth=login" class="btn btn-login">
+          <i class="fas fa-sign-in-alt"></i> Đăng nhập
+        </a>
+        <a href="../index.html?auth=register" class="btn btn-register">
+          <i class="fas fa-user-plus"></i> Đăng ký
+        </a>
+      </div>
+      <div id="drawerUserActions" class="drawer-user-actions" style="display:none;">
+        <div class="drawer-user-info">
+          <div class="user-avatar" id="drawerAvatar">U</div>
+          <div class="drawer-user-details">
+            <strong id="drawerUserName">Người dùng</strong>
+            <small id="drawerUserEmail">user@example.com</small>
+          </div>
+        </div>
+        <a href="#" class="drawer-logout-btn" onclick="logout(); closeMobileSidebar(); return false;">
+          <i class="fas fa-sign-out-alt"></i> Đăng xuất
+        </a>
+      </div>
+    </div>
+
+    <div class="side-box">
+          <div class="side-box-header"><i class="fas fa-list" style="margin-right:6px;"></i> Danh mục công cụ</div>
+          <div class="side-box-body">
+            <ul class="side-menu">
+              <li>
+                <a href="#" class="menu-toggle active">
+                  <i class="fas fa-th-large"></i>
+                  <span>Tất cả công cụ</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-star"></i> Mới nhất</a></li>
+                  <li><a href="#"><i class="fas fa-fire"></i> Phổ biến</a></li>
+                  <li><a href="#"><i class="fas fa-clock"></i> Dùng gần đây</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-file-pdf"></i>
+                  <span>Công cụ PDF</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="../pdf/index.html" style="font-weight:700; color:#1e5b9c;"><i class="fas fa-th-list"></i> Xem tất cả công cụ PDF</a></li>
+                  <li><a href="../pdf/nen-pdf.html"><i class="fas fa-compress-alt"></i> Nén PDF</a></li>
+                  <li><a href="../pdf/gop-pdf.html"><i class="fas fa-object-group"></i> Gộp PDF</a></li>
+                  <li><a href="../pdf/tach-pdf.html"><i class="fas fa-cut"></i> Tách PDF</a></li>
+                  <li><a href="../pdf/xoay-pdf.html"><i class="fas fa-redo"></i> Xoay PDF</a></li>
+                  <li><a href="../pdf/xoa-trang-pdf.html"><i class="fas fa-trash-alt"></i> Xóa trang PDF</a></li>
+                  <li><a href="../pdf/sap-xep-trang-pdf.html"><i class="fas fa-sort-amount-down"></i> Sắp xếp trang PDF</a></li>
+                  <li><a href="../pdf/trich-xuat-trang-pdf.html"><i class="fas fa-file-export"></i> Trích xuất trang PDF</a></li>
+                  <li><a href="../pdf/pdf-sang-word.html"><i class="fas fa-file-word"></i> PDF sang Word</a></li>
+                  <li><a href="../pdf/pdf-sang-excel.html"><i class="fas fa-file-excel"></i> PDF sang Excel</a></li>
+                  <li><a href="../pdf/pdf-sang-powerpoint.html"><i class="fas fa-file-powerpoint"></i> PDF sang PowerPoint</a></li>
+                  <li><a href="../pdf/word-sang-pdf.html"><i class="fas fa-file-word"></i> Word sang PDF</a></li>
+                  <li><a href="../pdf/excel-sang-pdf.html"><i class="fas fa-file-excel"></i> Excel sang PDF</a></li>
+                  <li><a href="../pdf/powerpoint-sang-pdf.html"><i class="fas fa-file-powerpoint"></i> PowerPoint sang PDF</a></li>
+                  <li><a href="../pdf/pdf-sang-anh.html"><i class="fas fa-file-image"></i> PDF sang ảnh</a></li>
+                  <li><a href="../pdf/anh-sang-pdf.html"><i class="fas fa-images"></i> Ảnh sang PDF</a></li>
+                  <li><a href="../pdf/chinh-sua-pdf.html"><i class="fas fa-edit"></i> Chỉnh sửa PDF</a></li>
+                  <li><a href="../pdf/them-so-trang-pdf.html"><i class="fas fa-list-ol"></i> Thêm số trang PDF</a></li>
+                  <li><a href="../pdf/them-watermark-pdf.html"><i class="fas fa-stamp"></i> Thêm watermark PDF</a></li>
+                  <li><a href="../pdf/bao-ve-pdf.html"><i class="fas fa-lock"></i> Bảo vệ PDF</a></li>
+                  <li><a href="../pdf/mo-khoa-pdf.html"><i class="fas fa-unlock-alt"></i> Mở khóa PDF</a></li>
+                  <li><a href="../pdf/ky-pdf.html"><i class="fas fa-signature"></i> Ký PDF</a></li>
+                  <li><a href="../pdf/so-sanh-pdf.html"><i class="fas fa-columns"></i> So sánh PDF</a></li>
+                  <li><a href="../pdf/ocr-pdf.html"><i class="fas fa-eye"></i> OCR PDF</a></li>
+                  <li><a href="../pdf/doc-thong-tin-pdf.html"><i class="fas fa-info-circle"></i> Đọc thông tin PDF</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-image"></i>
+                  <span>Chỉnh sửa ảnh</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="../anh/cat-anh.html"><i class="fas fa-crop-alt"></i> Cắt &amp; xoay ảnh</a></li>
+                  <li><a href="../anh/cat-anh.html"><i class="fas fa-images"></i> Ghép ảnh</a></li>
+                  <li><a href="../anh/cat-anh.html"><i class="fas fa-magic"></i> Xóa phông nền</a></li>
+                  <li><a href="../anh/cat-anh.html"><i class="fas fa-adjust"></i> Chỉnh màu</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-mobile-alt"></i>
+                  <span>Ứng dụng App</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-calculator"></i> Máy tính online</a></li>
+                  <li><a href="../tien-ich/tao-ma-qr.html"><i class="fas fa-qrcode"></i> Tạo mã QR</a></li>
+                  <li><a href="#"><i class="fas fa-clock"></i> Đồng hồ đếm ngược</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-exchange-alt"></i>
+                  <span>Chuyển đổi</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-file-word"></i> Word sang PDF</a></li>
+                  <li><a href="#"><i class="fas fa-file-excel"></i> Excel sang PDF</a></li>
+                  <li><a href="#"><i class="fas fa-file-image"></i> Ảnh sang PDF</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-file-alt"></i>
+                  <span>Văn bản</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-spell-check"></i> Kiểm tra chính tả</a></li>
+                  <li><a href="#"><i class="fas fa-text-width"></i> Đếm ký tự</a></li>
+                  <li><a href="#"><i class="fas fa-language"></i> Dịch văn bản</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-video"></i>
+                  <span>Video</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-cut"></i> Cắt video</a></li>
+                  <li><a href="#"><i class="fas fa-compress"></i> Nén video</a></li>
+                  <li><a href="#"><i class="fas fa-exchange-alt"></i> Chuyển đổi định dạng</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="menu-toggle">
+                  <i class="fas fa-tools"></i>
+                  <span>Tiện ích khác</span>
+                  <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu">
+                  <li><a href="#"><i class="fas fa-ruler"></i> Chuyển đổi đơn vị</a></li>
+                  <li><a href="#"><i class="fas fa-key"></i> Tạo mật khẩu</a></li>
+                  <li><a href="#"><i class="fas fa-random"></i> Tạo số ngẫu nhiên</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+  </aside>
+
+
+    <!-- ===== BREADCRUMB (SEO) ===== -->
+  <nav class="breadcrumb-nav sr-only" aria-label="Breadcrumb">
+    <a href="../index.html"><i class="fas fa-home"></i> Trang chủ</a>
       <span>/</span>
       <a href="../index.html">Công cụ PDF</a>
       <span>/</span>
       <strong>Đọc thông tin PDF</strong>
-    </nav>
-  </div>
+  </nav>
 
-  <div class="tool-hero">
-    <div class="tool-hero-badge"><i class="fas fa-bolt"></i> Miễn phí 100% · Trực tuyến</div>
+  <div class="tool-hero" id="toolHero">
     <h1>Đọc thông tin PDF trực tuyến</h1>
     <p>Xem metadata chi tiết: tiêu đề, tác giả, ngày tạo, số trang, bảo mật.</p>
   </div>
 
-  <div class="tool-container">
+  
+  <!-- BƯỚC 2: WORKSPACE XỬ LÝ TOÀN CHIỀU RỘNG (SÁT LỀ PHẢI THEO CHUẨN XULY.HTML) -->
+  <div class="tool-workspace full-bleed" id="toolWorkspace">
+    <!-- Cột trái: Khu vực xem trước file đã chọn -->
+    <div class="file-area">
+      <div class="file-area-content">
+        <div class="file-card-wrap" id="fileCardWrap">
+          <div class="file-card" id="fileCard">
+            <button type="button" class="btn-remove-file" onclick="resetFileSelection()" title="Xóa file">
+              <i class="fas fa-times"></i>
+            </button>
+            <div class="file-preview" id="filePreview">
+              <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
+                <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
+                <div class="line title"></div>
+                <div class="line"></div>
+                <div class="line short"></div>
+                <div class="line"></div>
+                <div class="line block"></div>
+                <div class="line"></div>
+                <div class="line short"></div>
+              </div>
+            </div>
+            <div class="file-name" id="selectedFileName">tai_lieu.pdf</div>
+            <div class="file-meta" id="selectedFileSize" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 0 KB</div>
+          </div>
+        </div>
+
+        <!-- Nút chọn file khác -->
+        <button type="button" class="btn-add-more" onclick="resetFileSelection()">
+          <i class="fas fa-sync-alt"></i> Chọn file khác
+        </button>
+      </div>
+    </div>
+
+    <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
+    <aside class="options-area">
+      <div class="options-header">
+        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+      </div>
+
+      <div class="options-body">
+        <div class="form-group">
+          <label class="form-label">Chế độ thực hiện</label>
+          <div class="ws-option-group">
+            <label class="ws-radio-box selected">
+              <input type="radio" name="toolMode" value="standard" checked>
+              <div class="ws-radio-text">
+                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
+                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
+              </div>
+            </label>
+            <label class="ws-radio-box">
+              <input type="radio" name="toolMode" value="advanced">
+              <div class="ws-radio-text">
+                <strong>Chế độ nâng cao</strong>
+                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div style="padding:12px; background:#f9fafb; border:1px dashed #d5dde6; border-radius:3px; font-size:0.82rem; color:#666; margin-top:16px;">
+          <i class="fas fa-info-circle" style="color:#1e5b9c; margin-right:4px;"></i>
+          Thuật toán tối ưu sẽ tự động bảo toàn chất lượng tài liệu và xử lý với tốc độ cao nhất.
+        </div>
+      </div>
+
+      <div class="action-area">
+        <button type="button" class="btn-convert btn-execute" id="btnExecute" onclick="executeToolAction()">
+          Đọc thông tin metadata <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="tool-container" id="toolContainer">
 
     <!-- BƯỚC 1: KHUNG TẢI FILE (UPLOAD PANEL) -->
     <div class="upload-panel" id="uploadPanel">
@@ -103,61 +347,7 @@
       </div>
     </div>
 
-    <!-- BƯỚC 2: KHÔNG GIAN LÀM VIỆC (WORKSPACE) -->
-    <div class="tool-workspace" id="toolWorkspace">
-      <div class="ws-grid">
-        <!-- Cột trái: Xem trước file -->
-        <div class="ws-preview-card">
-          <div class="ws-preview-header">
-            <span><i class="fas fa-file-alt"></i> Thông tin tài liệu</span>
-            <button type="button" class="btn-change-file" onclick="resetFileSelection()">
-              <i class="fas fa-exchange-alt"></i> Đổi tệp
-            </button>
-          </div>
-          <div class="ws-file-meta">
-            <div class="ws-file-icon"><i class="fas fa-info-circle"></i></div>
-            <div class="ws-file-info">
-              <strong id="selectedFileName">tai_lieu.pdf</strong>
-              <span id="selectedFileSize">Dung lượng: 0 KB</span>
-            </div>
-          </div>
-          <div class="ws-page-counter">
-            <i class="fas fa-check-circle" style="color:#27ae60;"></i> File đã sẵn sàng để xử lý
-          </div>
-        </div>
-
-        <!-- Cột phải: Cấu hình tùy chọn -->
-        <div class="ws-options-card">
-          <div class="ws-options-header">
-            <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
-          </div>
-
-          <div class="ws-option-group">
-            <div class="ws-option-label">Chế độ thực hiện</div>
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
-              <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
-              </div>
-            </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
-              <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
-              </div>
-            </label>
-          </div>
-
-          <button type="button" class="btn-execute" id="btnExecute" onclick="executeToolAction()">
-            Đọc thông tin metadata <i class="fas fa-arrow-right"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
       <h3>Đã trích xuất toàn bộ thông tin chi tiết của tài liệu!</h3>
@@ -195,7 +385,7 @@
     </section>
 
     <section class="seo-section">
-      <h2><i class="fas fa-shield-alt"></i> Bảo mật tài liệu &amp; Quyền riêng tư tối đa</h2>
+      <h2>Bảo mật tài liệu &amp; Quyền riêng tư tối đa</h2>
       <p>ToolHub cam kết bảo vệ dữ liệu người dùng ở mức cao nhất:</p>
       <div class="security-features">
         <div class="sec-item">
@@ -240,6 +430,35 @@
         </div>
         <div class="tool-faq-a">
           Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+        </div>
+      </div>
+    </section>
+
+  
+    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
+    <section class="seo-section seo-article">
+      <h2><i class="fas fa-file-alt"></i> Giới thiệu công cụ Đọc thông tin & Metadata PDF tại ToolHub</h2>
+
+      <p>Mỗi tệp PDF đều chứa siêu dữ liệu (Metadata) quan trọng như tác giả tạo lập, phần mềm biên soạn, ngày tạo, ngày sửa đổi lần cuối, số trang và phiên bản chuẩn PDF mà người đọc thông thường khó thấy được.</p>
+
+      <p>Công cụ <strong>Đọc thông tin PDF ToolHub</strong> giúp bạn trích xuất toàn bộ siêu dữ liệu chi tiết của file PDF một cách nhanh chóng, minh bạch và chính xác, phục vụ công tác kiểm tra bản quyền, tính toàn vẹn và nguồn gốc tài liệu.</p>
+
+      <div class="seo-grid-cols">
+        <div class="seo-col-card">
+          <h4><i class="fas fa-info-circle"></i> Trích xuất Metadata toàn diện</h4>
+          <p>Xem thông tin tác giả, tiêu đề, chủ đề, từ khóa và nhà sản xuất PDF.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-cogs"></i> Kiểm tra thông số kỹ thuật</h4>
+          <p>Hiển thị chuẩn PDF, số trang, kích thước trang in và thuật toán mã hóa.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-shield-alt"></i> Hỗ trợ rà soát bản quyền</h4>
+          <p>Xác minh tính hợp lệ và thời gian khởi tạo của tài liệu điện tử.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-check-circle"></i> Trực quan & dễ tra cứu</h4>
+          <p>Trình bày dữ liệu khoa học, rõ ràng và có thể sao chép nhanh chóng.</p>
         </div>
       </div>
     </section>
