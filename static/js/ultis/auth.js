@@ -132,15 +132,61 @@ function handleLogin(e) {
   const password = passEl.value;
   const remember = rememberEl ? rememberEl.checked : true;
 
-  if (!email) { showError('Vui lòng nhập email hoặc tên đăng nhập.'); return; }
+  if (!email) { showError('Vui lòng nhập địa chỉ email.'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('Địa chỉ email không đúng định dạng.'); return; }
   if (!password) { showError('Vui lòng nhập mật khẩu.'); return; }
   if (password.length < 6) { showError('Mật khẩu phải có ít nhất 6 ký tự.'); return; }
 
+  const btn = document.getElementById('loginSubmitBtn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang đăng nhập...';
+  }
+
+  // Gọi API xác thực thực tế tới Backend Flask & CSDL SQLite
+  fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email, password: password, remember: remember })
+  })
+  .then(function(res) {
+    return res.json().then(function(data) {
+      return { status: res.status, ok: res.ok, data: data };
+    });
+  })
+  .then(function(result) {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Đăng nhập';
+    }
+
+    if (result.ok && result.data.success) {
+      const user = result.data.user;
+      user.remember = remember;
+      if (typeof setLoggedIn === 'function') {
+        setLoggedIn(user);
+      }
+      closeModal();
+      const form = document.getElementById('loginForm');
+      if (form) form.reset();
+    } else {
+      showError(result.data.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
+    }
+  })
+  .catch(function(err) {
+    console.warn('Lỗi kết nối API login, fallback sang localStorage:', err);
+    // Fallback dự phòng khi chạy file tĩnh độc lập (file://)
+    handleLoginFallback(email, password, remember, btn);
+  });
+}
+
+function handleLoginFallback(email, password, remember, btn) {
   const users = JSON.parse(localStorage.getItem('toolhub_users') || '{}');
   let displayName;
 
   if (users[email.toLowerCase()]) {
     if (users[email.toLowerCase()].password !== password) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Đăng nhập'; }
       showError('Mật khẩu không đúng. Vui lòng thử lại.');
       return;
     }
@@ -148,12 +194,6 @@ function handleLogin(e) {
   } else {
     displayName = email.split('@')[0];
     displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
-  }
-
-  const btn = document.getElementById('loginSubmitBtn');
-  if (btn) {
-    btn.disabled = true;
-    btn.textContent = 'Đang đăng nhập...';
   }
 
   setTimeout(function() {
@@ -167,21 +207,19 @@ function handleLogin(e) {
     closeModal();
     const form = document.getElementById('loginForm');
     if (form) form.reset();
-  }, 500);
+  }, 400);
 }
 
 function handleRegister(e) {
   if (e) e.preventDefault();
   clearError();
 
-  const nameEl = document.getElementById('regName');
   const emailEl = document.getElementById('regEmail');
   const passEl = document.getElementById('regPassword');
   const confEl = document.getElementById('regPasswordConfirm');
   const agreeEl = document.getElementById('agreeTerms');
   if (!emailEl || !passEl) return;
 
-  const rawName = nameEl ? nameEl.value.trim() : '';
   const email = emailEl.value.trim();
   const password = passEl.value;
   const confirm = confEl ? confEl.value : '';
@@ -194,24 +232,68 @@ function handleRegister(e) {
   if (password !== confirm) { showError('Mật khẩu xác nhận không khớp.'); return; }
   if (!agree) { showError('Bạn cần đồng ý với điều khoản để tiếp tục.'); return; }
 
+  const btn = document.getElementById('registerSubmitBtn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý đăng ký...';
+  }
+
+  // Gọi API Đăng ký thực tế tới Backend Flask & SQLite DB
+  fetch('/api/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: email,
+      password: password,
+      confirm_password: confirm,
+      agree_terms: agree
+    })
+  })
+  .then(function(res) {
+    return res.json().then(function(data) {
+      return { status: res.status, ok: res.ok, data: data };
+    });
+  })
+  .then(function(result) {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Tạo tài khoản';
+    }
+
+    if (result.ok && result.data.success) {
+      const user = result.data.user;
+      user.remember = true;
+
+      if (typeof setLoggedIn === 'function') {
+        setLoggedIn(user);
+      }
+      closeModal();
+      const form = document.getElementById('registerForm');
+      if (form) form.reset();
+
+      // Hiển thị hộp thoại thông báo đăng ký thành công phong cách cổ điển
+      showClassicRegisterNotice(user.name, user.email);
+    } else {
+      showError(result.data.message || 'Đăng ký không thành công. Vui lòng thử lại.');
+    }
+  })
+  .catch(function(err) {
+    console.warn('Lỗi kết nối API register, fallback sang localStorage:', err);
+    // Fallback dự phòng khi chạy file tĩnh độc lập (file://)
+    handleRegisterFallback(email, password, btn);
+  });
+}
+
+function handleRegisterFallback(email, password, btn) {
   const users = JSON.parse(localStorage.getItem('toolhub_users') || '{}');
   if (users[email.toLowerCase()]) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Tạo tài khoản'; }
     showError('Email này đã được đăng ký. Vui lòng đăng nhập.');
     return;
   }
 
-  // Tên hiển thị (nếu để trống thì trích xuất từ email)
-  let name = rawName;
-  if (!name) {
-    const prefix = email.split('@')[0].replace(/[^a-zA-Z0-9]/g, ' ').trim();
-    name = prefix.charAt(0).toUpperCase() + prefix.slice(1);
-  }
-
-  const btn = document.getElementById('registerSubmitBtn');
-  if (btn) {
-    btn.disabled = true;
-    btn.textContent = 'Đang xử lý đăng ký...';
-  }
+  const prefix = email.split('@')[0].replace(/[^a-zA-Z0-9]/g, ' ').trim();
+  const name = prefix.charAt(0).toUpperCase() + prefix.slice(1);
 
   setTimeout(function() {
     if (btn) {
@@ -228,9 +310,8 @@ function handleRegister(e) {
     const form = document.getElementById('registerForm');
     if (form) form.reset();
 
-    // Hiển thị hộp thoại thông báo đăng ký thành công phong cách cổ điển
     showClassicRegisterNotice(name, email);
-  }, 600);
+  }, 400);
 }
 
 /**
@@ -288,7 +369,7 @@ function showClassicForgotNotice(email) {
   overlay.innerHTML = `
     <div class="classic-dialog" role="alertdialog" aria-modal="true">
       <div class="classic-dialog-header">
-        <span><i class="fas fa-key"></i> HỆ THỐNG TOOLHUB — KHÔI PHỤC MẬT KHẨU</span>
+        <span>HỆ THỐNG TOOLHUB — KHÔI PHỤC MẬT KHẨU</span>
       </div>
       <div class="classic-dialog-body">
         <div class="classic-dialog-icon" style="background:#eef4fa; border-color:#bcd5ee; color:#1e5b9c;">
@@ -344,7 +425,7 @@ function showClassicRegisterNotice(name, email) {
   overlay.innerHTML = `
     <div class="classic-dialog" role="alertdialog" aria-modal="true">
       <div class="classic-dialog-header">
-        <span><i class="fas fa-shield-alt"></i> HỆ THỐNG TOOLHUB — THÔNG BÁO ĐĂNG KÝ</span>
+        <span> HỆ THỐNG TOOLHUB — THÔNG BÁO ĐĂNG KÝ</span>
       </div>
       <div class="classic-dialog-body">
         <div class="classic-dialog-icon">

@@ -12,6 +12,20 @@
   <!-- CSS RIÊNG CỦA TRANG CHỦ -->
   <link rel="stylesheet" href="../static/css/pages/index.css">
   <link rel="icon" type="image/png" href="../static/img/logo.png">
+
+  <!-- Khôi phục sớm trạng thái đăng nhập để tránh chớp nháy giao diện -->
+  <script>
+    (function() {
+      try {
+        if (localStorage.getItem('toolhub_current_user') || sessionStorage.getItem('toolhub_current_user')) {
+          document.documentElement.classList.add('logged-in');
+          document.addEventListener('DOMContentLoaded', function() {
+            if (document.body) document.body.classList.add('logged-in');
+          });
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
 
@@ -609,10 +623,10 @@
 
         <form id="loginForm" onsubmit="handleLogin(event)">
           <div class="form-group">
-            <label for="loginEmail">Email hoặc tên đăng nhập</label>
+            <label for="loginEmail">Email</label>
             <div class="input-wrap">
               <i class="fas fa-envelope"></i>
-              <input type="text" id="loginEmail" placeholder="you@example.com" autocomplete="username">
+              <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email">
             </div>
           </div>
           <div class="form-group">

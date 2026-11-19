@@ -19,5 +19,12 @@ class Config:
         'office': {'docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt'}
     }
     
+    # Cấu hình Cơ sở dữ liệu SQLite (Lưu trong src/database/toolhub.db)
+    DATABASE_DIR = os.path.join(BASE_DIR, 'src', 'database')
+    DATABASE_URI = os.environ.get(
+        'DATABASE_URI',
+        f"sqlite:///{os.path.join(DATABASE_DIR, 'toolhub.db')}"
+    )
+
     # Tự động reload khi template thay đổi
     TEMPLATES_AUTO_RELOAD = True

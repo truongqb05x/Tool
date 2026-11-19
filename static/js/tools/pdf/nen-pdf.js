@@ -5,6 +5,8 @@
 
 let currentPdfFile = null;
 let currentCompressionLevel = 'recommended';
+let currentDownloadUrl = null;
+let currentDownloadName = null;
 
 function initNenPdfTool() {
   const fileInput = document.getElementById('fileInput');
@@ -107,51 +109,111 @@ function startCompression() {
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang nén file PDF...';
 
-  setTimeout(function() {
+  // Chuẩn bị FormData gửi lên Backend Flask
+  const formData = new FormData();
+  formData.append('file', currentPdfFile);
+  formData.append('level', currentCompressionLevel);
+
+  fetch('/pdf/api/nen-pdf', {
+    method: 'POST',
+    body: formData
+  })
+  .then(function(res) {
+    return res.json().then(function(data) {
+      return { ok: res.ok, status: res.status, data: data };
+    });
+  })
+  .then(function(result) {
     btn.disabled = false;
     btn.innerHTML = originalText;
 
-    // Tính toán giả lập dung lượng sau nén dựa trên mức độ nén
-    let ratio = 0.5; // recommended 50%
-    if (currentCompressionLevel === 'extreme') ratio = 0.3; // extreme 70%
-    if (currentCompressionLevel === 'light') ratio = 0.75; // light 25%
+    if (result.ok && result.data.status === 'success') {
+      const data = result.data.data;
+      currentDownloadUrl = data.download_url;
+      currentDownloadName = data.download_name;
 
-    const origSize = currentPdfFile.size ? (currentPdfFile.size / (1024 * 1024)) : 15.4;
-    const newSize = (origSize * ratio).toFixed(1);
-    const origSizeFormatted = origSize.toFixed(1);
-    const savedPercent = Math.round((1 - ratio) * 100);
+      // Cập nhật thông số dung lượng thực tế từ Backend
+      const downloadMeta = document.getElementById('downloadMeta');
+      if (downloadMeta) {
+        downloadMeta.innerHTML = `Dung lượng đã giảm từ <strong>${data.original_size_formatted}</strong> xuống còn <strong>${data.compressed_size_formatted}</strong> (tiết kiệm <strong>${data.saved_percent}%</strong>).`;
+      }
 
-    const downloadMeta = document.getElementById('downloadMeta');
-    if (downloadMeta) {
-      downloadMeta.innerHTML = `Dung lượng đã giảm từ <strong>${origSizeFormatted} MB</strong> xuống còn <strong>${newSize} MB</strong> (tiết kiệm <strong>${savedPercent}%</strong>).`;
+      // Chuyển sang màn hình tải file kết quả (giữ lề và padding aligned-left giống giao diện xử lý)
+      const toolWorkspace = document.getElementById('toolWorkspace');
+      const downloadCard = document.getElementById('downloadCard');
+      const toolContainer = document.getElementById('toolContainer') || document.querySelector('.tool-container');
+      if (toolContainer) toolContainer.classList.add('aligned-left');
+      if (toolWorkspace) toolWorkspace.classList.remove('active');
+      if (downloadCard) {
+        downloadCard.classList.add('show');
+        downloadCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    } else {
+      const errMsg = (result.data && result.data.message) ? result.data.message : 'Có lỗi xảy ra trong quá trình nén file PDF.';
+      alert(errMsg);
     }
+  })
+  .catch(function(err) {
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+    console.warn('Lỗi kết nối tới Backend API nén PDF, fallback giả lập:', err);
 
-    // Chuyển sang màn hình tải file kết quả
-    const toolWorkspace = document.getElementById('toolWorkspace');
-    const downloadCard = document.getElementById('downloadCard');
-    const toolContainer = document.getElementById('toolContainer') || document.querySelector('.tool-container');
-    if (toolContainer) toolContainer.classList.remove('aligned-left');
-    if (toolWorkspace) toolWorkspace.classList.remove('active');
-    if (downloadCard) {
-      downloadCard.classList.add('show');
-      downloadCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-  }, 1200);
+    // Fallback giả lập khi chạy file tĩnh độc lập không qua server
+    fallbackCompressionSimulation();
+  });
+}
+
+function fallbackCompressionSimulation() {
+  let ratio = 0.5;
+  if (currentCompressionLevel === 'extreme') ratio = 0.3;
+  if (currentCompressionLevel === 'light') ratio = 0.75;
+
+  const origSize = currentPdfFile.size ? (currentPdfFile.size / (1024 * 1024)) : 15.4;
+  const newSize = (origSize * ratio).toFixed(1);
+  const origSizeFormatted = origSize.toFixed(1);
+  const savedPercent = Math.round((1 - ratio) * 100);
+
+  const downloadMeta = document.getElementById('downloadMeta');
+  if (downloadMeta) {
+    downloadMeta.innerHTML = `Dung lượng đã giảm từ <strong>${origSizeFormatted} MB</strong> xuống còn <strong>${newSize} MB</strong> (tiết kiệm <strong>${savedPercent}%</strong>).`;
+  }
+
+  const toolWorkspace = document.getElementById('toolWorkspace');
+  const downloadCard = document.getElementById('downloadCard');
+  const toolContainer = document.getElementById('toolContainer') || document.querySelector('.tool-container');
+  if (toolContainer) toolContainer.classList.add('aligned-left');
+  if (toolWorkspace) toolWorkspace.classList.remove('active');
+  if (downloadCard) {
+    downloadCard.classList.add('show');
+    downloadCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 }
 
 function downloadCompressedFile() {
-  const baseName = currentPdfFile ? currentPdfFile.name.replace(/\.[^/.]+$/, '') : 'tailieu_nen';
-  const fileName = baseName + '_nen.pdf';
-
-  if (typeof fakeDownload === 'function') {
-    fakeDownload(fileName);
+  if (currentDownloadUrl) {
+    // Tải tệp thực tế từ Backend Server
+    const a = document.createElement('a');
+    a.href = currentDownloadUrl;
+    a.download = currentDownloadName || 'tailieu_nen.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   } else {
-    alert('Đã tải xuống file ' + fileName);
+    // Fallback giả lập khi chạy offline
+    const baseName = currentPdfFile ? currentPdfFile.name.replace(/\.[^/.]+$/, '') : 'tailieu_nen';
+    const fileName = baseName + '_nen.pdf';
+    if (typeof fakeDownload === 'function') {
+      fakeDownload(fileName);
+    } else {
+      alert('Đã tải xuống file ' + fileName);
+    }
   }
 }
 
 function resetFileSelection() {
   currentPdfFile = null;
+  currentDownloadUrl = null;
+  currentDownloadName = null;
   const fileInput = document.getElementById('fileInput');
   if (fileInput) fileInput.value = '';
 

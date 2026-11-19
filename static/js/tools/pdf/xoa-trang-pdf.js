@@ -83,7 +83,7 @@ function executeToolAction() {
     const toolWorkspace = document.getElementById('toolWorkspace');
     const downloadCard = document.getElementById('downloadCard');
     const toolContainer = document.getElementById('toolContainer');
-    if (toolContainer) toolContainer.classList.remove('aligned-left');
+    if (toolContainer) toolContainer.classList.add('aligned-left');
 
     if (toolWorkspace) toolWorkspace.classList.remove('active');
     if (downloadCard) {

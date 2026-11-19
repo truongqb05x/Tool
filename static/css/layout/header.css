@@ -379,12 +379,37 @@
   color: #c0392b;
 }
 
+/* =========================================================
+   TRẠNG THÁI HIỂN THỊ XÁC THỰC (ĐĂNG NHẬP / CHƯA ĐĂNG NHẬP)
+   ========================================================= */
+html.logged-in #guestActions,
+html.logged-in #drawerGuestActions,
+body.logged-in #guestActions,
+body.logged-in #drawerGuestActions {
+  display: none !important;
+}
+
+html.logged-in #userActions,
+body.logged-in #userActions {
+  display: flex !important;
+}
+
+html.logged-in #drawerUserActions,
+body.logged-in #drawerUserActions {
+  display: flex !important;
+}
+
+body:not(.logged-in) #userActions,
+body:not(.logged-in) #drawerUserActions {
+  display: none !important;
+}
+
 /* Header Responsive */
 @media (min-width: 993px) {
   .mobile-menu-btn {
     display: none !important;
   }
-  #guestActions {
+  body:not(.logged-in):not(.guest-only) #guestActions {
     display: flex !important;
     gap: 8px;
   }
