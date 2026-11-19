@@ -8,31 +8,26 @@ def uploaded_file(filename):
     return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)
 
 @main_bp.route('/')
-@main_bp.route('/index.html')
 def index():
     """Trang chủ ToolHub."""
     return render_template('index.html')
 
 @main_bp.route('/trogiup')
-@main_bp.route('/trogiup.html')
 def trogiup():
     """Trung tâm trợ giúp & FAQ."""
     return render_template('trogiup.html')
 
 @main_bp.route('/dieukhoan')
-@main_bp.route('/dieukhoan.html')
 def dieukhoan():
     """Điều khoản sử dụng & Chính sách bảo mật."""
     return render_template('dieukhoan.html')
 
 @main_bp.route('/chon-file')
-@main_bp.route('/chon-file.html')
 def chon_file():
     """Trang chọn file dự phòng."""
     return render_template('chon-file.html')
 
 @main_bp.route('/xuly')
-@main_bp.route('/xuly.html')
 def xuly():
     """Trang xử lý file dự phòng."""
     return render_template('xuly.html')

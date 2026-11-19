@@ -23,7 +23,8 @@
     basePath + 'sidebar.js',
     basePath + 'search.js',
     basePath + 'auth.js',
-    basePath + 'user.js'
+    basePath + 'user.js',
+    basePath + 'user-files.js'
   ];
 
   // Nạp tuần tự các module vào trang

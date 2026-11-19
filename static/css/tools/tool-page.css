@@ -484,6 +484,32 @@
   font-size: 0.92rem;
   margin-bottom: 20px;
 }
+.save-account-notice {
+  margin: -6px auto 20px;
+  max-width: 440px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 0.84rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.save-account-notice.saved {
+  background: #eafaf1;
+  color: #27ae60;
+  border: 1px solid #c3e6cb;
+}
+.save-account-notice.guest {
+  background: #fdf8e2;
+  color: #856404;
+  border: 1px solid #ffeeba;
+}
+.save-account-notice a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+}
 .btn-download-result {
   display: inline-flex;
   align-items: center;

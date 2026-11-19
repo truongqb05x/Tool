@@ -1,8 +1,11 @@
 import os
 import uuid
-from flask import Blueprint, render_template, request, jsonify, send_file, current_app
+import shutil
+from flask import Blueprint, render_template, request, jsonify, send_file, current_app, session
 from werkzeug.utils import secure_filename
 from ..services.pdf_service import PdfService
+from ..services.user_service import get_user_by_id
+from ..services.user_file_service import save_user_file
 
 pdf_bp = Blueprint('pdf', __name__, url_prefix='/pdf')
 
@@ -101,6 +104,48 @@ def api_compress_pdf():
         base_name = os.path.splitext(filename)[0]
         download_name = f"{base_name}_nen.pdf"
 
+        # Kiểm tra xem người dùng đã đăng nhập chưa (qua session hoặc header/param)
+        user_id = session.get('user_id')
+        if not user_id:
+            auth_id = request.headers.get('X-User-Id') or request.form.get('user_id')
+            if auth_id and str(auth_id).isdigit():
+                user_id = int(auth_id)
+
+        user = get_user_by_id(user_id) if user_id else None
+
+        saved_in_account = False
+        user_file_id = None
+        download_url = f"/pdf/download/{task_id}/{download_name}"
+
+        # NẾU ĐÃ ĐĂNG NHẬP: Tự động lưu file vào kho lưu trữ tài khoản của người dùng
+        if user and user.is_active:
+            user_storage_dir = os.path.join(upload_dir, 'users', str(user.id))
+            os.makedirs(user_storage_dir, exist_ok=True)
+            user_file_dest = os.path.join(user_storage_dir, f"{task_id}_{download_name}")
+            shutil.copy2(output_path, user_file_dest)
+
+            user_file = save_user_file(
+                user_id=user.id,
+                original_name=filename,
+                file_name=download_name,
+                file_path=user_file_dest,
+                file_size=result['compressed_size'],
+                file_type='pdf',
+                tool_slug='nen-pdf',
+                tool_title='Nén PDF',
+                meta_dict={
+                    'original_size': result['original_size'],
+                    'compressed_size': result['compressed_size'],
+                    'original_size_formatted': result['original_size_formatted'],
+                    'compressed_size_formatted': result['compressed_size_formatted'],
+                    'saved_percent': result['saved_percent'],
+                    'level': level
+                }
+            )
+            saved_in_account = True
+            user_file_id = user_file.id
+            download_url = f"/api/user/files/{user_file.id}/download"
+
         return jsonify({
             'status': 'success',
             'message': 'Nén file PDF thành công!',
@@ -113,7 +158,9 @@ def api_compress_pdf():
                 'original_size_formatted': result['original_size_formatted'],
                 'compressed_size_formatted': result['compressed_size_formatted'],
                 'saved_percent': result['saved_percent'],
-                'download_url': f"/pdf/download/{task_id}/{download_name}"
+                'download_url': download_url,
+                'saved_in_account': saved_in_account,
+                'user_file_id': user_file_id
             }
         }), 200
 

@@ -114,10 +114,12 @@ function startCompression() {
   formData.append('file', currentPdfFile);
   formData.append('level', currentCompressionLevel);
 
-  fetch('/pdf/api/nen-pdf', {
-    method: 'POST',
-    body: formData
-  })
+  // Sử dụng UserFiles helper chung (tự động gắn user_id và session nếu đã đăng nhập)
+  const uploadPromise = (window.UserFiles && typeof window.UserFiles.uploadAndProcess === 'function')
+    ? window.UserFiles.uploadAndProcess('/pdf/api/nen-pdf', formData)
+    : fetch('/pdf/api/nen-pdf', { method: 'POST', body: formData, credentials: 'same-origin' });
+
+  uploadPromise
   .then(function(res) {
     return res.json().then(function(data) {
       return { ok: res.ok, status: res.status, data: data };
@@ -134,8 +136,31 @@ function startCompression() {
 
       // Cập nhật thông số dung lượng thực tế từ Backend
       const downloadMeta = document.getElementById('downloadMeta');
+      const downloadSuccessTitle = document.getElementById('downloadSuccessTitle');
+
       if (downloadMeta) {
-        downloadMeta.innerHTML = `Dung lượng đã giảm từ <strong>${data.original_size_formatted}</strong> xuống còn <strong>${data.compressed_size_formatted}</strong> (tiết kiệm <strong>${data.saved_percent}%</strong>).`;
+        if (data.saved_percent > 0) {
+          if (downloadSuccessTitle) downloadSuccessTitle.textContent = 'File PDF của bạn đã được nén thành công!';
+          downloadMeta.innerHTML = `Dung lượng đã giảm từ <strong>${data.original_size_formatted}</strong> xuống còn <strong>${data.compressed_size_formatted}</strong> (tiết kiệm <strong>${data.saved_percent}%</strong>).`;
+        } else {
+          // Trường hợp file vốn đã tối ưu tối đa
+          if (downloadSuccessTitle) downloadSuccessTitle.textContent = 'File PDF đã ở kích thước tối ưu nhất!';
+          downloadMeta.innerHTML = `Tệp này đã được tối ưu hóa trước đó (<strong>${data.compressed_size_formatted}</strong>). Dung lượng được giữ nguyên để bảo toàn 100% chất lượng nội dung.`;
+        }
+      }
+
+      // Thông báo lưu trữ tài khoản
+      const saveNotice = document.getElementById('saveAccountNotice');
+      if (saveNotice) {
+        if (data.saved_in_account) {
+          saveNotice.className = 'save-account-notice saved';
+          saveNotice.innerHTML = '<i class="fas fa-check-circle"></i> File đã được tự động lưu vào <a href="/">File của bạn</a> trong tài khoản.';
+          saveNotice.style.display = 'flex';
+        } else {
+          saveNotice.className = 'save-account-notice guest';
+          saveNotice.innerHTML = '<i class="fas fa-info-circle"></i> <a href="#" onclick="openModal(\'login\'); return false;">Đăng nhập</a> để tự động lưu trữ và quản lý file của bạn lâu dài.';
+          saveNotice.style.display = 'flex';
+        }
       }
 
       // Chuyển sang màn hình tải file kết quả (giữ lề và padding aligned-left giống giao diện xử lý)

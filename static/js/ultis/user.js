@@ -8,6 +8,7 @@ const CURRENT_USER_KEY = 'toolhub_current_user';
 function setLoggedIn(user) {
   const storage = user.remember ? localStorage : sessionStorage;
   storage.setItem(CURRENT_USER_KEY, JSON.stringify({
+    id: user.id,
     name: user.name,
     email: user.email
   }));
@@ -90,6 +91,12 @@ function showUserPage() {
   const userPage = document.getElementById('userPage');
   if (guestPage) guestPage.style.display = 'none';
   if (userPage) userPage.classList.add('show');
+
+  // Tự động tải danh sách "File của bạn" và thống kê thực tế
+  if (window.UserFiles) {
+    window.UserFiles.renderFilesList('userFileList');
+    window.UserFiles.updateDashboardStats();
+  }
 }
 
 function showGuestPage() {

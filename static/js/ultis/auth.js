@@ -1,8 +1,3 @@
-/* =========================================================
-   XÁC THỰC & HỘP THOẠI ĐĂNG NHẬP / ĐĂNG KÝ - AUTH.JS
-   Quản lý modal popup, đăng ký, đăng nhập và thông báo lỗi
-   ========================================================= */
-
 function openModal(mode) {
   const authModal = document.getElementById('authModal');
   if (authModal) {
@@ -11,8 +6,8 @@ function openModal(mode) {
     switchTab(mode || 'login');
     clearError();
   } else {
-    // Nếu trang hiện tại chưa có authModal, xác định đường dẫn về index.html và chuyển hướng
-    let target = 'index.html';
+    // Nếu trang hiện tại chưa có authModal, xác định đường dẫn về trang chủ và chuyển hướng
+    let target = '/';
     const logoLink = document.querySelector('header .logo');
     if (logoLink && logoLink.getAttribute('href')) {
       target = logoLink.getAttribute('href');

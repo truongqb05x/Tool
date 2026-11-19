@@ -1,44 +1,39 @@
-/* =========================================================
-   TÌM KIẾM & GỢI Ý AUTOCOMPLETE - SEARCH.JS
-   Quản lý danh sách công cụ, tìm kiếm nhanh và phím tắt
-   ========================================================= */
-
 const TOOL_DATA = [
   // TRANG TỔNG HỢP CÔNG CỤ PDF
-  { name: 'Tất cả công cụ PDF', key: 'tat-ca-cong-cu-pdf', icon: 'fa-file-pdf', cat: 'Công cụ PDF', url: 'pdf/index.html' },
+  { name: 'Tất cả công cụ PDF', key: 'tat-ca-cong-cu-pdf', icon: 'fa-file-pdf', cat: 'Công cụ PDF', url: '/pdf' },
 
   // 24 CÔNG CỤ PDF ĐẦY ĐỦ
-  { name: 'Nén PDF', key: 'nen-pdf', icon: 'fa-compress-alt', cat: 'Công cụ PDF', url: 'pdf/nen-pdf.html' },
-  { name: 'Gộp PDF', key: 'gop-pdf', icon: 'fa-object-group', cat: 'Công cụ PDF', url: 'pdf/gop-pdf.html' },
-  { name: 'Tách PDF', key: 'tach-pdf', icon: 'fa-cut', cat: 'Công cụ PDF', url: 'pdf/tach-pdf.html' },
-  { name: 'Xoay PDF', key: 'xoay-pdf', icon: 'fa-redo', cat: 'Công cụ PDF', url: 'pdf/xoay-pdf.html' },
-  { name: 'Xóa trang PDF', key: 'xoa-trang-pdf', icon: 'fa-trash-alt', cat: 'Công cụ PDF', url: 'pdf/xoa-trang-pdf.html' },
-  { name: 'Sắp xếp trang PDF', key: 'sap-xep-trang-pdf', icon: 'fa-sort-amount-down', cat: 'Công cụ PDF', url: 'pdf/sap-xep-trang-pdf.html' },
-  { name: 'Trích xuất trang PDF', key: 'trich-xuat-trang-pdf', icon: 'fa-file-export', cat: 'Công cụ PDF', url: 'pdf/trich-xuat-trang-pdf.html' },
-  { name: 'Chuyển PDF sang Word', key: 'pdf-sang-word', icon: 'fa-file-word', cat: 'Công cụ PDF', url: 'pdf/pdf-sang-word.html' },
-  { name: 'Chuyển PDF sang Excel', key: 'pdf-sang-excel', icon: 'fa-file-excel', cat: 'Công cụ PDF', url: 'pdf/pdf-sang-excel.html' },
-  { name: 'Chuyển PDF sang PowerPoint', key: 'pdf-sang-powerpoint', icon: 'fa-file-powerpoint', cat: 'Công cụ PDF', url: 'pdf/pdf-sang-powerpoint.html' },
-  { name: 'Chuyển Word sang PDF', key: 'word-sang-pdf', icon: 'fa-file-word', cat: 'Công cụ PDF', url: 'pdf/word-sang-pdf.html' },
-  { name: 'Chuyển Excel sang PDF', key: 'excel-sang-pdf', icon: 'fa-file-excel', cat: 'Công cụ PDF', url: 'pdf/excel-sang-pdf.html' },
-  { name: 'Chuyển PowerPoint sang PDF', key: 'powerpoint-sang-pdf', icon: 'fa-file-powerpoint', cat: 'Công cụ PDF', url: 'pdf/powerpoint-sang-pdf.html' },
-  { name: 'PDF sang ảnh', key: 'pdf-sang-anh', icon: 'fa-file-image', cat: 'Công cụ PDF', url: 'pdf/pdf-sang-anh.html' },
-  { name: 'Ảnh sang PDF', key: 'anh-sang-pdf', icon: 'fa-images', cat: 'Công cụ PDF', url: 'pdf/anh-sang-pdf.html' },
-  { name: 'Chỉnh sửa PDF', key: 'chinh-sua-pdf', icon: 'fa-edit', cat: 'Công cụ PDF', url: 'pdf/chinh-sua-pdf.html' },
-  { name: 'Thêm số trang PDF', key: 'them-so-trang-pdf', icon: 'fa-list-ol', cat: 'Công cụ PDF', url: 'pdf/them-so-trang-pdf.html' },
-  { name: 'Thêm watermark PDF', key: 'them-watermark-pdf', icon: 'fa-stamp', cat: 'Công cụ PDF', url: 'pdf/them-watermark-pdf.html' },
-  { name: 'Bảo vệ PDF bằng mật khẩu', key: 'bao-ve-pdf', icon: 'fa-lock', cat: 'Công cụ PDF', url: 'pdf/bao-ve-pdf.html' },
-  { name: 'Mở khóa PDF', key: 'mo-khoa-pdf', icon: 'fa-unlock-alt', cat: 'Công cụ PDF', url: 'pdf/mo-khoa-pdf.html' },
-  { name: 'Ký PDF', key: 'ky-pdf', icon: 'fa-signature', cat: 'Công cụ PDF', url: 'pdf/ky-pdf.html' },
-  { name: 'So sánh PDF', key: 'so-sanh-pdf', icon: 'fa-columns', cat: 'Công cụ PDF', url: 'pdf/so-sanh-pdf.html' },
-  { name: 'OCR PDF', key: 'ocr-pdf', icon: 'fa-eye', cat: 'Công cụ PDF', url: 'pdf/ocr-pdf.html' },
-  { name: 'Đọc thông tin PDF', key: 'doc-thong-tin-pdf', icon: 'fa-info-circle', cat: 'Công cụ PDF', url: 'pdf/doc-thong-tin-pdf.html' },
+  { name: 'Nén PDF', key: 'nen-pdf', icon: 'fa-compress-alt', cat: 'Công cụ PDF', url: '/pdf/nen-pdf' },
+  { name: 'Gộp PDF', key: 'gop-pdf', icon: 'fa-object-group', cat: 'Công cụ PDF', url: '/pdf/gop-pdf' },
+  { name: 'Tách PDF', key: 'tach-pdf', icon: 'fa-cut', cat: 'Công cụ PDF', url: '/pdf/tach-pdf' },
+  { name: 'Xoay PDF', key: 'xoay-pdf', icon: 'fa-redo', cat: 'Công cụ PDF', url: '/pdf/xoay-pdf' },
+  { name: 'Xóa trang PDF', key: 'xoa-trang-pdf', icon: 'fa-trash-alt', cat: 'Công cụ PDF', url: '/pdf/xoa-trang-pdf' },
+  { name: 'Sắp xếp trang PDF', key: 'sap-xep-trang-pdf', icon: 'fa-sort-amount-down', cat: 'Công cụ PDF', url: '/pdf/sap-xep-trang-pdf' },
+  { name: 'Trích xuất trang PDF', key: 'trich-xuat-trang-pdf', icon: 'fa-file-export', cat: 'Công cụ PDF', url: '/pdf/trich-xuat-trang-pdf' },
+  { name: 'Chuyển PDF sang Word', key: 'pdf-sang-word', icon: 'fa-file-word', cat: 'Công cụ PDF', url: '/pdf/pdf-sang-word' },
+  { name: 'Chuyển PDF sang Excel', key: 'pdf-sang-excel', icon: 'fa-file-excel', cat: 'Công cụ PDF', url: '/pdf/pdf-sang-excel' },
+  { name: 'Chuyển PDF sang PowerPoint', key: 'pdf-sang-powerpoint', icon: 'fa-file-powerpoint', cat: 'Công cụ PDF', url: '/pdf/pdf-sang-powerpoint' },
+  { name: 'Chuyển Word sang PDF', key: 'word-sang-pdf', icon: 'fa-file-word', cat: 'Công cụ PDF', url: '/pdf/word-sang-pdf' },
+  { name: 'Chuyển Excel sang PDF', key: 'excel-sang-pdf', icon: 'fa-file-excel', cat: 'Công cụ PDF', url: '/pdf/excel-sang-pdf' },
+  { name: 'Chuyển PowerPoint sang PDF', key: 'powerpoint-sang-pdf', icon: 'fa-file-powerpoint', cat: 'Công cụ PDF', url: '/pdf/powerpoint-sang-pdf' },
+  { name: 'PDF sang ảnh', key: 'pdf-sang-anh', icon: 'fa-file-image', cat: 'Công cụ PDF', url: '/pdf/pdf-sang-anh' },
+  { name: 'Ảnh sang PDF', key: 'anh-sang-pdf', icon: 'fa-images', cat: 'Công cụ PDF', url: '/pdf/anh-sang-pdf' },
+  { name: 'Chỉnh sửa PDF', key: 'chinh-sua-pdf', icon: 'fa-edit', cat: 'Công cụ PDF', url: '/pdf/chinh-sua-pdf' },
+  { name: 'Thêm số trang PDF', key: 'them-so-trang-pdf', icon: 'fa-list-ol', cat: 'Công cụ PDF', url: '/pdf/them-so-trang-pdf' },
+  { name: 'Thêm watermark PDF', key: 'them-watermark-pdf', icon: 'fa-stamp', cat: 'Công cụ PDF', url: '/pdf/them-watermark-pdf' },
+  { name: 'Bảo vệ PDF bằng mật khẩu', key: 'bao-ve-pdf', icon: 'fa-lock', cat: 'Công cụ PDF', url: '/pdf/bao-ve-pdf' },
+  { name: 'Mở khóa PDF', key: 'mo-khoa-pdf', icon: 'fa-unlock-alt', cat: 'Công cụ PDF', url: '/pdf/mo-khoa-pdf' },
+  { name: 'Ký PDF', key: 'ky-pdf', icon: 'fa-signature', cat: 'Công cụ PDF', url: '/pdf/ky-pdf' },
+  { name: 'So sánh PDF', key: 'so-sanh-pdf', icon: 'fa-columns', cat: 'Công cụ PDF', url: '/pdf/so-sanh-pdf' },
+  { name: 'OCR PDF', key: 'ocr-pdf', icon: 'fa-eye', cat: 'Công cụ PDF', url: '/pdf/ocr-pdf' },
+  { name: 'Đọc thông tin PDF', key: 'doc-thong-tin-pdf', icon: 'fa-info-circle', cat: 'Công cụ PDF', url: '/pdf/doc-thong-tin-pdf' },
 
   // CÁC CÔNG CỤ DANH MỤC KHÁC
-  { name: 'Cắt & xoay ảnh', key: 'cat-xoay-anh', icon: 'fa-crop-alt', cat: 'Chỉnh sửa ảnh', url: 'anh/cat-anh.html' },
-  { name: 'Ghép ảnh', key: 'ghep-anh', icon: 'fa-images', cat: 'Chỉnh sửa ảnh', url: 'anh/cat-anh.html' },
-  { name: 'Xóa phông nền', key: 'xoa-phong-nen', icon: 'fa-magic', cat: 'Chỉnh sửa ảnh', url: 'anh/cat-anh.html' },
-  { name: 'Chỉnh màu ảnh', key: 'chinh-mau-anh', icon: 'fa-adjust', cat: 'Chỉnh sửa ảnh', url: 'anh/cat-anh.html' },
-  { name: 'Tạo mã QR', key: 'tao-ma-qr', icon: 'fa-qrcode', cat: 'Ứng dụng App', url: 'tien-ich/tao-ma-qr.html' },
+  { name: 'Cắt & xoay ảnh', key: 'cat-xoay-anh', icon: 'fa-crop-alt', cat: 'Chỉnh sửa ảnh', url: '/anh/cat-anh' },
+  { name: 'Ghép ảnh', key: 'ghep-anh', icon: 'fa-images', cat: 'Chỉnh sửa ảnh', url: '/anh/cat-anh' },
+  { name: 'Xóa phông nền', key: 'xoa-phong-nen', icon: 'fa-magic', cat: 'Chỉnh sửa ảnh', url: '/anh/cat-anh' },
+  { name: 'Chỉnh màu ảnh', key: 'chinh-mau-anh', icon: 'fa-adjust', cat: 'Chỉnh sửa ảnh', url: '/anh/cat-anh' },
+  { name: 'Tạo mã QR', key: 'tao-ma-qr', icon: 'fa-qrcode', cat: 'Ứng dụng App', url: '/tien-ich/tao-ma-qr' },
   { name: 'Máy tính online', key: 'may-tinh-online', icon: 'fa-calculator', cat: 'Ứng dụng App', url: '#' },
   { name: 'Đồng hồ đếm ngược', key: 'dong-ho-dem-nguoc', icon: 'fa-clock', cat: 'Ứng dụng App', url: '#' },
   { name: 'Kiểm tra chính tả', key: 'kiem-tra-chinh-ta', icon: 'fa-spell-check', cat: 'Văn bản', url: '#' },
@@ -117,11 +112,8 @@ function renderSuggestions(query, suggestionsBox) {
 
 function resolveToolUrl(url) {
   if (!url || url === '#' || url.startsWith('http')) return url;
-  const isSubfolder = window.location.pathname.indexOf('/pdf/') !== -1 ||
-                      window.location.pathname.indexOf('/anh/') !== -1 ||
-                      window.location.pathname.indexOf('/tien-ich/') !== -1 ||
-                      window.location.pathname.indexOf('/chuyen-doi/') !== -1;
-  return isSubfolder ? ('../' + url) : url;
+  if (url.startsWith('/')) return url;
+  return '/' + url.replace(/^\.\.\//, '').replace(/\.html$/, '');
 }
 
 function selectSuggestion(name, url) {
