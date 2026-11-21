@@ -14,4 +14,10 @@ from .user_service import (
     get_user_by_id,
     validate_email
 )
+from .pdf import (
+    PdfService,
+    compress_pdf,
+    merge_pdfs,
+    split_pdf
+)
 

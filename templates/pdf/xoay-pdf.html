@@ -257,12 +257,33 @@
   <div class="tool-workspace full-bleed" id="toolWorkspace">
     <!-- Cột trái: Khu vực xem trước file đã chọn -->
     <div class="file-area">
+      <!-- Nút nổi thêm / đổi file (theo chuẩn ToolHub) -->
+      <div class="floating-add-wrap">
+        <div class="floating-add-tooltip" id="floatingAddTooltip" onclick="document.getElementById('fileInput').click()">Chọn file khác</div>
+        <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Chọn file khác">
+          <span class="floating-badge" id="floatingBadge">1</span>
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+
       <div class="file-area-content">
         <div class="file-card-wrap" id="fileCardWrap">
-          <div class="file-card" id="fileCard">
+          <div class="file-card" id="fileCard" data-rotation="0">
+            <!-- Nút xóa file -->
             <button type="button" class="btn-remove-file" onclick="resetFileSelection()" title="Xóa file">
               <i class="fas fa-times"></i>
             </button>
+
+            <!-- Tùy chọn khi hover: Xoay 90 độ & Phóng to (Zoom) -->
+            <div class="file-card-actions">
+              <button type="button" class="btn-card-action" onclick="rotateFileDirection(90)" title="Xoay phải 90 độ">
+                <i class="fas fa-redo"></i>
+              </button>
+              <button type="button" class="btn-card-action" onclick="openPdfZoomModal()" title="Phóng to xem trước">
+                <i class="fas fa-search-plus"></i>
+              </button>
+            </div>
+
             <div class="file-preview" id="filePreview">
               <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
                 <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
@@ -279,45 +300,52 @@
             <div class="file-meta" id="selectedFileSize" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 0 KB</div>
           </div>
         </div>
-
-        <!-- Nút chọn file khác -->
-        <button type="button" class="btn-add-more" onclick="resetFileSelection()">
-          <i class="fas fa-sync-alt"></i> Chọn file khác
-        </button>
       </div>
     </div>
 
-    <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
+    <!-- Cột phải: Bảng tùy chọn xoay PDF sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-redo" style="margin-right:6px;"></i> Tùy chọn xoay PDF
       </div>
 
       <div class="options-body">
-        <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
-          <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
-              <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
-              </div>
-            </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
-              <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
-              </div>
-            </label>
+        <div class="form-group" style="margin-bottom:14px;">
+          <label class="form-label">Chọn hướng xoay tài liệu</label>
+          <div class="ws-rotate-action-grid">
+            <button type="button" class="btn-rotate-dir" onclick="rotateFileDirection(-90)" title="Xoay ngược chiều kim đồng hồ 90 độ">
+              <i class="fas fa-undo"></i>
+              <span>Xoay trái 90°</span>
+            </button>
+            <button type="button" class="btn-rotate-dir" onclick="rotateFileDirection(90)" title="Xoay thuận chiều kim đồng hồ 90 độ">
+              <i class="fas fa-redo"></i>
+              <span>Xoay phải 90°</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="ws-rotate-status">
+          <div class="rotate-status-label">
+            <i class="fas fa-compass"></i> Góc xoay hiện tại:
+          </div>
+          <span class="rotate-status-val" id="rotateStatusBadge">0° (Gốc)</span>
+        </div>
+
+        <button type="button" class="btn-reset-rotation" id="btnResetRotation" onclick="resetRotation()" style="display:none;">
+          <i class="fas fa-history"></i> Đặt lại về ban đầu (0°)
+        </button>
+
+        <div class="ws-info-box" style="margin-top:14px;">
+          <i class="fas fa-info-circle"></i>
+          <div id="rotateNoticeText">
+            Tất cả các trang trong tài liệu sẽ được xoay cùng hướng theo góc bạn đã chọn và lưu cố định vào tệp mới.
           </div>
         </div>
       </div>
 
       <div class="action-area">
         <button type="button" class="btn-convert btn-execute" id="btnExecute" onclick="executeToolAction()">
-          Xoay PDF ngay <i class="fas fa-arrow-right"></i>
+          Xoay file PDF ngay <i class="fas fa-arrow-right"></i>
         </button>
       </div>
     </aside>
@@ -328,53 +356,54 @@
     <!-- BƯỚC 1: KHUNG TẢI FILE (UPLOAD PANEL) -->
     <div class="upload-panel" id="uploadPanel">
       <div class="upload-panel-header">
-        <i class="fas fa-redo"></i> Tải tệp lên để thực hiện Xoay PDF
+        <i class="fas fa-redo"></i> Tải tệp PDF lên để xoay hướng trang
       </div>
       <div class="drop-zone" id="dropZone">
         <div class="dz-icon"><i class="fas fa-redo"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <h3>Kéo &amp; thả file PDF vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Chỉ hỗ trợ 1 file PDF mỗi lần xử lý · Tối đa 50 MB</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Tất cả trang PDF đã được xoay đúng hướng!</h3>
-      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <h3 id="downloadSuccessTitle">Tất cả trang PDF đã được xoay đúng hướng!</h3>
+      <p id="downloadMeta">Tài liệu đã được lưu hướng mới hoàn tất và sẵn sàng tải về máy tính.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultFile()">
         <i class="fas fa-download"></i> Tải xuống file PDF đã xoay
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
-          <i class="fas fa-redo"></i> Xử lý tệp khác
+          <i class="fas fa-redo"></i> Xoay một file PDF khác
         </button>
       </div>
     </div>
 
     <!-- ===== NỘI DUNG CHUẨN SEO ===== -->
     <section class="seo-section">
-      <h2>Hướng dẫn sử dụng Xoay PDF trực tuyến trong 3 bước</h2>
+      <h2>Cách xoay file PDF trực tuyến chỉ trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file PDF lên</h4>
+          <p>Kéo và thả file PDF cần xoay vào khung ở trên hoặc nhấn chọn tệp từ máy tính, điện thoại.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Chọn hướng xoay</h4>
+          <p>Bấm nút <strong>Xoay trái 90°</strong> hoặc <strong>Xoay phải 90°</strong> để điều chỉnh đúng chiều xem mong muốn.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
-          <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <h4>Lưu file PDF đã xoay</h4>
+          <p>Bấm "Xoay file PDF ngay" và tải ngay tài liệu đã cố định hướng chuẩn xác về thiết bị.</p>
         </div>
       </div>
     </section>
@@ -386,19 +415,19 @@
         <div class="sec-item">
           <div>
             <strong>Mã hóa SSL 256-bit</strong>
-            <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức HTTPS.</span>
+            <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức mã hóa HTTPS.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
             <strong>Tự động xóa sau 1 giờ</strong>
-            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút.</span>
+            <span>Tệp xử lý sẽ được xóa hoàn toàn khỏi máy chủ sau 60 phút, không lưu giữ dữ liệu thừa.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
-            <strong>Bảo mật thông tin</strong>
-            <span>Không chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
+            <strong>Bảo vệ quyền riêng tư 100%</strong>
+            <span>Không một ai có quyền xem hay can thiệp vào nội dung các tài liệu của bạn.</span>
           </div>
         </div>
       </div>
@@ -408,50 +437,79 @@
       <h2>Câu hỏi thường gặp về Xoay PDF (FAQ)</h2>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Sử dụng công cụ Xoay PDF tại ToolHub có mất phí không?
+          Xoay file PDF có làm mờ chữ hoặc giảm độ nét hình ảnh không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Hoàn toàn không. Công nghệ PyMuPDF chỉ thay đổi thuộc tính hiển thị hướng trang (rotation matrix) trong metadata của PDF mà không nén lại nội dung, giúp giữ nguyên 100% độ sắc nét ban đầu.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Hướng xoay có được lưu cố định khi gửi qua Email hoặc in ấn không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Có. Sau khi tải về máy, tài liệu đã được lưu vĩnh viễn hướng mới vào cấu trúc tệp. Dù mở trên bất kỳ ứng dụng nào như Adobe Reader, Foxit Reader, trình duyệt hay khi in ra giấy, trang đều hiển thị đúng chiều.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tôi có thể xoay file PDF trên điện thoại iPhone hoặc Android không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Có. Công cụ hoạt động mượt mà trên mọi trình duyệt web di động (Safari, Chrome, Cốc Cốc) mà không đòi hỏi cài đặt ứng dụng phức tạp.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          ToolHub có thu phí khi sử dụng công cụ xoay PDF không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Công cụ Xoay PDF tại ToolHub hoàn toàn miễn phí, không giới hạn số lượt sử dụng trong ngày.
         </div>
       </div>
     </section>
 
-  
     <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
     <section class="seo-section seo-article">
       <h2>Giới thiệu công cụ Xoay PDF trực tuyến tại ToolHub</h2>
 
-      <p>Việc tài liệu sau khi quét (scan) bị ngược đầu, nằm ngang hoặc lệch hướng xảy ra rất phổ biến, gây khó chịu cho người đọc và mất thẩm mỹ khi in ấn hoặc trình chiếu.</p>
+      <p>Trong quá trình làm việc với tài liệu văn phòng, tình trạng tài liệu sau khi quét (scan) từ máy in, chụp ảnh từ điện thoại hay chuyển đổi sang PDF bị ngược đầu 180°, nằm nghiêng 90° sang trái hoặc sang phải là vấn đề rất phổ biến. Điều này gây khó chịu khi xem tài liệu trên máy tính, gây khó khăn cho việc đọc và mất tính chuyên nghiệp khi gửi cho đối tác, khách hàng hoặc nộp hồ sơ xin việc.</p>
 
-      <p>Công cụ <strong>Xoay PDF ToolHub</strong> cho phép bạn xoay hướng tài liệu PDF 90 độ, 180 độ hoặc 270 độ theo chiều kim đồng hồ hoặc ngược lại: xoay toàn bộ tài liệu hoặc xoay riêng từng trang bị ngược một cách linh hoạt.</p>
+      <p>Công cụ <strong>Xoay PDF trực tuyến tại ToolHub</strong> mang đến giải pháp nhanh chóng, tiện lợi và chính xác giúp bạn điều chỉnh hướng hiển thị của toàn bộ trang PDF về chuẩn chỉ bằng vài cú nhấp chuột.</p>
 
       <div class="seo-grid-cols">
         <div class="seo-col-card">
-          <h4><i class="fas fa-redo"></i> Xoay linh hoạt mọi hướng</h4>
-          <p>Xoay sang trái 90°, xoay sang phải 90° hoặc lật ngược 180° chuẩn xác.</p>
+          <h4><i class="fas fa-undo"></i> Xoay trái &amp; Xoay phải 90°</h4>
+          <p>Tùy chọn xoay theo chiều kim đồng hồ hoặc ngược chiều kim đồng hồ từng bước 90°, lật 180° hoặc 270° cực kỳ dễ dàng.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-copy"></i> Xoay từng trang hoặc toàn bộ</h4>
-          <p>Tự do chọn xoay một trang riêng lẻ hoặc áp dụng cho toàn bộ file.</p>
+          <h4><i class="fas fa-eye"></i> Xem trước trực quan thời gian thực</h4>
+          <p>Bản xem trước trang đầu tiên tự động xoay tức thì trên màn hình giúp bạn kiểm tra chính xác hướng tài liệu trước khi bấm xuất file.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-eye"></i> Xem trước trực quan</h4>
-          <p>Hiển thị hướng trang sau khi xoay giúp bạn kiểm tra trước khi lưu.</p>
+          <h4><i class="fas fa-save"></i> Lưu vĩnh viễn vào tệp</h4>
+          <p>Góc xoay mới được ghi cố định vào cấu trúc tệp PDF, đảm bảo khi chia sẻ qua Zalo, Email hoặc in ấn đều giữ nguyên hướng chuẩn.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-save"></i> Lưu vĩnh viễn hướng xoay</h4>
-          <p>Hướng mới được lưu cố định vào tệp, mở trên bất kỳ thiết bị nào cũng chuẩn.</p>
+          <h4><i class="fas fa-shield-alt"></i> Bảo mật an toàn tuyệt đối</h4>
+          <p>Dữ liệu được xử lý tự động trong môi trường cô lập bảo mật cao, mã hóa đường truyền SSL và xóa sạch file sau 60 phút.</p>
         </div>
+      </div>
+
+      <h3>Khi nào bạn nên sử dụng công cụ Xoay PDF?</h3>
+      <ul>
+        <li><strong>Hồ sơ, hợp đồng scan bị ngược:</strong> Khi scan nhiều trang tài liệu từ máy in văn phòng, việc một số trang bị đặt ngược hướng là điều không thể tránh khỏi.</li>
+        <li><strong>Tài liệu chụp ảnh từ smartphone:</strong> Ảnh chụp bảng điểm, hóa đơn, CMND/CCCD chuyển sang PDF thường bị cảm biến điện thoại xoay ngang.</li>
+        <li><strong>Bản vẽ kỹ thuật, đồ án &amp; biểu đồ:</strong> Các trang chứa bản vẽ CAD, bảng biểu ngang (Landscape) cần xoay đúng chiều để trình chiếu hoặc in khổ giấy lớn.</li>
+        <li><strong>Chuẩn hóa hồ sơ xin việc (CV):</strong> Giúp bộ hồ sơ của bạn trông gọn gàng, ngay ngắn và chỉn chu nhất trong mắt nhà tuyển dụng.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo xử lý nhanh:</strong> Bạn có thể dùng 2 nút bấm <strong>Xoay trái 90°</strong> hoặc <strong>Xoay phải 90°</strong> ở cột bên phải, hoặc di chuột trực tiếp vào khung xem trước tài liệu bên trái để bấm nút xoay nhanh tiện lợi.
       </div>
     </section>
 
@@ -516,8 +574,9 @@
   </div>
 
   <!-- SCRIPTS -->
-
-<script src="../../static/js/app.js"></script>
+  <script src="../../static/vendor/pdfjs/pdf.min.js"></script>
+  <script src="../../static/js/ultis/pdf/pdf-preview.js"></script>
+  <script src="../../static/js/app.js"></script>
   <script src="../../static/js/tools/pdf/xoay-pdf.js"></script>
 
 </body>

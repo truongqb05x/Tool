@@ -1,65 +1,19 @@
+"""
+=========================================================
+LOGIC XỬ LÝ NÉN PDF - NEN_PDF.PY
+Tiếp nhận file PDF, gọi dịch vụ nén và quản lý lưu trữ tài khoản
+=========================================================
+"""
+
 import os
 import uuid
 import shutil
-from flask import Blueprint, render_template, request, jsonify, send_file, current_app, session
-from werkzeug.utils import secure_filename
-from ..services.pdf_service import PdfService
-from ..services.user_service import get_user_by_id
-from ..services.user_file_service import save_user_file
+from flask import request, jsonify, current_app, session
+from ...services.pdf import PdfService
+from ...services.user_service import get_user_by_id
+from ...services.user_file_service import save_user_file
 
-pdf_bp = Blueprint('pdf', __name__, url_prefix='/pdf')
 
-# Danh sách 24 công cụ PDF và hàm điều hướng tương ứng
-PDF_TOOLS = [
-    ('nen-pdf', 'Nén PDF'),
-    ('gop-pdf', 'Gộp PDF'),
-    ('tach-pdf', 'Tách PDF'),
-    ('xoay-pdf', 'Xoay PDF'),
-    ('xoa-trang-pdf', 'Xóa trang PDF'),
-    ('sap-xep-trang-pdf', 'Sắp xếp trang PDF'),
-    ('trich-xuat-trang-pdf', 'Trích xuất trang PDF'),
-    ('pdf-sang-word', 'Chuyển PDF sang Word'),
-    ('pdf-sang-excel', 'Chuyển PDF sang Excel'),
-    ('pdf-sang-powerpoint', 'Chuyển PDF sang PowerPoint'),
-    ('word-sang-pdf', 'Chuyển Word sang PDF'),
-    ('excel-sang-pdf', 'Chuyển Excel sang PDF'),
-    ('powerpoint-sang-pdf', 'Chuyển PowerPoint sang PDF'),
-    ('pdf-sang-anh', 'PDF sang ảnh'),
-    ('anh-sang-pdf', 'Ảnh sang PDF'),
-    ('chinh-sua-pdf', 'Chỉnh sửa PDF'),
-    ('them-so-trang-pdf', 'Thêm số trang PDF'),
-    ('them-watermark-pdf', 'Thêm watermark PDF'),
-    ('bao-ve-pdf', 'Bảo vệ PDF bằng mật khẩu'),
-    ('mo-khoa-pdf', 'Mở khóa PDF'),
-    ('ky-pdf', 'Ký PDF'),
-    ('so-sanh-pdf', 'So sánh PDF'),
-    ('ocr-pdf', 'OCR PDF'),
-    ('doc-thong-tin-pdf', 'Đọc thông tin PDF')
-]
-
-def make_view_func(slug):
-    """Tạo hàm render view cho từng công cụ PDF theo slug."""
-    def view_func():
-        return render_template(f'pdf/{slug}.html')
-    view_func.__name__ = f"tool_{slug.replace('-', '_')}"
-    return view_func
-
-# Đăng ký tự động cả 2 chuẩn URL: /pdf/<slug> và /pdf/<slug>.html
-for slug, _ in PDF_TOOLS:
-    func = make_view_func(slug)
-    pdf_bp.add_url_rule(f'/{slug}', view_func=func, methods=['GET'])
-    pdf_bp.add_url_rule(f'/{slug}.html', view_func=func, methods=['GET'])
-
-# ===== TRANG DANH MỤC TẤT CẢ 24 CÔNG CỤ PDF =====
-@pdf_bp.route('')
-@pdf_bp.route('/')
-@pdf_bp.route('/index.html')
-def pdf_index():
-    """Trang danh mục tổng hợp toàn bộ 24 công cụ PDF."""
-    return render_template('pdf/index.html')
-
-# ===== API ROUTE XỬ LÝ NÉN FILE PDF THỰC TẾ =====
-@pdf_bp.route('/api/nen-pdf', methods=['POST'])
 def api_compress_pdf():
     """
     Tiếp nhận file PDF và mức độ nén từ giao diện:
@@ -93,7 +47,7 @@ def api_compress_pdf():
         # Lưu tệp nguồn tạm thời
         uploaded_file.save(input_path)
 
-        # Thực thi nén thực tế
+        # Thực thi nén thực tế bằng PyMuPDF
         result = PdfService.compress_pdf(
             input_path=input_path,
             output_path=output_path,
@@ -104,7 +58,7 @@ def api_compress_pdf():
         base_name = os.path.splitext(filename)[0]
         download_name = f"{base_name}_nen.pdf"
 
-        # Kiểm tra xem người dùng đã đăng nhập chưa (qua session hoặc header/param)
+        # Kiểm tra xem người dùng đã đăng nhập chưa
         user_id = session.get('user_id')
         if not user_id:
             auth_id = request.headers.get('X-User-Id') or request.form.get('user_id')
@@ -175,40 +129,6 @@ def api_compress_pdf():
                 pass
 
 
-# ===== API DOWNLOAD FILE KẾT QUẢ ĐÃ NÉN =====
-@pdf_bp.route('/download/<task_id>/<path:filename>', methods=['GET'])
-def download_compressed_pdf(task_id, filename):
-    """Gửi tệp PDF đã nén về máy tính của người dùng."""
-    upload_dir = current_app.config.get('UPLOAD_FOLDER', 'uploads')
-    compressed_file_path = os.path.join(upload_dir, 'compressed', f"{task_id}_compressed.pdf")
-
-    if not os.path.exists(compressed_file_path):
-        return jsonify({'status': 'error', 'message': 'Tệp không tồn tại hoặc phiên tải đã hết hạn.'}), 404
-
-    return send_file(
-        compressed_file_path,
-        as_attachment=True,
-        download_name=filename,
-        mimetype='application/pdf'
-    )
-
-
-# ===== PLACEHOLDER API ROUTE XỬ LÝ CHO CÁC TÍNH NĂNG PDF KHÁC =====
-@pdf_bp.route('/api/<action>', methods=['POST'])
-def handle_pdf_api(action):
-    """
-    Điểm tiếp nhận xử lý file PDF từ giao diện cho các tính năng khác:
-    Sẵn sàng để gọi các hàm trong src.services.pdf_service.PdfService
-    """
-    if action == 'nen-pdf':
-        return api_compress_pdf()
-
-    valid_actions = {slug for slug, _ in PDF_TOOLS}
-    if action not in valid_actions:
-        return jsonify({'status': 'error', 'message': f'Hành động {action} không hợp lệ.'}), 400
-
-    return jsonify({
-        'status': 'success',
-        'message': f'Tính năng {action} đã tiếp nhận yêu cầu thành công (backend placeholder).',
-        'download_url': None
-    })
+def register_nen_pdf_routes(bp):
+    """Đăng ký route nén PDF vào blueprint."""
+    bp.add_url_rule('/api/nen-pdf', view_func=api_compress_pdf, methods=['POST'])

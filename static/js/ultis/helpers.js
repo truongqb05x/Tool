@@ -24,6 +24,17 @@ function escapeHtml(s) {
 }
 
 /**
+ * Đóng mở các mục câu hỏi thường gặp (FAQ Accordion)
+ */
+function toggleFaqItem(el) {
+  if (!el) return;
+  const item = el.closest('.tool-faq-item');
+  if (item) {
+    item.classList.toggle('open');
+  }
+}
+
+/**
  * Tải xuống file văn bản giả lập minh họa tính năng
  */
 function fakeDownload(filename) {

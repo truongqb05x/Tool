@@ -257,12 +257,33 @@
   <div class="tool-workspace full-bleed" id="toolWorkspace">
     <!-- Cột trái: Khu vực xem trước file đã chọn -->
     <div class="file-area">
+      <!-- Nút nổi thêm / đổi file (theo chuẩn ToolHub) -->
+      <div class="floating-add-wrap">
+        <div class="floating-add-tooltip" id="floatingAddTooltip" onclick="document.getElementById('fileInput').click()">Chọn file khác</div>
+        <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Chọn file khác">
+          <span class="floating-badge" id="floatingBadge">1</span>
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+
       <div class="file-area-content">
         <div class="file-card-wrap" id="fileCardWrap">
-          <div class="file-card" id="fileCard">
+          <div class="file-card" id="fileCard" data-rotation="0">
+            <!-- Nút xóa file -->
             <button type="button" class="btn-remove-file" onclick="resetFileSelection()" title="Xóa file">
               <i class="fas fa-times"></i>
             </button>
+
+            <!-- Tùy chọn khi hover: Xoay 90 độ & Phóng to (Zoom) -->
+            <div class="file-card-actions">
+              <button type="button" class="btn-card-action" onclick="rotatePreview(90)" title="Xoay 90 độ">
+                <i class="fas fa-redo"></i>
+              </button>
+              <button type="button" class="btn-card-action" onclick="openPdfZoomModal()" title="Phóng to xem trước">
+                <i class="fas fa-search-plus"></i>
+              </button>
+            </div>
+
             <div class="file-preview" id="filePreview">
               <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
                 <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
@@ -279,45 +300,68 @@
             <div class="file-meta" id="selectedFileSize" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 0 KB</div>
           </div>
         </div>
-
-        <!-- Nút chọn file khác -->
-        <button type="button" class="btn-add-more" onclick="resetFileSelection()">
-          <i class="fas fa-sync-alt"></i> Chọn file khác
-        </button>
       </div>
     </div>
 
-    <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
+    <!-- Cột phải: Bảng tùy chọn xóa trang PDF sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-trash-alt" style="margin-right:6px;"></i> Tùy chọn xóa trang PDF
       </div>
 
       <div class="options-body">
-        <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
-          <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
-              <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
-              </div>
-            </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
-              <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
-              </div>
-            </label>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label" for="inputPagesToRemove">Nhập các trang cần xóa</label>
+          <input type="text" id="inputPagesToRemove" class="ws-text-input" placeholder="Ví dụ: 1, 3, 5-8" oninput="updateDeleteNotice()">
+          <small class="ws-input-hint">Nhập số trang riêng lẻ hoặc dải trang, phân cách bởi dấu phẩy.</small>
+
+          <!-- Các nút chọn nhanh -->
+          <div class="ws-quick-tags">
+            <button type="button" class="ws-tag-btn" onclick="applyQuickTag('first')">
+              <i class="fas fa-step-backward"></i> Trang đầu
+            </button>
+            <button type="button" class="ws-tag-btn" onclick="applyQuickTag('last')">
+              <i class="fas fa-step-forward"></i> Trang cuối
+            </button>
+            <button type="button" class="ws-tag-btn" onclick="applyQuickTag('even')">
+              <i class="fas fa-list-ol"></i> Trang chẵn
+            </button>
+            <button type="button" class="ws-tag-btn" onclick="applyQuickTag('odd')">
+              <i class="fas fa-list-ul"></i> Trang lẻ
+            </button>
+            <button type="button" class="ws-tag-btn" onclick="clearPagesInput()">
+              <i class="fas fa-times"></i> Xóa ô
+            </button>
+          </div>
+        </div>
+
+        <!-- Tóm tắt số trang tài liệu -->
+        <div class="ws-file-summary" style="margin-bottom:12px;">
+          <div class="ws-summary-row">
+            <span><i class="fas fa-file-pdf"></i> Tổng số trang gốc:</span>
+            <strong id="totalPagesOrig">0 trang</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-trash-alt" style="color:#ef4444;"></i> Số trang sẽ xóa:</span>
+            <strong id="totalRemoveCount" style="color:#ef4444;">0 trang</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-check-circle" style="color:#10b981;"></i> Số trang còn lại:</span>
+            <strong id="totalRemainCount" style="color:#10b981;">0 trang</strong>
+          </div>
+        </div>
+
+        <div class="ws-info-box">
+          <i class="fas fa-info-circle"></i>
+          <div id="deleteNoticeText">
+            Vui lòng nhập số trang hoặc chọn nút gợi ý ở trên để chỉ định trang cần xóa.
           </div>
         </div>
       </div>
 
       <div class="action-area">
         <button type="button" class="btn-convert btn-execute" id="btnExecute" onclick="executeToolAction()">
-          Xóa các trang đã chọn <i class="fas fa-arrow-right"></i>
+          Xóa các trang đã chọn ngay <i class="fas fa-arrow-right"></i>
         </button>
       </div>
     </aside>
@@ -328,53 +372,54 @@
     <!-- BƯỚC 1: KHUNG TẢI FILE (UPLOAD PANEL) -->
     <div class="upload-panel" id="uploadPanel">
       <div class="upload-panel-header">
-        <i class="fas fa-trash-alt"></i> Tải tệp lên để thực hiện Xóa trang PDF
+        <i class="fas fa-trash-alt"></i> Tải tệp PDF lên để loại bỏ trang thừa
       </div>
       <div class="drop-zone" id="dropZone">
         <div class="dz-icon"><i class="fas fa-trash-alt"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <h3>Kéo &amp; thả file PDF vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Chỉ hỗ trợ 1 file PDF mỗi lần xử lý · Tối đa 50 MB</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Đã xóa thành công các trang thừa khỏi tài liệu!</h3>
-      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <h3 id="downloadSuccessTitle">Đã xóa thành công các trang thừa khỏi tài liệu!</h3>
+      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng tải về máy tính.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultFile()">
         <i class="fas fa-download"></i> Tải xuống file PDF đã xóa trang
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
-          <i class="fas fa-redo"></i> Xử lý tệp khác
+          <i class="fas fa-redo"></i> Xóa trang ở một file PDF khác
         </button>
       </div>
     </div>
 
     <!-- ===== NỘI DUNG CHUẨN SEO ===== -->
     <section class="seo-section">
-      <h2>Hướng dẫn sử dụng Xóa trang PDF trực tuyến trong 3 bước</h2>
+      <h2>Cách xóa trang file PDF trực tuyến chỉ trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file PDF lên</h4>
+          <p>Kéo và thả tài liệu vào khung ở trên hoặc nhấn chọn tệp từ máy tính, điện thoại.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Chỉ định trang cần xóa</h4>
+          <p>Nhập các số trang riêng lẻ hoặc khoảng trang (ví dụ: 1, 3, 5-8) hoặc dùng các nút chọn nhanh.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
-          <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <h4>Lưu file kết quả sạch sẽ</h4>
+          <p>Bấm "Xóa các trang đã chọn ngay" và tải về tài liệu PDF đã lược bỏ trang thừa.</p>
         </div>
       </div>
     </section>
@@ -386,19 +431,19 @@
         <div class="sec-item">
           <div>
             <strong>Mã hóa SSL 256-bit</strong>
-            <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức HTTPS.</span>
+            <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức mã hóa HTTPS.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
             <strong>Tự động xóa sau 1 giờ</strong>
-            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút.</span>
+            <span>Tài liệu sau khi xử lý sẽ được xóa hoàn toàn khỏi máy chủ sau 60 phút.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
-            <strong>Bảo mật thông tin</strong>
-            <span>Không chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
+            <strong>Bảo vệ quyền riêng tư 100%</strong>
+            <span>Không một ai có quyền xem hoặc chia sẻ tệp tài liệu riêng tư của bạn.</span>
           </div>
         </div>
       </div>
@@ -408,50 +453,79 @@
       <h2>Câu hỏi thường gặp về Xóa trang PDF (FAQ)</h2>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Sử dụng công cụ Xóa trang PDF tại ToolHub có mất phí không?
+          Xóa trang PDF có làm thay đổi chất lượng các trang còn lại không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Hoàn toàn không. Thuật toán loại bỏ trang bằng PyMuPDF giữ nguyên 100% độ sắc nét của font chữ, hình ảnh và bố cục nguyên bản của các trang được giữ lại.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Tôi có thể xóa cùng lúc nhiều trang và dải trang không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Có. Bạn có thể nhập kết hợp cả trang đơn lẻ và dải trang liên tiếp, ví dụ: <code>1, 3, 5-8</code>. Hệ thống sẽ tự động lọc và loại bỏ chính xác các trang đó.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Thứ tự các trang còn lại sau khi xóa có bị đảo lộn không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Không. Thứ tự các trang còn lại được bảo toàn nguyên vẹn từ đầu đến cuối đúng như trong file gốc của bạn.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Công cụ Xóa trang PDF tại ToolHub có miễn phí không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Dịch vụ hoàn toàn miễn phí 100%, không giới hạn số trang tài liệu và không yêu cầu đăng ký gói trả phí.
         </div>
       </div>
     </section>
 
-  
     <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
     <section class="seo-section seo-article">
       <h2>Giới thiệu công cụ Xóa trang PDF trực tuyến tại ToolHub</h2>
 
-      <p>Sau khi scan hoặc tổng hợp tài liệu, thường xuất hiện các trang trắng không có nội dung, các trang bị scan hỏng hoặc những trang tài liệu nhạy cảm cần loại bỏ trước khi chia sẻ.</p>
+      <p>Sau khi scan tài liệu bằng máy quét văn phòng hoặc tổng hợp tệp từ nhiều nguồn khác nhau, file PDF thường xuất hiện những trang trắng không có nội dung, trang bìa thừa, trang mục lục không cần thiết hoặc những trang chứa thông tin nhạy cảm cần bảo mật trước khi gửi cho khách hàng, đối tác.</p>
 
-      <p>Công cụ <strong>Xóa trang PDF ToolHub</strong> cung cấp giải pháp xóa bỏ các trang không mong muốn trong nháy mắt: chỉ cần nhấp chọn các trang cần xóa hoặc nhập số trang, hệ thống sẽ tạo ngay tệp PDF hoàn chỉnh sạch sẽ.</p>
+      <p>Công cụ <strong>Xóa trang PDF trực tuyến ToolHub</strong> cung cấp giải pháp loại bỏ các trang không mong muốn một cách nhanh chóng, chính xác và chuyên nghiệp ngay trên trình duyệt mà không cần cài đặt phần mềm chỉnh sửa PDF đắt tiền.</p>
 
       <div class="seo-grid-cols">
         <div class="seo-col-card">
-          <h4><i class="fas fa-mouse-pointer"></i> Nhấp chọn trang cần xóa</h4>
-          <p>Giao diện trực quan cho phép xem và đánh dấu trang muốn loại bỏ dễ dàng.</p>
+          <h4><i class="fas fa-list-ol"></i> Chọn trang linh hoạt</h4>
+          <p>Nhập số trang tùy ý, dải trang liên tiếp hoặc dùng các nút chọn nhanh trang chẵn, trang lẻ, trang đầu, trang cuối.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-trash-alt"></i> Xóa nhiều trang cùng lúc</h4>
-          <p>Hỗ trợ xóa các trang đơn lẻ hoặc một chuỗi các trang liên tiếp nhau.</p>
+          <h4><i class="fas fa-compress-arrows-alt"></i> Tối ưu dung lượng tệp</h4>
+          <p>Lược bỏ các trang thừa giúp giảm kích thước file PDF, giúp gửi qua Email và chia sẻ tiện lợi hơn.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-compress-arrows-alt"></i> Giảm dung lượng tài liệu</h4>
-          <p>Loại bỏ các trang thừa giúp tệp PDF nhẹ hơn và chuyên nghiệp hơn.</p>
+          <h4><i class="fas fa-file-contract"></i> Bảo toàn chất lượng 100%</h4>
+          <p>Các trang giữ lại không bị nén mờ hay biến dạng chữ, tương thích hoàn hảo với mọi phần mềm đọc PDF.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-check-circle"></i> Xuất file tức thì</h4>
-          <p>Lưu ngay tài liệu mới mà không làm suy giảm chất lượng các trang còn lại.</p>
+          <h4><i class="fas fa-shield-alt"></i> Bảo mật an toàn tuyệt đối</h4>
+          <p>File được xử lý tự động trong môi trường cô lập, xóa sạch dữ liệu sau 60 phút bảo vệ thông tin người dùng.</p>
         </div>
+      </div>
+
+      <h3>Khi nào bạn nên sử dụng công cụ Xóa trang PDF?</h3>
+      <ul>
+        <li><strong>Xóa trang trắng trong hợp đồng &amp; hồ sơ:</strong> Máy quét tự động thường chèn thêm các trang giấy trắng ở mặt sau, gây mất chuyên nghiệp khi gửi hồ sơ thầu hay hợp đồng pháp lý.</li>
+        <li><strong>Loại bỏ trang chứa thông tin mật:</strong> Cần lược bỏ bảng lương, thông tin cá nhân, báo cáo tài chính nội bộ trước khi công khai tài liệu cho đối tác.</li>
+        <li><strong>Cắt bỏ bìa hoặc mục lục thừa:</strong> Khi chỉ cần trích chọn phần nội dung chính của đồ án, luận văn hay sách điện tử.</li>
+        <li><strong>Giảm tải kích thước tệp đính kèm Email:</strong> Bỏ bớt các trang không liên quan giúp file nhẹ hơn, dễ dàng gửi qua Gmail, Zalo, Outlook.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo thao tác:</strong> Bạn có thể nhấn vào các nút chọn nhanh như <em>Trang đầu</em>, <em>Trang cuối</em>, <em>Trang chẵn</em> hoặc <em>Trang lẻ</em> để hệ thống tự động điền danh sách trang cần xóa vào ô chỉ trong một click!
       </div>
     </section>
 
@@ -516,8 +590,9 @@
   </div>
 
   <!-- SCRIPTS -->
-
-<script src="../../static/js/app.js"></script>
+  <script src="../../static/vendor/pdfjs/pdf.min.js"></script>
+  <script src="../../static/js/ultis/pdf/pdf-preview.js"></script>
+  <script src="../../static/js/app.js"></script>
   <script src="../../static/js/tools/pdf/xoa-trang-pdf.js"></script>
 
 </body>

@@ -101,6 +101,13 @@ function renderPdfFirstPageThumbnail(file, containerId) {
 
 function rotatePreview(degrees = 90) {
   currentPreviewRotation = (currentPreviewRotation + degrees) % 360;
+  if (currentPreviewRotation < 0) currentPreviewRotation += 360;
+
+  const fileCard = document.getElementById('fileCard');
+  if (fileCard) {
+    fileCard.dataset.rotation = currentPreviewRotation;
+  }
+
   const previewEl = document.getElementById('filePreview');
   if (previewEl) {
     const targetEl = previewEl.querySelector('canvas') || previewEl.querySelector('img') || previewEl.querySelector('.paper-mockup');
@@ -134,7 +141,7 @@ function ensurePdfZoomModal() {
   document.body.insertAdjacentHTML('beforeend', modalHtml);
 }
 
-function openPdfZoomModal() {
+function openPdfZoomModal(rotation) {
   ensurePdfZoomModal();
 
   const modal = document.getElementById('pdfZoomModal');
@@ -142,6 +149,20 @@ function openPdfZoomModal() {
   const previewEl = document.getElementById('filePreview');
 
   if (!modal || !content) return;
+
+  // Tự động phát hiện góc xoay chính xác từ tham số, data-rotation trên DOM, hoặc biến toàn cục
+  let rot = typeof rotation === 'number' ? rotation : null;
+  if (rot === null) {
+    const fileCard = document.getElementById('fileCard');
+    if (fileCard && fileCard.dataset.rotation !== undefined) {
+      rot = parseInt(fileCard.dataset.rotation, 10) || 0;
+    } else if (typeof currentRotationAngle !== 'undefined') {
+      rot = currentRotationAngle || 0;
+    } else {
+      rot = currentPreviewRotation || 0;
+    }
+  }
+  currentPreviewRotation = rot;
 
   content.innerHTML = `
     <div style="display:flex; justify-content:center; align-items:center; padding: 40px; color:#fff;">

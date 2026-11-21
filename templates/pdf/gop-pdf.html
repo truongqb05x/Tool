@@ -254,16 +254,21 @@
 
   <!-- BƯỚC 2: WORKSPACE SẮP XẾP VÀ GHÉP NỐI TOÀN CHIỀU RỘNG (SÁT LỀ PHẢI) -->
   <div class="tool-workspace full-bleed" id="toolWorkspace">
-    <div class="file-area" style="padding: 24px; overflow-y: auto;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-        <strong style="color:#333; font-size:0.95rem;">Danh sách file ghép nối (<span id="fileCountText">0</span> file):</strong>
-        <button type="button" class="btn-add-more" onclick="document.getElementById('fileInput').click()" style="margin:0;">
-          <i class="fas fa-plus"></i> Thêm file khác
+    <!-- Cột trái: Khu vực xem trước danh sách file đã chọn -->
+    <div class="file-area">
+      <!-- Nút nổi thêm file khác -->
+      <div class="floating-add-wrap">
+        <div class="floating-add-tooltip" id="floatingAddTooltip" onclick="document.getElementById('fileInput').click()">Thêm file khác</div>
+        <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Thêm file khác">
+          <span class="floating-badge" id="floatingBadge">0</span>
+          <i class="fas fa-plus"></i>
         </button>
       </div>
 
-      <div id="fileListContainer">
-        <!-- Render dynamically by gop-pdf.js -->
+      <div class="file-area-content">
+        <div class="file-card-wrap" id="fileCardWrap">
+          <!-- Render dynamically by gop-pdf.js -->
+        </div>
       </div>
     </div>
 
@@ -308,8 +313,9 @@
     <!-- BƯỚC 3: TẢI KẾT QUẢ -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Đã gộp các file PDF thành công!</h3>
+      <h3 id="downloadSuccessTitle">Đã gộp các file PDF thành công!</h3>
       <p id="downloadMeta">File kết quả đã sẵn sàng để tải xuống máy tính của bạn.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadMergedFile()">
         <i class="fas fa-download"></i> Tải xuống file PDF đã gộp
       </button>
@@ -320,57 +326,141 @@
       </div>
     </div>
 
-    <!-- SEO CONTENT -->
+    <!-- ===== NỘI DUNG CHUẨN SEO (SEO ARTICLE) ===== -->
+    <!-- 1. CÁC BƯỚC THỰC HIỆN -->
     <section class="seo-section">
-      <h2>Cách gộp nhiều file PDF thành 1 file duy nhất</h2>
+      <h2>Cách gộp nhiều file PDF thành 1 file duy nhất chỉ trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Chọn các file PDF</h4>
-          <p>Tải lên từ 2 file PDF trở lên mà bạn muốn kết hợp lại với nhau.</p>
+          <h4>Tải các file PDF lên</h4>
+          <p>Kéo và thả nhiều tệp PDF vào khung tải lên hoặc bấm "Chọn các tệp PDF" từ máy tính, điện thoại (từ 2 đến 20 file cùng lúc).</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Sắp xếp thứ tự</h4>
-          <p>Kéo hoặc bấm mũi tên để đổi vị trí file nào đứng trước, file nào đứng sau.</p>
+          <h4>Sắp xếp thứ tự ghép nối</h4>
+          <p>Kéo thả trực quan hoặc sử dụng nút mũi tên để di chuyển các file theo đúng thứ tự trang bạn muốn xuất hiện trong file gộp.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
-          <h4>Bấm gộp &amp; Tải về</h4>
-          <p>Nhấn nút "Gộp các file PDF" và lưu tệp hoàn chỉnh về máy tính ngay lập tức.</p>
+          <h4>Bấm gộp &amp; Tải file về máy</h4>
+          <p>Đặt tên file mong muốn và nhấn "Gộp các file PDF". Hệ thống xử lý tức thì, sẵn sàng để bạn tải xuống hoặc lưu vào tài khoản.</p>
         </div>
       </div>
     </section>
 
-    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
+    <!-- 2. BẢO MẬT & QUYỀN RIÊNG TƯ -->
+    <section class="seo-section">
+      <h2>Bảo mật tài liệu &amp; Quyền riêng tư tối đa</h2>
+      <p>ToolHub cam kết bảo vệ an toàn tuyệt đối cho mọi dữ liệu và tệp tin của người dùng:</p>
+      <div class="security-features">
+        <div class="sec-item">
+          <div>
+            <strong>Mã hóa chuẩn SSL 256-bit</strong>
+            <span>Mọi tệp tin được truyền tải qua giao thức mã hóa HTTPS an toàn cấp ngân hàng, chống nghe lén và can thiệp dữ liệu.</span>
+          </div>
+        </div>
+        <div class="sec-item">
+          <div>
+            <strong>Tự động dọn dẹp sau 30 ngày</strong>
+            <span>Hệ thống tự động xóa sạch file vật lý khỏi máy chủ sau 30 ngày. Khách vãng lai và thành viên đều có thể chủ động xóa file bất cứ lúc nào.</span>
+          </div>
+        </div>
+        <div class="sec-item">
+          <div>
+            <strong>Xử lý hoàn toàn tự động</strong>
+            <span>Quá trình ghép nối được thực thi 100% bằng thuật toán máy học, tuyệt đối không có sự can thiệp hay quyền truy cập của con người.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. CÂU HỎI THƯỜNG GẶP (FAQ) -->
+    <section class="seo-section">
+      <h2>Câu hỏi thường gặp về Gộp PDF (FAQ)</h2>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Gộp nhiều file PDF có làm giảm chất lượng hình ảnh hay vỡ chữ không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Hoàn toàn không. Thuật toán của ToolHub ghép nối trực tiếp các luồng dữ liệu trang nguyên bản (lossless merge), giữ nguyên 100% độ sắc nét của văn bản, độ phân giải hình ảnh, liên kết nhúng (hyperlinks) và thuộc tính in ấn gốc.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tôi có thể đổi thứ tự từng file trước khi bấm gộp không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Có. Sau khi chọn tệp, khu vực làm việc (Workspace) trực quan sẽ hiển thị toàn bộ danh sách file kèm dung lượng và thứ tự. Bạn có thể bấm các nút mũi tên lên/xuống để hoán đổi vị trí các tệp theo ý muốn một cách dễ dàng.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          ToolHub có giới hạn số lượng file hoặc dung lượng khi gộp không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Bạn có thể gộp tối đa 20 file PDF cùng lúc hoàn toàn miễn phí. Đối với người dùng thông thường, hạn mức này đáp ứng thoải mái mọi nhu cầu từ học tập, công việc văn phòng đến báo cáo doanh nghiệp.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Sau khi gộp nhiều file lớn, dung lượng tệp có bị phình to không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          File kết quả sẽ có dung lượng xấp xỉ tổng dung lượng các file thành phần. Nếu file quá lớn để gửi qua Email hoặc Zalo, bạn có thể chuyển tiếp sang công cụ <a href="/pdf/nen-pdf" style="color:#1e5b9c; font-weight:700;">Nén PDF</a> của ToolHub để giảm kích thước tệp tới 80% mà không lo giảm chất lượng.
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. BÀI VIẾT GIỚI THIỆU CHUYÊN SÂU & TỐI ƯU SEO -->
     <section class="seo-section seo-article">
-      <h2>Giới thiệu công cụ Gộp nhiều file PDF tại ToolHub</h2>
+      <h2>Giới thiệu công cụ Gộp nhiều file PDF trực tuyến tại ToolHub</h2>
 
-      <p>Trong quá trình làm việc, học tập hoặc chuẩn bị hồ sơ dự thầu, hồ sơ du học và thủ tục hành chính, bạn thường phải scan hoặc thu thập nhiều tài liệu rời rạc dưới dạng nhiều tệp PDF độc lập. Việc gửi hàng chục tệp lẻ khiến đối tác, khách hàng khó theo dõi và dễ thất lạc tài liệu quan trọng.</p>
+      <p>Trong thời đại số hóa hồ sơ và văn phòng không giấy tờ, <strong>PDF (Portable Document Format)</strong> là định dạng tài liệu chuẩn mực nhất thế giới nhờ tính bảo mật cao và khả năng hiển thị đồng nhất trên mọi thiết bị. Tuy nhiên, trong quá trình làm việc hàng ngày, chúng ta thường xuyên đối mặt với tình trạng tài liệu bị phân mảnh thành nhiều file PDF rời rạc: một bản hợp đồng gồm nhiều trang scan riêng biệt, các phụ lục tài chính độc lập, hồ sơ năng lực gửi từng phần, hay bài giảng đại học được lưu thành từng chương nhỏ.</p>
 
-      <p>Công cụ <strong>Gộp PDF trực tuyến ToolHub</strong> cho phép bạn nối và ghép không giới hạn số lượng file PDF thành một tệp tài liệu hoàn chỉnh, liền mạch chỉ với vài cú nhấp chuột mà vẫn giữ nguyên 100% định dạng, độ phân giải và chất lượng trang in.</p>
+      <p>Việc gửi hàng loạt tệp PDF riêng lẻ không chỉ gây rối mắt, tạo cảm giác thiếu chuyên nghiệp trong mắt đối tác mà còn tăng nguy cơ thất lạc trang tài liệu quan trọng. Công cụ <strong>Gộp PDF trực tuyến tại ToolHub</strong> ra đời nhằm giải quyết triệt để vấn đề này, cung cấp giải pháp hợp nhất và ghép nối không giới hạn số lượng tài liệu PDF thành một tệp duy nhất, liền mạch chỉ trong vài giây.</p>
 
       <div class="seo-grid-cols">
         <div class="seo-col-card">
-          <h4><i class="fas fa-sort-amount-down"></i> Tùy chỉnh thứ tự linh hoạt</h4>
-          <p>Dễ dàng kéo thả, sắp xếp vị trí các file theo đúng trình tự bạn muốn trước khi tiến hành kết hợp.</p>
+          <h4><i class="fas fa-sort-amount-down"></i> Sắp xếp thứ tự trực quan</h4>
+          <p>Dễ dàng xem trước danh sách tài liệu, đảo vị trí các trang và các file thành phần theo đúng cấu trúc mong muốn trước khi tiến hành kết hợp.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-bolt"></i> Xử lý thần tốc</h4>
-          <p>Công nghệ ghép file hiện đại trên trình duyệt giúp hoàn tất quá trình gộp chỉ trong vài giây.</p>
+          <h4><i class="fas fa-gem"></i> Giữ nguyên 100% định dạng gốc</h4>
+          <p>Cam kết bảo toàn toàn bộ bố cục, font chữ nhúng, đồ họa vector và hình ảnh phân giải cao. Bản in xuất ra chuẩn xác y như tài liệu gốc.</p>
         </div>
         <div class="seo-col-card">
-          <h4>Bảo mật an toàn 100%</h4>
-          <p>Kết nối mã hóa SSL 256-bit, tệp của bạn tự động xóa vĩnh viễn khỏi hệ thống sau 60 phút.</p>
+          <h4><i class="fas fa-bolt"></i> Xử lý thần tốc trên Cloud</h4>
+          <p>Hệ thống máy chủ xử lý tác vụ thông minh giúp ghép nối nhiều tệp PDF kích thước lớn chỉ trong vài giây mà không làm đơ giật trình duyệt.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-laptop-code"></i> Không cần cài phần mềm</h4>
-          <p>Hoạt động trực tiếp trên web, tương thích hoàn hảo với mọi trình duyệt trên Windows, Mac, iOS và Android.</p>
+          <h4><i class="fas fa-shield-alt"></i> Bảo mật &amp; Quản trị thông minh</h4>
+          <p>Được tích hợp trực tiếp vào mục "File của bạn" khi đã đăng nhập, giúp bạn dễ dàng tải lại bất cứ lúc nào hoặc để hệ thống tự động dọn dẹp sau 30 ngày.</p>
         </div>
       </div>
 
+      <h3>Khi nào bạn nên sử dụng công cụ gộp file PDF?</h3>
+      <ul>
+        <li><strong>Nộp hồ sơ xin việc (CV), chứng chỉ &amp; portfolio ứng tuyển:</strong> Thay vì gửi từng file CV, bảng điểm, bằng đại học và chứng chỉ IELTS rời rạc khiến nhà tuyển dụng phải mở từng tệp, bạn có thể gộp tất cả thành một bộ hồ sơ ứng tuyển duy nhất, gọn gàng và tạo ấn tượng chuyên nghiệp vượt trội.</li>
+        <li><strong>Hoàn thiện hồ sơ thầu, hợp đồng kinh tế &amp; phụ lục pháp lý:</strong> Kết hợp văn bản hợp đồng chính, các điều khoản bổ sung, phụ lục kỹ thuật, biên bản nghiệm thu và báo giá thành một tài liệu pháp lý trọn vẹn, thuận tiện cho việc ký kết và lưu trữ nội bộ.</li>
+        <li><strong>Tổng hợp hóa đơn điện tử &amp; báo cáo chứng từ kế toán:</strong> Gom toàn bộ hóa đơn VAT scan, phiếu thu chi, bảng sao kê ngân hàng hàng tháng vào một file PDF để phục vụ công tác quyết toán thuế và thanh kiểm tra tài chính dễ dàng.</li>
+        <li><strong>Hợp nhất tài liệu học tập, giáo trình &amp; sách điện tử:</strong> Ghép các chương tài liệu học thuật, slide bài giảng PowerPoint đã xuất PDF hoặc các bài tiểu luận nhóm thành một cuốn cẩm nang học tập liền mạch, thuận tiện để đọc trên máy tính bảng hoặc in ấn đóng quyển.</li>
+      </ul>
+
+      <h3>Ưu điểm vượt trội của ToolHub so với các phần mềm truyền thống</h3>
+      <p>Trước đây, để ghép các file PDF, người dùng thường phải cài đặt các phần mềm cồng kềnh như Adobe Acrobat Pro (vốn có chi phí bản quyền rất cao) hoặc sử dụng các công cụ trôi nổi tiềm ẩn mã độc. <strong>ToolHub</strong> mang đến trải nghiệm hoàn toàn mới:</p>
+      <ul>
+        <li><strong>Không cần cài đặt:</strong> Hoạt động 100% trên nền tảng web, tương thích tuyệt đối với Chrome, Edge, Safari, Firefox trên cả Windows, macOS, Android và iPhone/iPad.</li>
+        <li><strong>Không chèn Watermark:</strong> Tài liệu xuất ra sạch sẽ, không bị đóng dấu mờ bản quyền hay logo quảng cáo gây mất thẩm mỹ.</li>
+        <li><strong>Miễn phí &amp; Không giới hạn:</strong> Cho phép sử dụng tức thì mà không bắt buộc phải trả phí hay cung cấp thẻ tín dụng.</li>
+      </ul>
+
       <div class="seo-highlight-box">
-        <strong><i class="fas fa-lightbulb"></i> Mẹo quản lý tài liệu:</strong> Sau khi gộp các file PDF thành công, nếu kích thước tệp quá lớn để gửi email, bạn có thể tiếp tục sử dụng ngay công cụ <a href="/pdf/nen-pdf" style="color:#1e5b9c; font-weight:700;">Nén PDF</a> để giảm dung lượng tệp nhanh chóng.
+        <strong><i class="fas fa-lightbulb"></i> Mẹo kết hợp công cụ thông minh:</strong> Sau khi gộp các tài liệu PDF thành công, bạn có thể sử dụng thêm công cụ <a href="/pdf/nen-pdf" style="color:#1e5b9c; font-weight:700;">Nén PDF</a> nếu muốn gửi file qua email nhanh chóng, hoặc sử dụng công cụ <a href="/pdf/them-so-trang-pdf" style="color:#1e5b9c; font-weight:700;">Thêm số trang PDF</a> để tự động đánh lại số trang từ đầu đến cuối cho tệp tài liệu mới!
       </div>
     </section>
 
@@ -435,7 +525,11 @@
     </div>
   </div>
 
-<script src="../../static/js/app.js"></script>
+  <!-- SCRIPTS -->
+  <script src="../../static/vendor/pdfjs/pdf.min.js"></script>
+  <script src="../../static/js/ultis/pdf/pdf-preview.js"></script>
+  <script src="../../static/js/ultis/drag-reorder.js"></script>
+  <script src="../../static/js/app.js"></script>
   <script src="../../static/js/tools/pdf/gop-pdf.js"></script>
 </body>
 </html>

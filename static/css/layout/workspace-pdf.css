@@ -40,6 +40,356 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Số thứ tự file cho công cụ ghép nhiều file */
+.file-card-order {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #1e5b9c;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.2s ease;
+}
+.file-card:hover .file-card-order {
+  opacity: 0;
+}
+
+/* Trạng thái kéo thả thẻ file (Drag & Drop Reorder) */
+.file-card[draggable="true"] {
+  cursor: grab;
+  user-select: none;
+}
+.file-card[draggable="true"]:active {
+  cursor: grabbing;
+}
+.file-card.dragging {
+  opacity: 0.35;
+  transform: scale(0.96);
+  border: 2px dashed #1e5b9c;
+  box-shadow: 0 10px 25px rgba(30, 91, 156, 0.25);
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+/* Chặn các phần tử con cướp sự kiện drag của card */
+.file-card .file-preview,
+.file-card .file-preview * {
+  pointer-events: none;
+  user-select: none;
+}
+.file-card .file-name,
+.file-card .file-meta,
+.file-card .file-card-order {
+  pointer-events: none;
+  user-select: none;
+}
+.file-card .btn-remove-file,
+.file-card .file-card-actions,
+.file-card .btn-card-action {
+  pointer-events: auto;
+}
+
+/* --- TÙY CHỌN TÁCH PDF (SPLIT PDF OPTIONS) CHUẨN LAYOUT TOOLHUB --- */
+.ws-tab-group {
+  display: flex;
+  gap: 6px;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+.ws-tab-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 4px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+  font-family: inherit;
+}
+.ws-tab-btn i {
+  font-size: 1.05rem;
+}
+.ws-tab-btn:hover {
+  color: #1e5b9c;
+  background: rgba(255, 255, 255, 0.6);
+}
+.ws-tab-btn.active {
+  background: #fff;
+  color: #1e5b9c;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Submode buttons */
+.ws-submode-group {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.ws-submode-btn {
+  flex: 1;
+  padding: 7px 10px;
+  border: 1px solid #d0d7de;
+  background: #f8fafc;
+  color: #475569;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+.ws-submode-btn:hover {
+  border-color: #1e5b9c;
+  color: #1e5b9c;
+  background: #f0f5fb;
+}
+.ws-submode-btn.active {
+  background: #1e5b9c;
+  border-color: #1e5b9c;
+  color: #fff;
+  box-shadow: 0 1px 3px rgba(30, 91, 156, 0.2);
+}
+
+/* Range Card Item */
+.ws-range-card {
+  background: #fff;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+.ws-range-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1e5b9c;
+}
+.ws-range-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.ws-input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  padding: 5px 8px;
+  background: #fdfdfd;
+}
+.ws-input-wrap:focus-within {
+  border-color: #1e5b9c;
+  box-shadow: 0 0 0 2px rgba(30, 91, 156, 0.12);
+}
+.ws-input-prefix {
+  font-size: 0.76rem;
+  color: #64748b;
+  white-space: nowrap;
+  margin-right: 6px;
+}
+.ws-input-wrap input {
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: right;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #1e293b;
+  background: transparent;
+  font-family: inherit;
+}
+
+/* Nút thêm khoảng trang */
+.btn-add-range {
+  width: 100%;
+  padding: 8px 12px;
+  background: #fff;
+  border: 1px dashed #1e5b9c;
+  color: #1e5b9c;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 10px 0 14px;
+  font-family: inherit;
+}
+.btn-add-range:hover {
+  background: #f0f5fb;
+  border-style: solid;
+}
+
+/* Nút xóa range nhỏ */
+.btn-delete-range {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 0.85rem;
+  opacity: 0.75;
+  transition: opacity 0.15s;
+  padding: 2px 4px;
+}
+.btn-delete-range:hover {
+  opacity: 1;
+}
+
+/* Hộp thông báo màu xanh thương hiệu ToolHub */
+.ws-info-box {
+  background: #f0f5fb;
+  border: 1px solid #d3e4f7;
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: #164677;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  margin: 12px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.ws-info-box i {
+  color: #1e5b9c;
+  font-size: 1rem;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.ws-info-box strong {
+  color: #0f2d4e;
+}
+
+/* Checkbox tùy chọn gộp */
+.ws-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #334155;
+  cursor: pointer;
+  user-select: none;
+  margin: 10px 0 14px;
+  line-height: 1.4;
+}
+.ws-checkbox-label input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  margin-top: 1px;
+  accent-color: #1e5b9c;
+  flex-shrink: 0;
+}
+
+/* Các trường input chuẩn ToolHub */
+.ws-number-input {
+  width: 90px;
+  padding: 6px 8px;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e293b;
+  outline: none;
+  font-family: inherit;
+}
+.ws-number-input:focus {
+  border-color: #1e5b9c;
+  box-shadow: 0 0 0 2px rgba(30, 91, 156, 0.12);
+}
+.ws-text-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  font-size: 0.86rem;
+  color: #1e293b;
+  outline: none;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.ws-text-input:focus {
+  border-color: #1e5b9c;
+  box-shadow: 0 0 0 2px rgba(30, 91, 156, 0.12);
+}
+.ws-input-hint {
+  display: block;
+  font-size: 0.74rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* Summary info của file gốc */
+.ws-file-summary {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.ws-file-summary i {
+  color: #1e5b9c;
+  margin-right: 4px;
+}
+.ws-file-summary strong {
+  color: #1e293b;
+}
+
+/* Unit toggle KB / MB */
+.unit-toggle-group {
+  display: inline-flex;
+  background: #e2e8f0;
+  border-radius: 4px;
+  padding: 2px;
+}
+.unit-toggle-btn {
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: 3px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.unit-toggle-btn.active {
+  background: #fff;
+  color: #1e5b9c;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
 .btn-card-action {
   width: 32px;
   height: 32px;
@@ -274,6 +624,150 @@
 
 #fileInput {
   display: none;
+}
+
+/* --- CÁC NÚT XOAY TRÁI / XOAY PHẢI CÔNG CỤ XOAY PDF --- */
+.ws-rotate-action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.btn-rotate-dir {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 10px;
+  background: #f8fafc;
+  border: 1.5px solid #d0d7de;
+  border-radius: 8px;
+  color: #1e5b9c;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+.btn-rotate-dir i {
+  font-size: 1.6rem;
+  transition: transform 0.2s ease;
+}
+.btn-rotate-dir span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+}
+.btn-rotate-dir:hover {
+  background: #f0f5fb;
+  border-color: #1e5b9c;
+  box-shadow: 0 3px 8px rgba(30, 91, 156, 0.12);
+  transform: translateY(-1px);
+}
+.btn-rotate-dir:hover i {
+  transform: scale(1.15);
+}
+.btn-rotate-dir:active {
+  transform: translateY(0);
+}
+
+.ws-rotate-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f1f5f9;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  color: #475569;
+  margin-bottom: 8px;
+}
+.rotate-status-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.rotate-status-label i {
+  color: #1e5b9c;
+}
+.rotate-status-val {
+  font-weight: 700;
+  color: #1e5b9c;
+  background: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+}
+
+.btn-reset-rotation {
+  width: 100%;
+  padding: 7px 10px;
+  background: transparent;
+  border: 1px dashed #94a3b8;
+  border-radius: 5px;
+  color: #64748b;
+  font-size: 0.78rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.btn-reset-rotation:hover {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #dc2626;
+}
+
+/* --- CÁC NÚT VÀ BADGE TÙY CHỌN XÓA TRANG PDF --- */
+.ws-quick-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  margin-bottom: 14px;
+}
+.ws-tag-btn {
+  padding: 4px 10px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.ws-tag-btn:hover {
+  background: #f0f5fb;
+  color: #1e5b9c;
+  border-color: #1e5b9c;
+}
+.ws-tag-btn.active {
+  background: #1e5b9c;
+  color: #fff;
+  border-color: #1e5b9c;
+}
+
+.ws-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px dashed #e2e8f0;
+  font-size: 0.82rem;
+  color: #475569;
+}
+.ws-summary-row:last-child {
+  border-bottom: none;
+}
+.ws-summary-row strong {
+  font-weight: 700;
 }
 
 @media (max-width: 560px) {

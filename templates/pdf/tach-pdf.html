@@ -257,12 +257,33 @@
   <div class="tool-workspace full-bleed" id="toolWorkspace">
     <!-- Cột trái: Khu vực xem trước file đã chọn -->
     <div class="file-area">
+      <!-- Nút nổi thêm / đổi file (theo chuẩn demo) -->
+      <div class="floating-add-wrap">
+        <div class="floating-add-tooltip" id="floatingAddTooltip" onclick="document.getElementById('fileInput').click()">Chọn file khác</div>
+        <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Chọn file khác">
+          <span class="floating-badge" id="floatingBadge">1</span>
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+
       <div class="file-area-content">
         <div class="file-card-wrap" id="fileCardWrap">
-          <div class="file-card" id="fileCard">
+          <div class="file-card" id="fileCard" data-rotation="0">
+            <!-- Nút xóa file -->
             <button type="button" class="btn-remove-file" onclick="resetFileSelection()" title="Xóa file">
               <i class="fas fa-times"></i>
             </button>
+
+            <!-- Tùy chọn khi hover: Xoay 90 độ & Phóng to (Zoom) -->
+            <div class="file-card-actions">
+              <button type="button" class="btn-card-action" onclick="rotatePreview(90)" title="Xoay 90 độ">
+                <i class="fas fa-redo"></i>
+              </button>
+              <button type="button" class="btn-card-action" onclick="openPdfZoomModal()" title="Phóng to xem trước">
+                <i class="fas fa-search-plus"></i>
+              </button>
+            </div>
+
             <div class="file-preview" id="filePreview">
               <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
                 <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
@@ -279,45 +300,181 @@
             <div class="file-meta" id="selectedFileSize" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 0 KB</div>
           </div>
         </div>
-
-        <!-- Nút chọn file khác -->
-        <button type="button" class="btn-add-more" onclick="resetFileSelection()">
-          <i class="fas fa-sync-alt"></i> Chọn file khác
-        </button>
       </div>
     </div>
 
-    <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
+    <!-- Cột phải: Bảng tùy chọn tách PDF sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-cut" style="margin-right:6px;"></i> Tùy chọn tách PDF
       </div>
 
       <div class="options-body">
-        <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
-          <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
-              <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
+        <!-- 3 TAB PHƯƠNG THỨC TÁCH -->
+        <div class="ws-tab-group" style="margin-bottom:14px;">
+          <button type="button" class="ws-tab-btn active" id="tabBtnRange" onclick="selectSplitTab('range')">
+            <i class="fas fa-layer-group"></i>
+            <span>Phạm vi</span>
+          </button>
+          <button type="button" class="ws-tab-btn" id="tabBtnPages" onclick="selectSplitTab('pages')">
+            <i class="fas fa-file-alt"></i>
+            <span>Theo trang</span>
+          </button>
+          <button type="button" class="ws-tab-btn" id="tabBtnSize" onclick="selectSplitTab('size')">
+            <i class="fas fa-weight-hanging"></i>
+            <span>Dung lượng</span>
+          </button>
+        </div>
+
+        <!-- ================= TAB 1: PHẠM VI (RANGE) ================= -->
+        <div class="split-tab-content" id="tabContentRange">
+          <div class="form-group" style="margin-bottom:10px;">
+            <label class="form-label">Chế độ chia phạm vi</label>
+            <div class="ws-submode-group">
+              <button type="button" class="ws-submode-btn active" id="modeBtnCustom" onclick="selectRangeMode('custom')">
+                Tùy chọn khoảng
+              </button>
+              <button type="button" class="ws-submode-btn" id="modeBtnFixed" onclick="selectRangeMode('fixed')">
+                Chia đều trang
+              </button>
+            </div>
+          </div>
+
+          <!-- Chế độ: Tùy chọn khoảng (Custom) -->
+          <div id="rangeCustomContainer">
+            <div id="rangeListWrapper">
+              <!-- Khoảng trang 1 mặc định -->
+              <div class="ws-range-card" id="rangeItem_1">
+                <div class="ws-range-header">
+                  <span><i class="fas fa-bookmark" style="margin-right:4px;"></i> Khoảng trang 1</span>
+                </div>
+                <div class="ws-range-inputs">
+                  <div class="ws-input-wrap">
+                    <span class="ws-input-prefix">Từ trang</span>
+                    <input type="number" min="1" value="1" id="rangeFrom_1" oninput="validateRangeInput(this, false)">
+                  </div>
+                  <div class="ws-input-wrap">
+                    <span class="ws-input-prefix">Đến trang</span>
+                    <input type="number" min="1" value="1" id="rangeTo_1" oninput="validateRangeInput(this, true)">
+                  </div>
+                </div>
               </div>
-            </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
-              <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
-              </div>
+            </div>
+
+            <!-- Nút thêm khoảng trang -->
+            <button type="button" class="btn-add-range" onclick="addNewRangeItem()">
+              <i class="fas fa-plus"></i> Thêm khoảng trang khác
+            </button>
+
+            <label class="ws-checkbox-label">
+              <input type="checkbox" id="chkMergeRangesCustom">
+              <span>Gộp tất cả các khoảng trang này thành 1 file PDF duy nhất</span>
             </label>
           </div>
+
+          <!-- Chế độ: Chia đều số trang (Fixed) -->
+          <div id="rangeFixedContainer" style="display:none;">
+            <div class="form-group" style="margin-bottom:10px;">
+              <label class="form-label" for="fixedRangePages">Số trang trên mỗi file sau khi tách</label>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <input type="number" id="fixedRangePages" min="1" value="1" class="ws-number-input" oninput="validateFixedRangeInput(this)">
+                <span style="font-size:0.86rem; color:#475569;">trang / file</span>
+              </div>
+            </div>
+
+            <div class="ws-info-box">
+              <i class="fas fa-info-circle"></i>
+              <div id="fixedNoticeText">
+                Tệp PDF sẽ được chia đều thành các file gồm 1 trang.<br>
+                Dự kiến tạo ra: <strong><span id="fixedCountPdf">5</span> file PDF</strong>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 2: THEO TRANG (PAGES) ================= -->
+        <div class="split-tab-content" id="tabContentPages" style="display:none;">
+          <div class="form-group" style="margin-bottom:10px;">
+            <label class="form-label">Chế độ tách theo trang</label>
+            <div class="ws-submode-group">
+              <button type="button" class="ws-submode-btn active" id="modeBtnExtractAll" onclick="selectExtractMode('all')">
+                Tách tất cả trang
+              </button>
+              <button type="button" class="ws-submode-btn" id="modeBtnExtractSelect" onclick="selectExtractMode('select')">
+                Chọn trang cần lấy
+              </button>
+            </div>
+          </div>
+
+          <!-- Tách tất cả các trang -->
+          <div id="extractAllContainer">
+            <div class="ws-info-box">
+              <i class="fas fa-info-circle"></i>
+              <div>
+                Tất cả các trang của tài liệu sẽ được tách thành từng file PDF độc lập.<br>
+                Dự kiến tạo ra: <strong><span id="extractAllCountPdf">5</span> file PDF</strong>.
+              </div>
+            </div>
+          </div>
+
+          <!-- Chọn trang cần lấy -->
+          <div id="extractSelectContainer" style="display:none;">
+            <div class="form-group" style="margin-bottom:10px;">
+              <label class="form-label" for="inputPagesToExtract">Các số trang cần trích xuất</label>
+              <input type="text" id="inputPagesToExtract" placeholder="Ví dụ: 1, 3, 5-8" class="ws-text-input" oninput="updateSplitNotice()">
+              <small class="ws-input-hint">Nhập các trang riêng lẻ hoặc dải trang, phân cách bởi dấu phẩy.</small>
+            </div>
+
+            <label class="ws-checkbox-label">
+              <input type="checkbox" id="chkMergeExtractedPages">
+              <span>Gộp các trang đã chọn thành 1 file PDF duy nhất</span>
+            </label>
+
+            <div class="ws-info-box">
+              <i class="fas fa-info-circle"></i>
+              <div>
+                Các trang được chọn sẽ được trích xuất thành tệp riêng.<br>
+                Dự kiến tạo ra: <strong><span id="extractSelectCountPdf">0</span> file PDF</strong>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 3: DUNG LƯỢNG (SIZE) ================= -->
+        <div class="split-tab-content" id="tabContentSize" style="display:none;">
+          <div class="ws-file-summary">
+            <div><i class="fas fa-file-pdf"></i> Dung lượng gốc: <strong id="sizeInfoOrig">0 KB</strong></div>
+            <div><i class="fas fa-copy"></i> Tổng số trang: <strong id="sizeInfoPages">0 trang</strong></div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:12px;">
+            <label class="form-label">Dung lượng tối đa cho mỗi file</label>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <input type="number" id="inputMaxSize" value="500" min="1" class="ws-number-input" oninput="updateSplitNotice()">
+              <div class="unit-toggle-group">
+                <button type="button" class="unit-toggle-btn active" id="unitBtnKB" onclick="toggleSizeUnit('KB')">KB</button>
+                <button type="button" class="unit-toggle-btn" id="unitBtnMB" onclick="toggleSizeUnit('MB')">MB</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ws-info-box">
+            <i class="fas fa-info-circle"></i>
+            <div>
+              Tệp PDF sẽ được chia thành các file có kích thước không vượt quá: <strong><span id="noticeMaxSizeVal">500 KB</span></strong> mỗi file.
+            </div>
+          </div>
+
+          <label class="ws-checkbox-label">
+            <input type="checkbox" id="chkAllowCompression" checked>
+            <span>Cho phép nén tối ưu dung lượng khi tách</span>
+          </label>
         </div>
       </div>
 
       <div class="action-area">
-        <button type="button" class="btn-convert btn-execute" id="btnExecute" onclick="executeToolAction()">
-          Tách trang PDF ngay <i class="fas fa-arrow-right"></i>
+        <button type="button" class="btn-convert" id="btnExecute" onclick="executeToolAction()">
+          Tách file PDF ngay <i class="fas fa-arrow-right"></i>
         </button>
       </div>
     </aside>
@@ -328,57 +485,60 @@
     <!-- BƯỚC 1: KHUNG TẢI FILE (UPLOAD PANEL) -->
     <div class="upload-panel" id="uploadPanel">
       <div class="upload-panel-header">
-        <i class="fas fa-cut"></i> Tải tệp lên để thực hiện Tách PDF
+        <i class="fas fa-cut"></i> Tải tệp PDF lên để tách trang
       </div>
       <div class="drop-zone" id="dropZone">
-        <div class="dz-icon"><i class="fas fa-cut"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>Kéo &amp; thả file PDF vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Chỉ hỗ trợ 1 file PDF mỗi lần xử lý · Tối đa 50 MB</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>File PDF của bạn đã được tách thành công!</h3>
-      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <h3 id="downloadSuccessTitle">File PDF của bạn đã được tách thành công!</h3>
+      <p id="downloadMeta">Tài liệu đã được chia tách hoàn tất và sẵn sàng tải về máy tính.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultFile()">
-        <i class="fas fa-download"></i> Tải xuống các trang đã tách
+        <i class="fas fa-download"></i> Tải xuống các tệp đã tách
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
-          <i class="fas fa-redo"></i> Xử lý tệp khác
+          <i class="fas fa-redo"></i> Tách một file PDF khác
         </button>
       </div>
     </div>
 
-    <!-- ===== NỘI DUNG CHUẨN SEO ===== -->
+    <!-- ===== NỘI DUNG CHUẨN SEO (SEO ARTICLE) ===== -->
+    <!-- 1. CÁC BƯỚC THỰC HIỆN -->
     <section class="seo-section">
-      <h2>Hướng dẫn sử dụng Tách PDF trực tuyến trong 3 bước</h2>
+      <h2>Cách tách file PDF trực tuyến chỉ trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file PDF lên</h4>
+          <p>Kéo và thả tệp PDF cần chia nhỏ vào khung tải lên hoặc chọn từ máy tính, điện thoại của bạn.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Chọn chế độ tách</h4>
+          <p>Lựa chọn theo nhu cầu: Tách theo phạm vi (Range), Trích xuất từng trang (Pages) hoặc Tách theo dung lượng (Size).</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
-          <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <h4>Tải tệp kết quả về</h4>
+          <p>Nhấn "Tách file PDF ngay" và tải về các file PDF đã được bóc tách hoàn chỉnh chỉ sau vài giây.</p>
         </div>
       </div>
     </section>
 
+    <!-- 2. BẢO MẬT & QUYỀN RIÊNG TƯ -->
     <section class="seo-section">
       <h2>Bảo mật tài liệu &amp; Quyền riêng tư tối đa</h2>
       <p>ToolHub cam kết bảo vệ dữ liệu người dùng ở mức cao nhất:</p>
@@ -392,65 +552,96 @@
         <div class="sec-item">
           <div>
             <strong>Tự động xóa sau 1 giờ</strong>
-            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút.</span>
+            <span>File của bạn được xóa vĩnh viễn khỏi máy chủ sau 60 phút, không lưu trữ dài hạn.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
-            <strong>Bảo mật thông tin</strong>
-            <span>Không chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
+            <strong>Không ai xem file của bạn</strong>
+            <span>Quá trình tách hoàn toàn tự động bởi thuật toán, không nhân viên nào có quyền xem.</span>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- 3. CÂU HỎI THƯỜNG GẶP (FAQ) -->
     <section class="seo-section">
       <h2>Câu hỏi thường gặp về Tách PDF (FAQ)</h2>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Sử dụng công cụ Tách PDF tại ToolHub có mất phí không?
+          Tách file PDF có làm giảm chất lượng văn bản hoặc hình ảnh không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Hoàn toàn không. Công cụ tách trang của ToolHub sử dụng thuật toán bóc tách luồng dữ liệu gốc, bảo toàn nguyên bản 100% font chữ, hình ảnh, bảng biểu và đồ họa vector của tài liệu gốc.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Tôi có thể trích xuất những trang không liên tục (ví dụ trang 1, 3, 5-8) được không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Có. Bạn chỉ cần chọn tab <strong>Pages</strong> và chế độ <strong>Select pages</strong>, sau đó nhập danh sách trang cần trích xuất (ví dụ: <code>1, 3, 5-8</code>). Hệ thống sẽ tách chính xác các trang bạn yêu cầu.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tách theo dung lượng (Size) hoạt động như thế nào?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Chế độ <strong>Size</strong> cho phép bạn đặt giới hạn dung lượng tối đa cho mỗi tệp đầu ra (ví dụ 500 KB hoặc 2 MB). Hệ thống sẽ tự động tính toán và chia nhỏ file PDF thành nhiều phần sao cho không tệp nào vượt quá kích thước bạn đặt ra.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          ToolHub có giới hạn số lần tách file PDF trong ngày không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Hoàn toàn miễn phí và không giới hạn số lần sử dụng. Bạn có thể tách bao nhiêu tài liệu tùy thích mà không phải cài đặt bất kỳ phần mềm nào.
         </div>
       </div>
     </section>
 
-    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
+    <!-- 4. BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO -->
     <section class="seo-section seo-article">
       <h2>Giới thiệu công cụ Tách file PDF trực tuyến tại ToolHub</h2>
 
-      <p>Khi làm việc với các tài liệu PDF dài như sách điện tử, báo cáo tài chính hàng trăm trang, hợp đồng kinh tế hoặc tài liệu học tập, bạn thường chỉ cần trích xuất một vài trang hoặc một chương cụ thể để gửi cho đối tác hoặc lưu trữ riêng biệt.</p>
+      <p>Trong công việc văn phòng, nghiên cứu học thuật và giao dịch điện tử, chúng ta thường xuyên bắt gặp những tệp tài liệu PDF rất dài như hợp đồng kinh tế dày hàng chục trang, báo cáo tài chính thường niên, đề tài nghiên cứu hoặc sách giáo trình điện tử. Trong nhiều trường hợp, bạn chỉ cần trích xuất một vài trang quan trọng (chẳng hạn như phụ lục hợp đồng, hóa đơn, hoặc một chương cụ thể) để gửi qua Email hoặc lưu trữ riêng mà không muốn gửi toàn bộ tài liệu cồng kềnh.</p>
 
-      <p>Công cụ <strong>Tách PDF trực tuyến ToolHub</strong> cung cấp giải pháp bóc tách trang tài liệu thông minh: tách từng trang đơn lẻ, trích xuất theo khoảng trang tùy chọn (ví dụ: trang 1-5, 8, 12-20) hoặc chia nhỏ file PDF thành nhiều phần mà không làm mất liên kết nội bộ hay suy giảm chất lượng hiển thị.</p>
+      <p>Hiểu được nhu cầu đó, <strong>ToolHub</strong> phát triển công cụ <em>Tách PDF trực tuyến thông minh</em> với đầy đủ 3 chế độ chuyên sâu: Tách theo phạm vi trang (Range), Trích xuất trang đơn lẻ (Pages) và Tách đều theo kích thước dung lượng (Size). Toàn bộ quá trình diễn ra trực tiếp trên trình duyệt web, đảm bảo tốc độ vượt trội và bảo mật an toàn tuyệt đối.</p>
 
       <div class="seo-grid-cols">
         <div class="seo-col-card">
-          <h4><i class="fas fa-cut"></i> Tách trang linh hoạt</h4>
-          <p>Hỗ trợ trích xuất trang chính xác theo khoảng trang bất kỳ hoặc chia đều theo số lượng trang mong muốn.</p>
+          <h4><i class="fas fa-crop-alt"></i> Tách theo phạm vi linh hoạt</h4>
+          <p>Hỗ trợ chia nhỏ theo dải trang tùy chỉnh (Custom) hoặc chia đều mỗi file X trang (Fixed). Cho phép gộp các dải trang thành 1 file duy nhất.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-bolt"></i> Tốc độ bóc tách tức thì</h4>
-          <p>Xử lý trực tiếp trên nền web không cần tải phần mềm, xuất file kết quả siêu tốc.</p>
+          <h4><i class="fas fa-layer-group"></i> Trích xuất từng trang lẻ</h4>
+          <p>Trích xuất toàn bộ các trang thành các file đơn lẻ hoặc chọn lựa danh sách các trang ngắt quãng bất kỳ một cách chính xác tuyệt đối.</p>
         </div>
         <div class="seo-col-card">
-          <h4>Bảo mật dữ liệu tuyệt đối</h4>
-          <p>Mã hóa truyền tải SSL 256-bit an toàn, file tự động xóa sạch khỏi máy chủ sau 60 phút.</p>
+          <h4><i class="fas fa-weight-hanging"></i> Tách theo dung lượng tối đa</h4>
+          <p>Tự động chia nhỏ tài liệu PDF thành các file có kích thước không vượt quá mức KB/MB bạn yêu cầu, rất tiện lợi khi gửi đính kèm email.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-check-circle"></i> Giữ trọn vẹn chất lượng</h4>
-          <p>Bảo toàn 100% font chữ, hình ảnh, liên kết và đồ họa nguyên bản của tài liệu gốc.</p>
+          <h4><i class="fas fa-shield-alt"></i> Bảo mật dữ liệu 100%</h4>
+          <p>Mã hóa truyền tải SSL 256-bit an toàn, file tự động xóa sạch khỏi máy chủ sau 60 phút, cam kết không xem hoặc chia sẻ tệp của bạn.</p>
         </div>
+      </div>
+
+      <h3>Khi nào bạn nên sử dụng công cụ tách file PDF?</h3>
+      <ul>
+        <li><strong>Trích xuất trang cần thiết từ hợp đồng:</strong> Khi chỉ cần gửi các trang điều khoản thi công hoặc biên bản nghiệm thu cho đối tác mà không muốn lộ toàn bộ nội dung hợp đồng bảo mật.</li>
+        <li><strong>Giảm dung lượng để gửi qua Email:</strong> Email giới hạn dung lượng tệp đính kèm 20MB - 25MB. Chế độ tách theo kích thước giúp bạn chia nhỏ tài liệu để gửi thư điện tử thuận lợi mà không gặp thông báo lỗi.</li>
+        <li><strong>Bóc tách từng chứng từ kế toán, hóa đơn:</strong> Đối với các tệp scan chứa nhiều hóa đơn liên tiếp, chế độ trích xuất tất cả các trang (Extract all pages) giúp bạn có ngay từng hóa đơn riêng lẻ chỉ với 1 cú nhấp chuột.</li>
+        <li><strong>Lưu trữ và phân loại chương mục sách, giáo trình:</strong> Chia sách điện tử hoặc luận văn tốt nghiệp thành từng chương nhỏ để dễ tra cứu, đọc trên điện thoại hoặc chia sẻ theo từng bài học.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo tách PDF đạt hiệu quả cao:</strong> Nếu bạn cần lấy các trang không liền nhau (ví dụ trang bìa và trang kết luận), hãy chọn tab <strong>Pages &gt; Select pages</strong> và nhập <code>1, 15-20</code>. Đánh dấu vào ô <em>"Merge extracted pages into one PDF file"</em> để hệ thống tự động gộp các trang đó thành 1 file duy nhất cho bạn!
       </div>
     </section>
 
@@ -515,8 +706,9 @@
   </div>
 
   <!-- SCRIPTS -->
-
-<script src="../../static/js/app.js"></script>
+  <script src="../../static/vendor/pdfjs/pdf.min.js"></script>
+  <script src="../../static/js/ultis/pdf/pdf-preview.js"></script>
+  <script src="../../static/js/app.js"></script>
   <script src="../../static/js/tools/pdf/tach-pdf.js"></script>
 
 </body>

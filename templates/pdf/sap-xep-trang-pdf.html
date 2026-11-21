@@ -257,61 +257,56 @@
   <div class="tool-workspace full-bleed" id="toolWorkspace">
     <!-- Cột trái: Khu vực xem trước file đã chọn -->
     <div class="file-area">
-      <div class="file-area-content">
-        <div class="file-card-wrap" id="fileCardWrap">
-          <div class="file-card" id="fileCard">
-            <button type="button" class="btn-remove-file" onclick="resetFileSelection()" title="Xóa file">
-              <i class="fas fa-times"></i>
-            </button>
-            <div class="file-preview" id="filePreview">
-              <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
-                <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
-                <div class="line title"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
-                <div class="line"></div>
-                <div class="line block"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
-              </div>
-            </div>
-            <div class="file-name" id="selectedFileName">tai_lieu.pdf</div>
-            <div class="file-meta" id="selectedFileSize" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 0 KB</div>
-          </div>
-        </div>
-
-        <!-- Nút chọn file khác -->
-        <button type="button" class="btn-add-more" onclick="resetFileSelection()">
-          <i class="fas fa-sync-alt"></i> Chọn file khác
+      <!-- Nút nổi góc phải trên để chọn file khác -->
+      <div class="floating-add-wrap" data-tooltip="Chọn file PDF khác">
+        <button type="button" class="btn-floating-add" onclick="resetFileSelection()" aria-label="Chọn file khác">
+          <i class="fas fa-plus"></i>
         </button>
+      </div>
+
+      <div class="file-area-content">
+        <!-- Lưới hiển thị thumbnail tất cả các trang PDF để kéo thả sắp xếp -->
+        <div class="file-card-wrap" id="fileCardWrap"></div>
       </div>
     </div>
 
-    <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
+    <!-- Cột phải: Bảng hướng dẫn & tùy chọn sắp xếp sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-sliders-h" style="margin-right:6px;"></i> Hướng dẫn &amp; Tùy chọn
       </div>
 
       <div class="options-body">
-        <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
-          <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
-              <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
-              </div>
-            </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
-              <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
-              </div>
-            </label>
+        <!-- Box hướng dẫn kéo thả -->
+        <div class="ws-info-box" style="margin-bottom:14px; font-size:0.82rem; line-height:1.5;">
+          <i class="fas fa-info-circle"></i>
+          <div>Kéo và thả các thẻ trang ở khung bên trái để di chuyển thứ tự tài liệu theo ý muốn của bạn.</div>
+        </div>
+
+        <!-- Tóm tắt thông tin tài liệu & thứ tự trang mới -->
+        <div class="ws-file-summary" style="margin-bottom:14px;">
+          <div class="ws-summary-row">
+            <span><i class="fas fa-file-pdf"></i> Tệp đã chọn:</span>
+            <strong id="selectedFileName" style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">tai_lieu.pdf</strong>
           </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-layer-group"></i> Tổng số trang:</span>
+            <strong id="totalPagesCount">0 trang</strong>
+          </div>
+          <div class="ws-summary-row" style="flex-direction:column; align-items:flex-start; gap:4px; padding-top:8px; border-top:1px dashed #e2e8f0;">
+            <span style="font-weight:600;"><i class="fas fa-sort-numeric-down"></i> Thứ tự trang mới:</span>
+            <div id="orderSequencePreview" style="font-size:0.8rem; color:#1e5b9c; font-weight:700; word-break:break-all; max-height:60px; overflow-y:auto; line-height:1.4; background:#f8fafc; padding:6px 8px; border-radius:4px; border:1px solid #e2e8f0; width:100%; box-sizing:border-box;">Chưa tải trang...</div>
+          </div>
+        </div>
+
+        <!-- Các nút thao tác nhanh -->
+        <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;">
+          <button type="button" class="ws-tag-btn" onclick="reversePageOrder()" style="width:100%; justify-content:center; padding:8px 10px; font-weight:600;">
+            <i class="fas fa-exchange-alt"></i> Đảo ngược thứ tự trang
+          </button>
+          <button type="button" class="ws-tag-btn" onclick="resetPageOrder()" style="width:100%; justify-content:center; padding:8px 10px; color:#64748b;">
+            <i class="fas fa-undo"></i> Khôi phục thứ tự gốc
+          </button>
         </div>
       </div>
 
@@ -331,28 +326,29 @@
         <i class="fas fa-sort-amount-down"></i> Tải tệp lên để thực hiện Sắp xếp trang PDF
       </div>
       <div class="drop-zone" id="dropZone">
-        <div class="dz-icon"><i class="fas fa-sort-amount-down"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>Kéo &amp; thả file PDF vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Hỗ trợ file PDF tối đa 50 MB · Kéo thả để sắp xếp lại từng trang</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Thứ tự các trang PDF đã được sắp xếp lại chuẩn xác!</h3>
-      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <h3 id="downloadSuccessTitle">Thứ tự các trang PDF đã được sắp xếp lại chuẩn xác!</h3>
+      <p id="downloadMeta">Tài liệu đã được biên tập hoàn tất theo đúng trình tự bạn sắp xếp và sẵn sàng tải về.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultFile()">
-        <i class="fas fa-download"></i> Tải xuống PDF theo thứ tự mới
+        <i class="fas fa-download"></i> Tải xuống file PDF đã sắp xếp
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
-          <i class="fas fa-redo"></i> Xử lý tệp khác
+          <i class="fas fa-redo"></i> Sắp xếp một file PDF khác
         </button>
       </div>
     </div>
@@ -363,18 +359,18 @@
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file PDF lên</h4>
+          <p>Kéo và thả tài liệu PDF vào khung tải lên hoặc bấm nút chọn file từ thiết bị của bạn.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Kéo thả sắp xếp thứ tự</h4>
+          <p>Di chuyển vị trí các thẻ trang trực quan hoặc dùng nút đảo ngược thứ tự chỉ với 1 cú click.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
           <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <p>Nhấn "Lưu thứ tự trang mới" và tải file PDF hoàn chỉnh về thiết bị ngay lập tức.</p>
         </div>
       </div>
     </section>
@@ -392,13 +388,13 @@
         <div class="sec-item">
           <div>
             <strong>Tự động xóa sau 1 giờ</strong>
-            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút.</span>
+            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút, không lưu trữ dài hạn.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
-            <strong>Bảo mật thông tin</strong>
-            <span>Không chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
+            <strong>Không ai xem file của bạn</strong>
+            <span>Quá trình biên tập thực hiện hoàn toàn tự động bởi thuật toán, bảo vệ tối đa sự riêng tư.</span>
           </div>
         </div>
       </div>
@@ -412,46 +408,75 @@
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần, không giới hạn số lượng trang mà không cần đăng ký tài khoản trả phí.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Tôi có thể vừa đổi thứ tự vừa xoay hướng từng trang được không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Có. Bạn chỉ cần di chuột vào từng thẻ trang và nhấn biểu tượng xoay 90° để điều chỉnh góc xoay theo ý muốn trước khi bấm lưu file.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tài liệu sau khi sắp xếp có giữ nguyên chất lượng không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Có. Thuật toán PyMuPDF bảo toàn 100% độ sắc nét của font chữ, hình ảnh độ phân giải cao và các siêu dữ liệu của từng trang trong file gốc.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Làm thế nào để đảo ngược thứ tự các trang nhanh nhất?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Bạn chỉ cần bấm nút "Đảo ngược thứ tự trang" ở cột tùy chọn bên phải, hệ thống sẽ tự động xếp trang cuối lên đầu tiên và đảo ngược toàn bộ tài liệu ngay lập tức.
         </div>
       </div>
     </section>
 
-  
     <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
     <section class="seo-section seo-article">
       <h2>Giới thiệu công cụ Sắp xếp trang PDF trực tuyến tại ToolHub</h2>
 
-      <p>Trong quá trình scan tài liệu hoặc ghép các hợp đồng, các trang tài liệu thường bị xáo trộn thứ tự hoặc bị đặt nhầm vị trí, khiến văn bản trở nên lộn xộn và thiếu tính logic.</p>
+      <p>Trong quá trình làm việc văn phòng, in ấn tài liệu hoặc số hóa hồ sơ từ máy scan văn phòng, việc các trang tài liệu bị xếp lộn xộn, bị ngược từ trang cuối lên trang đầu hoặc bị xáo trộn vị trí là sự cố rất thường gặp. Điều này khiến văn bản trở nên rời rạc, khó theo dõi và thiếu tính chuyên nghiệp khi gửi cho đối tác, khách hàng hoặc nộp hồ sơ công trực tuyến.</p>
 
-      <p>Công cụ <strong>Sắp xếp trang PDF ToolHub</strong> mang đến giao diện trực quan hiển thị hình thu nhỏ của từng trang, cho phép bạn kéo thả để thay đổi vị trí trang trước sau một cách nhanh chóng và dễ dàng.</p>
+      <p>Công cụ <strong>Sắp xếp trang PDF ToolHub</strong> mang đến giải pháp trực quan với khả năng hiển thị hình thu nhỏ (thumbnail) của toàn bộ các trang, cho phép bạn kéo và thả để thay đổi vị trí từng trang một cách linh hoạt, mượt mà và chuẩn xác nhất ngay trên trình duyệt web.</p>
 
       <div class="seo-grid-cols">
         <div class="seo-col-card">
-          <h4><i class="fas fa-arrows-alt"></i> Kéo thả trực quan</h4>
-          <p>Dễ dàng cầm nắm và di chuyển trang đến vị trí mong muốn chỉ trong tích tắc.</p>
+          <h4><i class="fas fa-arrows-alt"></i> Kéo thả mượt mà trực quan</h4>
+          <p>Dễ dàng dùng chuột hoặc chạm trên màn hình cảm ứng để di chuyển trang đến bất kỳ vị trí mong muốn nào.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-th"></i> Xem trước hình thu nhỏ</h4>
-          <p>Hiển thị thumbnail sắc nét giúp bạn nhận diện chính xác nội dung từng trang.</p>
+          <h4><i class="fas fa-th"></i> Xem trước hình thu nhỏ sắc nét</h4>
+          <p>Tự động render thumbnail từng trang với độ sắc nét cao giúp bạn nhận diện nhanh chóng nội dung trước khi xếp.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-sync-alt"></i> Xoay hoặc xóa trang nhanh</h4>
-          <p>Tích hợp thao tác xoay hướng hoặc gỡ bỏ trang thừa ngay trong lúc sắp xếp.</p>
+          <h4><i class="fas fa-sync-alt"></i> Xoay trang linh hoạt 90°</h4>
+          <p>Tích hợp sẵn tính năng xoay hướng từng trang riêng biệt ngay trên từng thẻ mà không cần dùng thêm công cụ khác.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-check-circle"></i> Xuất file tức thì</h4>
-          <p>Lưu lại tài liệu đã hoàn thiện thứ tự chuẩn xác mà không giảm chất lượng file.</p>
+          <h4><i class="fas fa-shield-alt"></i> Bảo mật an toàn tuyệt đối</h4>
+          <p>Toàn bộ tài liệu được mã hóa SSL 256-bit và tự động xóa sạch khỏi máy chủ sau 60 phút để bảo vệ quyền riêng tư.</p>
         </div>
+      </div>
+
+      <h3>Khi nào bạn nên sử dụng công cụ sắp xếp lại thứ tự trang PDF?</h3>
+      <ul>
+        <li><strong>Tài liệu scan bị ngược thứ tự:</strong> Khi quét tài liệu bằng máy in nạp giấy tự động, các trang thường bị xếp từ trang cuối về trang đầu. Nút "Đảo ngược thứ tự trang" sẽ khắc phục tình trạng này chỉ trong 1 giây.</li>
+        <li><strong>Tổng hợp nhiều tài liệu thành hồ sơ hoàn chỉnh:</strong> Khi gộp báo cáo tài chính, hợp đồng, phụ lục từ nhiều nguồn khác nhau, bạn cần sắp xếp các trang theo đúng thứ tự logic trước khi gửi đi.</li>
+        <li><strong>Đóng gói luận văn, đồ án &amp; kỷ yếu:</strong> Kiểm tra và sắp xếp lại trang bìa, mục lục, nội dung chính và phụ lục theo đúng quy chuẩn trình bày văn bản khoa học.</li>
+        <li><strong>Chuẩn bị tài liệu in ấn hai mặt:</strong> Sắp xếp lại thứ tự trang chẵn lẻ phù hợp trước khi xuất bản hoặc đóng gáy sách.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo xử lý nhanh:</strong> Nếu file của bạn có nhiều trang bị ngược hoàn toàn, hãy bấm nút <strong>"Đảo ngược thứ tự trang"</strong> ở cột bên phải. Bạn cũng có thể bấm biểu tượng kính lúp trên từng thẻ để xem phóng to chi tiết nội dung trang đó trước khi lưu file.
       </div>
     </section>
 
@@ -516,8 +541,10 @@
   </div>
 
   <!-- SCRIPTS -->
-
-<script src="../../static/js/app.js"></script>
+  <script src="../../static/vendor/pdfjs/pdf.min.js"></script>
+  <script src="../../static/js/ultis/pdf/pdf-preview.js"></script>
+  <script src="../../static/js/ultis/drag-reorder.js"></script>
+  <script src="../../static/js/app.js"></script>
   <script src="../../static/js/tools/pdf/sap-xep-trang-pdf.js"></script>
 
 </body>
