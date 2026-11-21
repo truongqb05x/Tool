@@ -1,23 +1,42 @@
 """
-Dịch vụ xử lý hình ảnh (Image Service)
-Sẵn sàng để tích hợp thư viện Pillow (PIL) hoặc OpenCV / rembg.
+Dịch vụ xử lý hình ảnh (Image Service Facade)
+Duy trì tương thích ngược 100%, chuyển tiếp lời gọi sang package src.services.image
 """
 
-class ImageService:
-    @staticmethod
-    def crop_and_rotate(input_path: str, output_path: str, crop_box: tuple = None, angle: int = 0) -> dict:
-        """Cắt ảnh theo vùng chọn và xoay góc ảnh."""
-        # TODO: Điền logic xử lý ảnh qua Pillow (PIL)
-        return {
-            'status': 'success',
-            'output_path': output_path
-        }
+from .image import (
+    ImageService,
+    compress_image,
+    resize_image,
+    crop_image,
+    convert_to_jpg,
+    convert_from_jpg,
+    rotate_image,
+    add_watermark_image,
+    enhance_image,
+    edit_photo,
+    blur_faces,
+    create_meme,
+    remove_background,
+    html_to_image,
+    format_size,
+    get_image_info
+)
 
-    @staticmethod
-    def remove_background(input_path: str, output_path: str) -> dict:
-        """Tự động tách nền hình ảnh."""
-        # TODO: Điền logic tách nền qua rembg
-        return {
-            'status': 'success',
-            'output_path': output_path
-        }
+__all__ = [
+    'ImageService',
+    'compress_image',
+    'resize_image',
+    'crop_image',
+    'convert_to_jpg',
+    'convert_from_jpg',
+    'rotate_image',
+    'add_watermark_image',
+    'enhance_image',
+    'edit_photo',
+    'blur_faces',
+    'create_meme',
+    'remove_background',
+    'html_to_image',
+    'format_size',
+    'get_image_info'
+]

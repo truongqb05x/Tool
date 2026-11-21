@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tất Cả Công Cụ Dành Cho Developer — 25 Tiện Ích Lập Trình Viên | ToolHub</title>
+  <meta name="description" content="Trọn bộ 25 công cụ Developer trực tuyến miễn phí: JSON Formatter & Minifier, XML/HTML/CSS/JS Beautifier, Base64 Encode/Decode, URL Encode, Escape text, Binary/Hex to Text, Text to QR Code... Chuẩn cú pháp, nhanh chóng và bảo mật cao.">
+  <meta name="keywords" content="cong cu developer, json formatter, json validator, json minifier, base64 encode decode, url encode, html beautifier, css minifier, javascript formatter, text to qr, binary to text, developer text tools">
+
+  <!-- Font Awesome & CSS Layout -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../static/css/layout/layout.css">
+  <link rel="stylesheet" href="../../static/css/layout/modal.css">
+  <link rel="stylesheet" href="../../static/css/pages/catalog-list.css">
+  <link rel="icon" type="image/png" href="../../static/img/logo.png">
+</head>
+<body>
+
+  <!-- ===== HEADER CHUẨN ===== -->
+  <header class="header">
+    <div class="container">
+      <a href="/" class="logo" style="text-decoration:none;">
+        <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+        <div class="logo-text">ToolHub</div>
+      </a>
+
+      <div class="header-search-wrap">
+        <div class="header-search">
+          <input type="text" id="searchInput" placeholder="Tìm công cụ: json formatter, base64, url encode, minifier..." autocomplete="off">
+          <button type="button" id="searchSubmitBtn" aria-label="Tìm kiếm"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+
+      <div class="header-actions" id="headerActions">
+        <div id="guestActions" style="display:flex; gap:8px;">
+          <a href="/?auth=login" class="btn btn-login">Đăng nhập</a>
+          <a href="/?auth=register" class="btn btn-register">Đăng ký</a>
+        </div>
+
+        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu công cụ">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <div id="userActions" class="user-menu" style="display:none;">
+          <div class="user-menu-trigger" id="userMenuTrigger">
+            <div class="user-avatar" id="headerAvatar">U</div>
+            <span class="user-name" id="headerUserName">Người dùng</span>
+            <i class="fas fa-chevron-down caret"></i>
+          </div>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-header">
+              <strong id="dropdownName">Người dùng</strong>
+              <small id="dropdownEmail">user@example.com</small>
+            </div>
+            <a href="/" class="user-dropdown-item">
+              <i class="fas fa-history"></i> Lịch sử xử lý
+            </a>
+            <a href="/" class="user-dropdown-item">
+              <i class="fas fa-cog"></i> Cài đặt tài khoản
+            </a>
+            <div class="user-dropdown-divider"></div>
+            <a href="#" class="user-dropdown-item danger" onclick="logout(); return false;">
+              <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Lớp phủ màn hình khi mở Menu Drawer trên Mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Drawer Menu dành riêng cho Mobile trên các trang con -->
+  <aside class="sidebar drawer-only" id="sidebar">
+    <div class="sidebar-drawer-header">
+      <div class="sidebar-drawer-brand">
+        <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+        <span>Danh mục công cụ</span>
+      </div>
+      <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng menu">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Auth Box bên trong Mobile Drawer -->
+    <div class="sidebar-auth-box">
+      <div id="drawerGuestActions" class="drawer-guest-actions">
+        <a href="/?auth=login" class="btn btn-login">
+          <i class="fas fa-sign-in-alt"></i> Đăng nhập
+        </a>
+        <a href="/?auth=register" class="btn btn-register">
+          <i class="fas fa-user-plus"></i> Đăng ký
+        </a>
+      </div>
+      <div id="drawerUserActions" class="drawer-user-actions" style="display:none;">
+        <div class="drawer-user-info">
+          <div class="user-avatar" id="drawerAvatar">U</div>
+          <div class="drawer-user-details">
+            <strong id="drawerUserName">Người dùng</strong>
+            <small id="drawerUserEmail">user@example.com</small>
+          </div>
+        </div>
+        <a href="#" class="drawer-logout-btn" onclick="logout(); closeMobileSidebar(); return false;">
+          <i class="fas fa-sign-out-alt"></i> Đăng xuất
+        </a>
+      </div>
+    </div>
+
+    <div class="side-box">
+      <div class="side-box-header"><i class="fas fa-list" style="margin-right:6px;"></i> Danh mục công cụ</div>
+      <div class="side-box-body">
+        <ul class="side-menu">
+          <li>
+            <a href="/" class="menu-toggle">
+              <i class="fas fa-home"></i>
+              <span>Trang chủ</span>
+            </a>
+          </li>
+          <li>
+            <a href="/pdf" class="menu-toggle">
+              <i class="fas fa-file-pdf"></i>
+              <span>Công cụ PDF</span>
+            </a>
+          </li>
+          <li>
+            <a href="/anh" class="menu-toggle">
+              <i class="fas fa-image"></i>
+              <span>Chỉnh sửa ảnh</span>
+            </a>
+          </li>
+          <li>
+            <a href="/txt" class="menu-toggle">
+              <i class="fas fa-file-lines"></i>
+              <span>Công cụ TXT</span>
+            </a>
+          </li>
+          <li>
+            <a href="/van-ban" class="menu-toggle">
+              <i class="fas fa-file-alt"></i>
+              <span>Văn bản &amp; Danh sách</span>
+            </a>
+          </li>
+          <li>
+            <a href="/developer" class="menu-toggle active">
+              <i class="fas fa-laptop-code"></i>
+              <span>Công cụ Developer</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== BREADCRUMB (SEO) ===== -->
+  <nav class="breadcrumb-nav sr-only" aria-label="Breadcrumb">
+    <a href="/"><i class="fas fa-home"></i> Trang chủ</a>
+    <span>/</span>
+    <strong>Công cụ Dành Cho Developer</strong>
+  </nav>
+
+  <!-- ===== NỘI DUNG DANH MỤC CÔNG CỤ DEVELOPER ===== -->
+  <div class="catalog-container">
+
+    <!-- HERO SECTION -->
+    <div class="catalog-hero">
+      <h1>Tất cả công cụ dành cho Developer trực tuyến</h1>
+      <p>Trọn bộ 25 công cụ định dạng, nén mã nguồn, mã hóa bảo mật, giải mã và chuyển đổi hệ đếm chuyên nghiệp dành riêng cho lập trình viên phần mềm và kỹ sư công nghệ.</p>
+      
+      <!-- BỘ LỌC TÌM KIẾM NHANH TRÊN TRANG -->
+      <div class="catalog-filter-bar">
+        <div class="catalog-filter-input-wrap">
+          <i class="fas fa-search"></i>
+          <input type="text" id="catalogFilter" class="catalog-filter-input" placeholder="Lọc nhanh: json, xml, base64, url encode, minifier, binary, hex..." autocomplete="off">
+        </div>
+        <div class="catalog-count-badge" id="catalogCountBadge">25 công cụ</div>
+      </div>
+    </div>
+
+    <!-- THÔNG BÁO KHI KHÔNG TÌM THẤY KẾT QUẢ -->
+    <div class="catalog-empty-state" id="catalogEmptyState">
+      <i class="fas fa-search-minus"></i>
+      <h3>Không tìm thấy công cụ Developer phù hợp</h3>
+      <p>Vui lòng thử từ khóa khác như "json", "minifier", "base64", "escape", "hex", "encode"...</p>
+    </div>
+
+    <!-- NHÓM CÔNG CỤ DEVELOPER (25 CÔNG CỤ) -->
+    <div class="catalog-group-section" data-group="developer">
+      <div class="catalog-group-header">
+        <span><i class="fas fa-laptop-code"></i> Developer Text Tools &amp; Data Utilities</span>
+        <span class="catalog-group-count">25 công cụ</span>
+      </div>
+      <div class="catalog-tools-grid">
+        {% for slug, title, desc, icon, kw in developer_tools %}
+        <a href="/developer/{{ slug }}" class="catalog-tool-card" data-title="{{ title }}" data-keywords="{{ kw }}">
+          <div class="catalog-card-top">
+            <div class="catalog-card-icon"><i class="{{ icon }}"></i></div>
+            <div>
+              <div class="catalog-card-title">{{ title }}</div>
+            </div>
+          </div>
+          <div class="catalog-card-desc">{{ desc }}</div>
+          <div class="catalog-card-footer">
+            <span class="catalog-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- ===== SEO CONTENT CONTAINER ===== -->
+    <div style="margin-top: 40px; background: #fff; border: 1px solid #d4d4cc; border-radius: 4px; padding: 24px 20px; line-height: 1.6; color: #444; font-size: 0.9rem;">
+      <h2 style="font-size: 1.25rem; color: #1e5b9c; margin-bottom: 12px; font-weight: 700;">
+        Bộ tiện ích hỗ trợ lập trình viên toàn diện từ ToolHub
+      </h2>
+      <p style="margin-bottom: 12px;">
+        Các công cụ Developer được thiết kế tối ưu với giao diện đơn giản, tốc độ phản hồi tính bằng mili-giây, giúp lập trình viên nhanh chóng debug chuỗi JSON, kiểm tra tính hợp lệ của dữ liệu, nén gọn dung lượng file HTML/CSS/JS hay mã hóa Base64 và URL an toàn cho các lệnh gọi API.
+      </p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 18px;">
+        <div style="background: #fbfbf9; border: 1px solid #e2e2d8; padding: 14px; border-radius: 4px;">
+          <h4 style="color: #222; margin-bottom: 6px; font-size: 0.95rem;"><i class="fas fa-code-compare" style="color:#27ae60; margin-right:6px;"></i>Chuẩn cú pháp W3C &amp; RFC</h4>
+          <p style="margin: 0; font-size: 0.84rem; color: #666;">Các bộ xử lý JSON, XML, Base64 tuân thủ nghiêm ngặt theo các tiêu chuẩn quốc tế RFC 8259 và W3C.</p>
+        </div>
+        <div style="background: #fbfbf9; border: 1px solid #e2e2d8; padding: 14px; border-radius: 4px;">
+          <h4 style="color: #222; margin-bottom: 6px; font-size: 0.95rem;"><i class="fas fa-user-secret" style="color:#e67e22; margin-right:6px;"></i>Tuyệt đối bảo mật Token &amp; API</h4>
+          <p style="margin: 0; font-size: 0.84rem; color: #666;">Thuật toán mã hóa & giải mã chạy 100% trong trình duyệt của bạn, không gửi chuỗi bảo mật lên server bên thứ ba.</p>
+        </div>
+        <div style="background: #fbfbf9; border: 1px solid #e2e2d8; padding: 14px; border-radius: 4px;">
+          <h4 style="color: #222; margin-bottom: 6px; font-size: 0.95rem;"><i class="fas fa-terminal" style="color:#2980b9; margin-right:6px;"></i>Sao chép 1 chạm</h4>
+          <p style="margin: 0; font-size: 0.84rem; color: #666;">Hỗ trợ sao chép kết quả nhanh vào Clipboard, tải file kết quả về máy tính hoặc chuyển đổi liên tục.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== FOOTER CHUẨN ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-brand">
+            <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+            <span>ToolHub</span>
+          </div>
+          <p class="footer-desc">
+            Nền tảng cung cấp trọn bộ công cụ trực tuyến miễn phí hàng đầu: PDF, Hình ảnh, TXT, Văn bản và Công cụ Developer.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">Công cụ Developer</h4>
+          <ul class="footer-links">
+            <li><a href="/developer/json-formatter">JSON Formatter</a></li>
+            <li><a href="/developer/json-validator">JSON Validator</a></li>
+            <li><a href="/developer/base64-encode">Base64 Encode</a></li>
+            <li><a href="/developer/url-encode">URL Encode</a></li>
+            <li><a href="/developer/text-to-qr-code">Text to QR Code</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">Danh mục nổi bật</h4>
+          <ul class="footer-links">
+            <li><a href="/pdf">Công cụ PDF</a></li>
+            <li><a href="/anh">Chỉnh sửa ảnh</a></li>
+            <li><a href="/txt">Công cụ TXT</a></li>
+            <li><a href="/van-ban">Văn bản &amp; Danh sách</a></li>
+            <li><a href="/tien-ich/tao-ma-qr">Tạo mã QR</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">Hỗ trợ &amp; Điều khoản</h4>
+          <ul class="footer-links">
+            <li><a href="/trogiup">Trung tâm trợ giúp</a></li>
+            <li><a href="/dieukhoan">Điều khoản sử dụng</a></li>
+            <li><a href="/dieukhoan">Chính sách bảo mật</a></li>
+            <li><a href="/lienhe">Liên hệ đóng góp ý kiến</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== THANH DƯỚI FOOTER (BOTTOM BAR) ===== -->
+  <div class="bottom-bar">
+    <div class="container">
+      <div>© 2025 ToolHub — Nền tảng tiện ích trực tuyến</div>
+      <div>
+        <a href="/trogiup">Trợ giúp</a>
+        <a href="/dieukhoan">Điều khoản</a>
+        <a href="/dieukhoan">Bảo mật</a>
+        <a href="#"><i class="fas fa-globe"></i> Ngôn ngữ: VI</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="../../static/js/app.js"></script>
+  <script>
+    // Logic tìm kiếm / lọc nhanh công cụ Developer
+    document.addEventListener('DOMContentLoaded', function() {
+      const filterInput = document.getElementById('catalogFilter');
+      const cards = document.querySelectorAll('.catalog-tool-card');
+      const groups = document.querySelectorAll('.catalog-group-section');
+      const emptyState = document.getElementById('catalogEmptyState');
+      const countBadge = document.getElementById('catalogCountBadge');
+
+      if (!filterInput) return;
+
+      filterInput.addEventListener('input', function() {
+        const query = this.value.trim().toLowerCase();
+        let visibleTotal = 0;
+
+        cards.forEach(function(card) {
+          const title = (card.getAttribute('data-title') || '').toLowerCase();
+          const desc = (card.querySelector('.catalog-card-desc')?.textContent || '').toLowerCase();
+          const keywords = (card.getAttribute('data-keywords') || '').toLowerCase();
+
+          const isMatch = !query || title.includes(query) || desc.includes(query) || keywords.includes(query);
+          if (isMatch) {
+            card.style.display = 'flex';
+            visibleTotal++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        groups.forEach(function(group) {
+          const groupCards = group.querySelectorAll('.catalog-tool-card');
+          const hasVisible = Array.from(groupCards).some(c => c.style.display !== 'none');
+          group.style.display = hasVisible ? 'block' : 'none';
+        });
+
+        if (countBadge) {
+          countBadge.textContent = visibleTotal + ' công cụ';
+        }
+
+        if (emptyState) {
+          emptyState.style.display = visibleTotal === 0 ? 'block' : 'none';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

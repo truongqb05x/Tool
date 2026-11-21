@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ tool_title }} Trực Tuyến — Tiện Ích Developer | ToolHub</title>
+  <meta name="description" content="{{ tool_desc }} Dành cho lập trình viên, nhanh chóng, chuẩn cú pháp và bảo mật cao.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../static/css/layout/layout.css">
+  <link rel="stylesheet" href="../../static/css/layout/modal.css">
+  <link rel="stylesheet" href="../../static/css/pages/catalog-list.css">
+  <link rel="icon" type="image/png" href="../../static/img/logo.png">
+  <style>
+    .tool-workspace {
+      max-width: 1000px;
+      margin: 24px auto 48px;
+      padding: 0 16px;
+    }
+    .workspace-card {
+      background: #fff;
+      border: 1px solid #d4d4cc;
+      border-radius: 4px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .workspace-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+    .workspace-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 6px;
+      background: #eef4fb;
+      color: #1e5b9c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+    .workspace-title {
+      font-size: 1.35rem;
+      color: #222;
+      font-weight: 700;
+      margin: 0;
+    }
+    .workspace-desc {
+      color: #666;
+      font-size: 0.88rem;
+      margin: 4px 0 0;
+    }
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 768px) {
+      .workspace-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #444;
+    }
+    .code-textarea {
+      width: 100%;
+      height: 260px;
+      padding: 12px;
+      font-size: 0.86rem;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #fafaf8;
+      resize: vertical;
+      outline: none;
+      box-sizing: border-box;
+      line-height: 1.45;
+    }
+    .code-textarea:focus {
+      background: #fff;
+      border-color: #1e5b9c;
+      box-shadow: 0 0 0 2px rgba(30, 91, 156, 0.15);
+    }
+    .action-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .btn-tool-action {
+      background: #1e5b9c;
+      color: #fff;
+      border: 1px solid #154374;
+      padding: 9px 18px;
+      border-radius: 3px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-tool-action:hover {
+      background: #154374;
+    }
+    .btn-tool-secondary {
+      background: #fbfbf9;
+      color: #444;
+      border: 1px solid #ccc;
+      padding: 9px 16px;
+      border-radius: 3px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-tool-secondary:hover {
+      background: #f0f0ea;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container">
+      <a href="/" class="logo" style="text-decoration:none;">
+        <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+        <div class="logo-text">ToolHub</div>
+      </a>
+      <div class="header-actions">
+        <a href="/developer" class="btn btn-secondary" style="font-size:0.85rem;"><i class="fas fa-arrow-left"></i> Tất cả công cụ Developer</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="tool-workspace">
+    <div class="workspace-card">
+      <div class="workspace-header">
+        <div class="workspace-icon"><i class="{{ tool_icon }}"></i></div>
+        <div>
+          <h1 class="workspace-title">{{ tool_title }}</h1>
+          <p class="workspace-desc">{{ tool_desc }}</p>
+        </div>
+      </div>
+
+      <div class="workspace-grid">
+        <div>
+          <div class="box-header">
+            <span><i class="fas fa-code"></i> Dữ liệu / Mã nguồn đầu vào</span>
+            <button type="button" id="btnSample" style="border:none; background:none; color:#1e5b9c; cursor:pointer; font-size:0.8rem; text-decoration:underline;">Dữ liệu mẫu</button>
+          </div>
+          <textarea id="devInput" class="code-textarea" placeholder="Dán mã nguồn, dữ liệu JSON/XML hoặc văn bản tại đây..."></textarea>
+        </div>
+
+        <div>
+          <div class="box-header">
+            <span><i class="fas fa-terminal"></i> Kết quả</span>
+            <span id="statusTag" style="font-size:0.75rem; color:#27ae60; font-weight:normal;">Sẵn sàng</span>
+          </div>
+          <textarea id="devOutput" class="code-textarea" placeholder="Kết quả xử lý sẽ xuất hiện tại đây..." readonly></textarea>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button type="button" class="btn-tool-action" id="btnRun">
+          <i class="fas fa-bolt"></i> Thực hiện
+        </button>
+        <button type="button" class="btn-tool-secondary" id="btnCopyResult">
+          <i class="fas fa-copy"></i> Sao chép
+        </button>
+        <button type="button" class="btn-tool-secondary" id="btnClearAll">
+          <i class="fas fa-trash-alt"></i> Xóa hết
+        </button>
+        <a href="/developer" class="btn-tool-secondary" style="text-decoration:none; margin-left:auto;">
+          <i class="fas fa-th-list"></i> Xem công cụ khác
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const inputEl = document.getElementById('devInput');
+      const outputEl = document.getElementById('devOutput');
+      const btnRun = document.getElementById('btnRun');
+      const btnCopy = document.getElementById('btnCopyResult');
+      const btnClear = document.getElementById('btnClearAll');
+      const btnSample = document.getElementById('btnSample');
+      const statusTag = document.getElementById('statusTag');
+      const slug = '{{ tool_slug }}';
+
+      btnSample.addEventListener('click', function() {
+        if (slug.includes('json')) {
+          inputEl.value = '{"title":"ToolHub","features":["PDF","Image","TXT","Developer"],"active":true,"version":2.0}';
+        } else if (slug.includes('xml') || slug.includes('html')) {
+          inputEl.value = '<root><item id="1"><name>ToolHub</name></item></root>';
+        } else if (slug.includes('base64')) {
+          inputEl.value = 'Xin chào thế giới! ToolHub Developer Tools.';
+        } else if (slug.includes('url')) {
+          inputEl.value = 'https://toolhub.vn/search?query=công cụ lập trình&category=all';
+        } else {
+          inputEl.value = 'ToolHub Developer text utility demo';
+        }
+      });
+
+      btnRun.addEventListener('click', function() {
+        const val = inputEl.value;
+        if (!val.trim()) {
+          alert('Vui lòng nhập dữ liệu cần xử lý!');
+          return;
+        }
+
+        try {
+          let res = val;
+          if (slug === 'json-formatter') {
+            const obj = JSON.parse(val);
+            res = JSON.stringify(obj, null, 2);
+            statusTag.textContent = 'JSON hợp lệ (Valid)';
+            statusTag.style.color = '#27ae60';
+          } else if (slug === 'json-minifier') {
+            const obj = JSON.parse(val);
+            res = JSON.stringify(obj);
+            statusTag.textContent = 'Đã nén JSON';
+            statusTag.style.color = '#27ae60';
+          } else if (slug === 'json-validator') {
+            JSON.parse(val);
+            res = 'Cú pháp JSON hoàn toàn hợp lệ (Valid JSON)!';
+            statusTag.textContent = 'Hợp lệ 100%';
+            statusTag.style.color = '#27ae60';
+          } else if (slug === 'base64-encode') {
+            res = btoa(unescape(encodeURIComponent(val)));
+            statusTag.textContent = 'Đã mã hóa Base64';
+          } else if (slug === 'base64-decode') {
+            res = decodeURIComponent(escape(atob(val.trim())));
+            statusTag.textContent = 'Đã giải mã Base64';
+          } else if (slug === 'url-encode') {
+            res = encodeURIComponent(val);
+            statusTag.textContent = 'Đã URL Encode';
+          } else if (slug === 'url-decode') {
+            res = decodeURIComponent(val);
+            statusTag.textContent = 'Đã URL Decode';
+          } else if (slug === 'escape-text') {
+            res = JSON.stringify(val).slice(1, -1);
+            statusTag.textContent = 'Đã Escape';
+          } else if (slug === 'unescape-text') {
+            res = JSON.parse('"' + val.replace(/"/g, '\\"') + '"');
+            statusTag.textContent = 'Đã Unescape';
+          } else {
+            res = val;
+            statusTag.textContent = 'Hoàn thành';
+          }
+          outputEl.value = res;
+        } catch (err) {
+          statusTag.textContent = 'Lỗi cú pháp';
+          statusTag.style.color = '#c0392b';
+          outputEl.value = 'Lỗi xử lý: ' + err.message;
+        }
+      });
+
+      btnCopy.addEventListener('click', function() {
+        if (!outputEl.value) {
+          alert('Chưa có nội dung để sao chép!');
+          return;
+        }
+        navigator.clipboard.writeText(outputEl.value).then(() => {
+          alert('Đã sao chép vào bộ nhớ tạm!');
+        });
+      });
+
+      btnClear.addEventListener('click', function() {
+        inputEl.value = '';
+        outputEl.value = '';
+        statusTag.textContent = 'Sẵn sàng';
+        statusTag.style.color = '#27ae60';
+      });
+    });
+  </script>
+
+</body>
+</html>

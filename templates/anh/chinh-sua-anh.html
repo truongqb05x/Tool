@@ -244,21 +244,21 @@
                 <span>Độ sáng (Brightness):</span>
                 <span id="valBrightness">100%</span>
               </div>
-              <input type="range" min="50" max="150" value="100" class="form-range" style="width:100%;" oninput="updatePhotoAdjust('brightness', this.value)">
+              <input type="range" id="sliderBrightness" min="50" max="150" value="100" class="form-range" style="width:100%;" oninput="updatePhotoAdjust('brightness', this.value)">
             </div>
             <div style="margin-bottom:8px;">
               <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#555;">
                 <span>Độ tương phản (Contrast):</span>
                 <span id="valContrast">100%</span>
               </div>
-              <input type="range" min="50" max="150" value="100" class="form-range" style="width:100%;" oninput="updatePhotoAdjust('contrast', this.value)">
+              <input type="range" id="sliderContrast" min="50" max="150" value="100" class="form-range" style="width:100%;" oninput="updatePhotoAdjust('contrast', this.value)">
             </div>
             <div>
               <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#555;">
                 <span>Độ bão hòa màu (Saturation):</span>
                 <span id="valSaturation">100%</span>
               </div>
-              <input type="range" min="0" max="200" value="100" class="form-range" style="width:100%;" oninput="updatePhotoAdjust('saturate', this.value)">
+              <input type="range" id="sliderSaturation" min="0" max="200" value="100" class="form-range" style="width:100%;" oninput="updatePhotoAdjust('saturate', this.value)">
             </div>
           </div>
       </div>
@@ -295,6 +295,7 @@
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
       <h3 id="downloadSuccessTitle">Đã chỉnh sửa hình ảnh thành công!</h3>
       <p id="downloadMeta">Bức ảnh mới với hiệu ứng màu sắc tinh chỉnh đã sẵn sàng cho bạn tải về.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultImage()">
         <i class="fas fa-download"></i> Tải xuống hình ảnh đã xử lý
       </button>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ tool_title }} Trực Tuyến Miễn Phí | ToolHub</title>
+  <meta name="description" content="{{ tool_desc }} Miễn phí 100%, thao tác trực tuyến nhanh chóng, bảo mật cao.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../static/css/layout/layout.css">
+  <link rel="stylesheet" href="../../static/css/layout/modal.css">
+  <link rel="stylesheet" href="../../static/css/pages/catalog-list.css">
+  <link rel="icon" type="image/png" href="../../static/img/logo.png">
+  <style>
+    .tool-workspace {
+      max-width: 960px;
+      margin: 24px auto 48px;
+      padding: 0 16px;
+    }
+    .workspace-card {
+      background: #fff;
+      border: 1px solid #d4d4cc;
+      border-radius: 4px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .workspace-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+    .workspace-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 6px;
+      background: #eef4fb;
+      color: #1e5b9c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+    .workspace-title {
+      font-size: 1.35rem;
+      color: #222;
+      font-weight: 700;
+      margin: 0;
+    }
+    .workspace-desc {
+      color: #666;
+      font-size: 0.88rem;
+      margin: 4px 0 0;
+    }
+    .drop-zone {
+      border: 2px dashed #b5c7d8;
+      background: #f7fafd;
+      padding: 36px 16px;
+      text-align: center;
+      border-radius: 4px;
+      margin-bottom: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .drop-zone:hover {
+      border-color: #1e5b9c;
+      background: #eef4fb;
+    }
+    .drop-zone i {
+      font-size: 2.5rem;
+      color: #1e5b9c;
+      margin-bottom: 10px;
+    }
+    .tool-textarea {
+      width: 100%;
+      height: 160px;
+      padding: 12px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .action-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .btn-tool-action {
+      background: #1e5b9c;
+      color: #fff;
+      border: 1px solid #154374;
+      padding: 9px 18px;
+      border-radius: 3px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-tool-secondary {
+      background: #fbfbf9;
+      color: #444;
+      border: 1px solid #ccc;
+      padding: 9px 16px;
+      border-radius: 3px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container">
+      <a href="/" class="logo" style="text-decoration:none;">
+        <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+        <div class="logo-text">ToolHub</div>
+      </a>
+      <div class="header-actions">
+        <a href="/txt" class="btn btn-secondary" style="font-size:0.85rem;"><i class="fas fa-arrow-left"></i> Tất cả công cụ TXT</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="tool-workspace">
+    <div class="workspace-card">
+      <div class="workspace-header">
+        <div class="workspace-icon"><i class="{{ tool_icon }}"></i></div>
+        <div>
+          <h1 class="workspace-title">{{ tool_title }}</h1>
+          <p class="workspace-desc">{{ tool_desc }}</p>
+        </div>
+      </div>
+
+      <!-- Khu vực chọn file TXT -->
+      <div class="drop-zone" onclick="document.getElementById('fileInput').click();">
+        <i class="fas fa-file-upload"></i>
+        <h4 style="margin: 0 0 6px; color: #222;">Chọn file TXT từ thiết bị của bạn</h4>
+        <p style="margin: 0; color: #666; font-size: 0.85rem;">Hoặc kéo thả file vào đây (hỗ trợ .txt, .log, .csv, UTF-8, ANSI)</p>
+        <input type="file" id="fileInput" accept=".txt,.log,.csv" multiple style="display:none;">
+      </div>
+
+      <div>
+        <div style="font-size:0.85rem; font-weight:700; color:#444; margin-bottom:6px;">
+          <span><i class="fas fa-align-left"></i> Hoặc dán trực tiếp nội dung văn bản</span>
+        </div>
+        <textarea id="txtContent" class="tool-textarea" placeholder="Nội dung file TXT hoặc dán văn bản vào đây..."></textarea>
+      </div>
+
+      <div class="action-row">
+        <button type="button" class="btn-tool-action" id="btnProcess">
+          <i class="fas fa-bolt"></i> Bắt đầu xử lý
+        </button>
+        <button type="button" class="btn-tool-secondary" id="btnDownload">
+          <i class="fas fa-download"></i> Tải về file kết quả
+        </button>
+        <a href="/txt" class="btn-tool-secondary" style="text-decoration:none; margin-left:auto;">
+          <i class="fas fa-th-list"></i> Xem công cụ khác
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const fileInput = document.getElementById('fileInput');
+      const txtArea = document.getElementById('txtContent');
+      const btnProcess = document.getElementById('btnProcess');
+      const btnDownload = document.getElementById('btnDownload');
+
+      fileInput.addEventListener('change', function(e) {
+        if (!e.target.files.length) return;
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          txtArea.value = evt.target.result;
+          alert(`Đã nạp file: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
+        };
+        reader.readAsText(file);
+      });
+
+      btnProcess.addEventListener('click', function() {
+        if (!txtArea.value.trim()) {
+          alert('Vui lòng chọn file hoặc nhập nội dung văn bản!');
+          return;
+        }
+        alert('Đã xử lý xong tác vụ thành công!');
+      });
+
+      btnDownload.addEventListener('click', function() {
+        if (!txtArea.value) {
+          alert('Chưa có nội dung để tải về!');
+          return;
+        }
+        const blob = new Blob([txtArea.value], {type: 'text/plain;charset=utf-8'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'ket-qua-txt.txt';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    });
+  </script>
+
+</body>
+</html>

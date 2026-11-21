@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ tool_title }} Trực Tuyến Miễn Phí | ToolHub</title>
+  <meta name="description" content="{{ tool_desc }} Miễn phí 100%, thao tác trực tuyến nhanh chóng, bảo mật cao.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../static/css/layout/layout.css">
+  <link rel="stylesheet" href="../../static/css/layout/modal.css">
+  <link rel="stylesheet" href="../../static/css/pages/catalog-list.css">
+  <link rel="icon" type="image/png" href="../../static/img/logo.png">
+  <style>
+    .tool-workspace {
+      max-width: 960px;
+      margin: 24px auto 48px;
+      padding: 0 16px;
+    }
+    .workspace-card {
+      background: #fff;
+      border: 1px solid #d4d4cc;
+      border-radius: 4px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .workspace-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+    .workspace-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 6px;
+      background: #eef4fb;
+      color: #1e5b9c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+    .workspace-title {
+      font-size: 1.35rem;
+      color: #222;
+      font-weight: 700;
+      margin: 0;
+    }
+    .workspace-desc {
+      color: #666;
+      font-size: 0.88rem;
+      margin: 4px 0 0;
+    }
+    .workspace-box {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .box-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #444;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .tool-textarea {
+      width: 100%;
+      height: 180px;
+      padding: 12px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .tool-textarea:focus {
+      border-color: #1e5b9c;
+      box-shadow: 0 0 0 2px rgba(30, 91, 156, 0.15);
+    }
+    .action-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .btn-tool-action {
+      background: #1e5b9c;
+      color: #fff;
+      border: 1px solid #154374;
+      padding: 9px 18px;
+      border-radius: 3px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-tool-action:hover {
+      background: #154374;
+    }
+    .btn-tool-secondary {
+      background: #fbfbf9;
+      color: #444;
+      border: 1px solid #ccc;
+      padding: 9px 16px;
+      border-radius: 3px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-tool-secondary:hover {
+      background: #f0f0ea;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container">
+      <a href="/" class="logo" style="text-decoration:none;">
+        <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+        <div class="logo-text">ToolHub</div>
+      </a>
+      <div class="header-actions">
+        <a href="/van-ban" class="btn btn-secondary" style="font-size:0.85rem;"><i class="fas fa-arrow-left"></i> Tất cả công cụ văn bản</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="tool-workspace">
+    <div class="workspace-card">
+      <div class="workspace-header">
+        <div class="workspace-icon"><i class="{{ tool_icon }}"></i></div>
+        <div>
+          <h1 class="workspace-title">{{ tool_title }}</h1>
+          <p class="workspace-desc">{{ tool_desc }}</p>
+        </div>
+      </div>
+
+      <div class="workspace-box">
+        <div>
+          <div class="box-label">
+            <span><i class="fas fa-edit"></i> Văn bản đầu vào</span>
+            <span id="charCountLabel" style="font-weight: normal; color: #888;">0 ký tự | 0 từ</span>
+          </div>
+          <textarea id="inputText" class="tool-textarea" placeholder="Nhập hoặc dán văn bản của bạn vào đây để xử lý..."></textarea>
+        </div>
+
+        <div>
+          <div class="box-label">
+            <span><i class="fas fa-check-circle"></i> Kết quả xử lý</span>
+          </div>
+          <textarea id="outputText" class="tool-textarea" placeholder="Kết quả sau khi xử lý sẽ hiển thị tại đây..." readonly></textarea>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button type="button" class="btn-tool-action" id="btnExecute">
+          <i class="fas fa-bolt"></i> Thực hiện xử lý
+        </button>
+        <button type="button" class="btn-tool-secondary" id="btnCopy">
+          <i class="fas fa-copy"></i> Sao chép kết quả
+        </button>
+        <button type="button" class="btn-tool-secondary" id="btnClear">
+          <i class="fas fa-trash-alt"></i> Xóa làm lại
+        </button>
+        <a href="/van-ban" class="btn-tool-secondary" style="text-decoration:none; margin-left:auto;">
+          <i class="fas fa-th-list"></i> Xem công cụ khác
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const inputEl = document.getElementById('inputText');
+      const outputEl = document.getElementById('outputText');
+      const btnExec = document.getElementById('btnExecute');
+      const btnCopy = document.getElementById('btnCopy');
+      const btnClear = document.getElementById('btnClear');
+      const countLabel = document.getElementById('charCountLabel');
+      const slug = '{{ tool_slug }}';
+
+      inputEl.addEventListener('input', function() {
+        const val = this.value;
+        const words = val.trim() ? val.trim().split(/\s+/).length : 0;
+        countLabel.textContent = `${val.length} ký tự | ${words} từ`;
+      });
+
+      btnExec.addEventListener('click', function() {
+        const text = inputEl.value;
+        if (!text) {
+          alert('Vui lòng nhập văn bản cần xử lý!');
+          return;
+        }
+
+        // Logic xử lý client-side cho các công cụ phổ biến
+        let res = text;
+        if (slug === 'chuyen-chu-thuong') res = text.toLowerCase();
+        else if (slug === 'chuyen-chu-hoa') res = text.toUpperCase();
+        else if (slug === 'loai-bo-khoang-trang-thua') res = text.replace(/[ \t]+/g, ' ').trim();
+        else if (slug === 'loai-bo-dong-trong') res = text.split('\n').filter(l => l.trim() !== '').join('\n');
+        else if (slug === 'loai-bo-dong-trung-lap' || slug === 'xoa-phan-tu-trung-lap') {
+          res = Array.from(new Set(text.split('\n'))).join('\n');
+        } else if (slug === 'sap-xep-dong-a-z' || slug === 'sap-xep-danh-sach') {
+          res = text.split('\n').sort((a,b) => a.localeCompare(b, 'vi')).join('\n');
+        } else if (slug === 'sap-xep-dong-z-a') {
+          res = text.split('\n').sort((a,b) => b.localeCompare(a, 'vi')).join('\n');
+        } else if (slug === 'dao-nguoc-van-ban') {
+          res = text.split('').reverse().join('');
+        } else if (slug === 'dao-nguoc-tung-dong' || slug === 'dao-nguoc-danh-sach') {
+          res = text.split('\n').reverse().join('\n');
+        } else if (slug === 'danh-so-dong') {
+          res = text.split('\n').map((l, idx) => `${idx + 1}. ${l}`).join('\n');
+        } else if (slug === 'dem-tu') {
+          const words = text.trim().split(/\s+/).filter(Boolean);
+          res = `Tổng số từ: ${words.length}\nTổng số ký tự (cả khoảng trắng): ${text.length}\nTổng số ký tự (không khoảng trắng): ${text.replace(/\s/g, '').length}`;
+        } else if (slug === 'dem-ky-tu') {
+          res = `Tổng số ký tự (bao gồm khoảng trắng): ${text.length}\nKý tự không tính khoảng trắng: ${text.replace(/\s/g, '').length}`;
+        } else if (slug === 'chuyen-van-ban-sang-slug') {
+          res = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd').replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
+        } else {
+          res = text; // Mặc định hiển thị nguyên bản
+        }
+        outputEl.value = res;
+      });
+
+      btnCopy.addEventListener('click', function() {
+        if (!outputEl.value) {
+          alert('Không có nội dung để sao chép!');
+          return;
+        }
+        navigator.clipboard.writeText(outputEl.value).then(() => {
+          alert('Đã sao chép vào bộ nhớ tạm!');
+        });
+      });
+
+      btnClear.addEventListener('click', function() {
+        inputEl.value = '';
+        outputEl.value = '';
+        countLabel.textContent = '0 ký tự | 0 từ';
+      });
+    });
+  </script>
+
+</body>
+</html>

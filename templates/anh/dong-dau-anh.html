@@ -244,7 +244,7 @@
               <span>Độ trong suốt (Opacity):</span>
               <span id="wmOpacityVal">60%</span>
             </div>
-            <input type="range" min="10" max="100" value="60" class="form-range" style="width:100%;" oninput="document.getElementById('wmOpacityVal').textContent = this.value + '%'">
+            <input type="range" id="sliderWmOpacity" min="10" max="100" value="60" class="form-range" style="width:100%;" oninput="document.getElementById('wmOpacityVal').textContent = this.value + '%'">
           </div>
       </div>
 
@@ -280,6 +280,7 @@
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
       <h3 id="downloadSuccessTitle">Đã đóng dấu bản quyền thành công!</h3>
       <p id="downloadMeta">Bức ảnh của bạn đã được gắn dấu bản quyền và sẵn sàng chia sẻ an toàn.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultImage()">
         <i class="fas fa-download"></i> Tải xuống hình ảnh đã xử lý
       </button>

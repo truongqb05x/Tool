@@ -229,22 +229,22 @@
         <div class="form-group">
             <label class="form-label">Chọn kiểu hiệu ứng che mờ</label>
             <div class="ws-option-group">
-              <div class="ws-radio-box selected" onclick="selectRadio(this)">
-                <input type="radio" name="blurStyle" checked>
+              <div class="ws-radio-box selected" onclick="selectBlurStyle(this, 'gaussian')">
+                <input type="radio" name="blurStyle" value="gaussian" checked>
                 <div class="ws-radio-info">
                   <strong>Làm mờ mượt mà (Gaussian Blur)</strong>
                   <span>Tạo lớp phủ sương mờ thanh lịch, che khuất chi tiết tự nhiên.</span>
                 </div>
               </div>
-              <div class="ws-radio-box" onclick="selectRadio(this)">
-                <input type="radio" name="blurStyle">
+              <div class="ws-radio-box" onclick="selectBlurStyle(this, 'pixelate')">
+                <input type="radio" name="blurStyle" value="pixelate">
                 <div class="ws-radio-info">
                   <strong>Che điểm ảnh (Pixelate / Ô vuông)</strong>
                   <span>Phong cách che mặt phóng sự kinh điển, giấu danh tính tuyệt đối.</span>
                 </div>
               </div>
-              <div class="ws-radio-box" onclick="selectRadio(this)">
-                <input type="radio" name="blurStyle">
+              <div class="ws-radio-box" onclick="selectBlurStyle(this, 'blackout')">
+                <input type="radio" name="blurStyle" value="blackout">
                 <div class="ws-radio-info">
                   <strong>Hộp đen che kín (Blackout)</strong>
                   <span>Che thanh đen hoàn toàn các thông tin nhạy cảm hoặc đôi mắt.</span>
@@ -257,7 +257,7 @@
               <span>Mức độ làm mờ (Cường độ):</span>
               <span id="blurIntensityVal">Vừa phải</span>
             </div>
-            <input type="range" min="1" max="3" value="2" class="form-range" style="width:100%;" oninput="updateBlurLabel(this.value)">
+            <input type="range" id="sliderBlurStrength" min="1" max="3" value="2" class="form-range" style="width:100%;" oninput="updateBlurLabel(this.value)">
           </div>
       </div>
 
@@ -293,6 +293,7 @@
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
       <h3 id="downloadSuccessTitle">Đã làm mờ khuôn mặt thành công!</h3>
       <p id="downloadMeta">Thông tin cá nhân trên bức ảnh đã được che phủ an toàn và sẵn sàng chia sẻ.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultImage()">
         <i class="fas fa-download"></i> Tải xuống hình ảnh đã xử lý
       </button>

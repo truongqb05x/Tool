@@ -229,22 +229,22 @@
         <div class="form-group">
             <label class="form-label">Chọn mô hình nâng cấp AI</label>
             <div class="ws-option-group">
-              <div class="ws-radio-box selected" onclick="selectRadio(this)">
-                <input type="radio" name="aiModel" checked>
+              <div class="ws-radio-box selected" onclick="selectAiModel(this, 'clarity')">
+                <input type="radio" name="aiModel" value="clarity" checked>
                 <div class="ws-radio-info">
                   <strong>Tăng nét chi tiết 2x (Khuyên dùng)</strong>
                   <span>Phục hồi đường viền, khử mờ nhẹ, tăng gấp đôi độ phân giải sắc nét.</span>
                 </div>
               </div>
-              <div class="ws-radio-box" onclick="selectRadio(this)">
-                <input type="radio" name="aiModel">
+              <div class="ws-radio-box" onclick="selectAiModel(this, 'hdr')">
+                <input type="radio" name="aiModel" value="hdr">
                 <div class="ws-radio-info">
                   <strong>Siêu phân giải 4x (Ultra HD AI)</strong>
                   <span>Phóng to gấp 4 lần, tái tạo kết cấu chi tiết cho ảnh in ấn khổ lớn.</span>
                 </div>
               </div>
-              <div class="ws-radio-box" onclick="selectRadio(this)">
-                <input type="radio" name="aiModel">
+              <div class="ws-radio-box" onclick="selectAiModel(this, 'portrait')">
+                <input type="radio" name="aiModel" value="portrait">
                 <div class="ws-radio-info">
                   <strong>Khử nhiễu &amp; Làm nét chân dung cũ</strong>
                   <span>Tối ưu riêng cho khuôn mặt, làm mịn da và làm rõ đôi mắt.</span>
@@ -286,6 +286,7 @@
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
       <h3 id="downloadSuccessTitle">Đã nâng cấp chất lượng ảnh thành công!</h3>
       <p id="downloadMeta">Độ phân giải đã được phóng đại và các chi tiết mờ đã được AI làm sắc nét.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultImage()">
         <i class="fas fa-download"></i> Tải xuống hình ảnh đã xử lý
       </button>

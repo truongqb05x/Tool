@@ -254,7 +254,7 @@
           </div>
           <div class="form-group" style="margin-top:14px;">
             <label style="display:flex; align-items:center; gap:8px; font-size:0.86rem; cursor:pointer; color:#444;">
-              <input type="checkbox" checked>
+              <input type="checkbox" id="stripExifCheck" checked>
               <span>Xóa siêu dữ liệu (EXIF &amp; vị trí GPS) để bảo vệ sự riêng tư</span>
             </label>
           </div>
@@ -292,6 +292,7 @@
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
       <h3 id="downloadSuccessTitle">Hình ảnh của bạn đã được nén thành công!</h3>
       <p id="downloadMeta">Dung lượng đã giảm từ <strong>4.2 MB</strong> xuống còn <strong>890 KB</strong> (tiết kiệm <strong>78%</strong>).</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultImage()">
         <i class="fas fa-download"></i> Tải xuống hình ảnh đã xử lý
       </button>

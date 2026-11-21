@@ -20,4 +20,12 @@ from .pdf import (
     merge_pdfs,
     split_pdf
 )
+from .image import (
+    ImageService,
+    compress_image,
+    resize_image,
+    crop_image,
+    convert_to_jpg,
+    convert_from_jpg
+)
 

@@ -229,22 +229,22 @@
         <div class="form-group">
             <label class="form-label">Chọn kiểu phông nền thay thế</label>
             <div class="ws-option-group">
-              <div class="ws-radio-box selected" onclick="selectRadio(this)">
+              <div class="ws-radio-box selected" onclick="selectBgType(this, 'transparent')">
                 <input type="radio" name="bgType" value="transparent" checked>
                 <div class="ws-radio-info">
                   <strong>Trong suốt (Transparent PNG)</strong>
                   <span>Phù hợp ghép ảnh, thiết kế banner và chèn vào slide thuyết trình.</span>
                 </div>
               </div>
-              <div class="ws-radio-box" onclick="selectRadio(this)">
-                <input type="radio" name="bgType" value="white">
+              <div class="ws-radio-box" onclick="selectBgType(this, '#ffffff')">
+                <input type="radio" name="bgType" value="#ffffff">
                 <div class="ws-radio-info">
                   <strong>Phông trắng tinh (Pure White)</strong>
                   <span>Chuẩn hóa ảnh sản phẩm bán hàng trên sàn Shopee, Lazada, Amazon.</span>
                 </div>
               </div>
-              <div class="ws-radio-box" onclick="selectRadio(this)">
-                <input type="radio" name="bgType" value="gray">
+              <div class="ws-radio-box" onclick="selectBgType(this, '#f0f0f0')">
+                <input type="radio" name="bgType" value="#f0f0f0">
                 <div class="ws-radio-info">
                   <strong>Màu xám Studio nhẹ nhàng</strong>
                   <span>Tông màu thanh lịch tạo cảm giác hiện đại và nổi bật chủ thể.</span>
@@ -286,6 +286,7 @@
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
       <h3 id="downloadSuccessTitle">Đã xóa phông nền thành công!</h3>
       <p id="downloadMeta">Chủ thể đã được tách nền sắc nét, file ảnh PNG trong suốt đã sẵn sàng tải về.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultImage()">
         <i class="fas fa-download"></i> Tải xuống hình ảnh đã xử lý
       </button>
