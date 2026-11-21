@@ -1,9 +1,12 @@
 /* =========================================================
    CÔNG CỤ PDF: So sánh PDF - so-sanh-pdf.js
-   Logic chuyên biệt: Xử lý chọn file, workspace & chuẩn bị API backend
+   Logic chuyên biệt: Tiếp nhận 2 file, hiển thị đối chiếu & kết nối API
    ========================================================= */
 
-let currentSelectedFile = null;
+let selectedFileA = null;
+let selectedFileB = null;
+let currentDownloadUrl = null;
+let currentDownloadName = null;
 
 function initTool() {
   const fileInput = document.getElementById('fileInput');
@@ -11,8 +14,18 @@ function initTool() {
 
   if (fileInput) {
     fileInput.addEventListener('change', function() {
-      if (this.files && this.files[0]) {
-        handleFileSelected(this.files[0]);
+      if (this.files && this.files.length >= 2) {
+        handleFilesSelected(this.files[0], this.files[1]);
+      } else if (this.files && this.files.length === 1) {
+        if (!selectedFileA) {
+          selectedFileA = this.files[0];
+          alert('Đã chọn Bản A: ' + selectedFileA.name + '. Vui lòng chọn tiếp Bản B (File đối chiếu).');
+          fileInput.value = '';
+          fileInput.click();
+        } else {
+          selectedFileB = this.files[0];
+          handleFilesSelected(selectedFileA, selectedFileB);
+        }
       }
     });
   }
@@ -30,23 +43,41 @@ function initTool() {
     dropZone.addEventListener('drop', function(e) {
       e.preventDefault();
       dropZone.classList.remove('dragover');
-      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-        handleFileSelected(e.dataTransfer.files[0]);
+      if (e.dataTransfer.files && e.dataTransfer.files.length >= 2) {
+        handleFilesSelected(e.dataTransfer.files[0], e.dataTransfer.files[1]);
+      } else if (e.dataTransfer.files && e.dataTransfer.files.length === 1) {
+        alert('Vui lòng kéo và thả đồng thời 2 file PDF để so sánh đối chiếu.');
       }
     });
   }
 }
 
-function handleFileSelected(file) {
-  currentSelectedFile = file;
-  const sizeKb = (file.size / 1024).toFixed(1);
-  const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
-  const displaySize = file.size >= 1024 * 1024 ? sizeMb + ' MB' : sizeKb + ' KB';
+function formatFileSize(bytes) {
+  if (bytes >= 1024 * 1024) {
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+  return (bytes / 1024).toFixed(1) + ' KB';
+}
 
-  const nameEl = document.getElementById('selectedFileName');
-  const sizeEl = document.getElementById('selectedFileSize');
-  if (nameEl) nameEl.textContent = file.name;
-  if (sizeEl) sizeEl.textContent = 'Dung lượng: ' + displaySize;
+function handleFilesSelected(fileA, fileB) {
+  if (!fileA.name.toLowerCase().endsWith('.pdf') || !fileB.name.toLowerCase().endsWith('.pdf')) {
+    alert('Cả 2 tài liệu phải có định dạng PDF (.pdf). Vui lòng chọn lại.');
+    return;
+  }
+
+  selectedFileA = fileA;
+  selectedFileB = fileB;
+
+  const nameA = document.getElementById('fileNameA');
+  const sizeA = document.getElementById('fileSizeA');
+  const nameB = document.getElementById('fileNameB');
+  const sizeB = document.getElementById('fileSizeB');
+
+  if (nameA) nameA.textContent = fileA.name;
+  if (sizeA) sizeA.textContent = 'Dung lượng: ' + formatFileSize(fileA.size);
+
+  if (nameB) nameB.textContent = fileB.name;
+  if (sizeB) sizeB.textContent = 'Dung lượng: ' + formatFileSize(fileB.size);
 
   const uploadPanel = document.getElementById('uploadPanel');
   const toolWorkspace = document.getElementById('toolWorkspace');
@@ -64,72 +95,106 @@ function handleFileSelected(file) {
   }
 }
 
-function executeToolAction() {
-  if (!currentSelectedFile) return;
-
-  const btn = document.getElementById('btnExecute');
-  if (btn) {
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý tài liệu...';
-  }
-
-  // Giả lập tiến trình xử lý, sẵn sàng thay bằng fetch('/pdf/api/so-sanh-pdf')
-  setTimeout(function() {
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = 'Bắt đầu so sánh <i class="fas fa-arrow-right"></i>';
-    }
-
-    const toolWorkspace = document.getElementById('toolWorkspace');
-    const downloadCard = document.getElementById('downloadCard');
-    const toolContainer = document.getElementById('toolContainer');
-    if (toolContainer) toolContainer.classList.add('aligned-left');
-
-    if (toolWorkspace) toolWorkspace.classList.remove('active');
-    if (downloadCard) {
-      downloadCard.classList.add('show');
-      downloadCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-  }, 1200);
-}
-
-function downloadResultFile() {
-  if (!currentSelectedFile) return;
-  const originalName = currentSelectedFile.name;
-  const dotIndex = originalName.lastIndexOf('.');
-  const baseName = dotIndex !== -1 ? originalName.substring(0, dotIndex) : originalName;
-  const resultFileName = baseName + '_so-sanh-pdf.pdf';
-
-  if (typeof fakeDownload === 'function') {
-    fakeDownload(resultFileName);
-  } else {
-    alert('Đã chuẩn bị tải về: ' + resultFileName);
-  }
-}
-
 function resetFileSelection() {
-  currentSelectedFile = null;
+  selectedFileA = null;
+  selectedFileB = null;
+  currentDownloadUrl = null;
+  currentDownloadName = null;
+
   const fileInput = document.getElementById('fileInput');
   if (fileInput) fileInput.value = '';
 
   const uploadPanel = document.getElementById('uploadPanel');
   const toolWorkspace = document.getElementById('toolWorkspace');
   const downloadCard = document.getElementById('downloadCard');
-
   const toolHero = document.getElementById('toolHero');
   const toolContainer = document.getElementById('toolContainer');
+
   if (toolHero) toolHero.classList.remove('sr-only');
   if (toolContainer) toolContainer.classList.remove('aligned-left');
-  if (downloadCard) downloadCard.classList.remove('show');
   if (toolWorkspace) toolWorkspace.classList.remove('active');
-  if (uploadPanel) uploadPanel.style.display = 'block';
+  if (downloadCard) downloadCard.classList.remove('show');
+  if (uploadPanel) {
+    uploadPanel.style.display = 'block';
+    uploadPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 }
 
-function toggleFaqItem(element) {
-  const faqItem = element.closest('.tool-faq-item');
-  if (faqItem) {
-    faqItem.classList.toggle('active');
+function executeToolAction() {
+  if (!selectedFileA || !selectedFileB) {
+    alert('Vui lòng chọn đủ 2 tệp PDF để so sánh.');
+    return;
   }
+
+  const btn = document.getElementById('btnExecute');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang đối chiếu văn bản...';
+  }
+
+  const formData = new FormData();
+  formData.append('file1', selectedFileA);
+  formData.append('file2', selectedFileB);
+
+  fetch('/pdf/api/so-sanh-pdf', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = 'Bắt đầu so sánh <i class="fas fa-arrow-right"></i>';
+    }
+
+    if (data.status === 'success' || data.success) {
+      currentDownloadUrl = data.download_url;
+      currentDownloadName = data.download_name || 'Bao_cao_so_sanh_PDF.pdf';
+
+      const toolWorkspace = document.getElementById('toolWorkspace');
+      const downloadCard = document.getElementById('downloadCard');
+      const downloadMeta = document.getElementById('downloadMeta');
+
+      const d = data.data || {};
+      if (downloadMeta) {
+        downloadMeta.innerHTML = `<strong>Tỷ lệ tương đồng: ${d.similarity_ratio || 100}%</strong> · Phát hiện <strong>${d.differences_found || 0} điểm khác biệt</strong> (+${d.total_added || 0} dòng thêm, -${d.total_removed || 0} dòng xóa trên ${d.changed_pages || 0} trang).`;
+      }
+
+      if (toolWorkspace) toolWorkspace.classList.remove('active');
+      if (downloadCard) {
+        downloadCard.classList.add('show');
+        downloadCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    } else {
+      alert(data.message || 'Có lỗi xảy ra khi so sánh PDF. Vui lòng thử lại!');
+    }
+  })
+  .catch(err => {
+    console.error('Lỗi API compare PDF:', err);
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = 'Bắt đầu so sánh <i class="fas fa-arrow-right"></i>';
+    }
+    alert('Không thể kết nối đến máy chủ. Vui lòng thử lại sau ít phút!');
+  });
+}
+
+function downloadResultFile() {
+  if (currentDownloadUrl) {
+    const a = document.createElement('a');
+    a.href = currentDownloadUrl;
+    if (currentDownloadName) a.download = currentDownloadName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } else {
+    alert('Không tìm thấy tệp tải về!');
+  }
+}
+
+function toggleFaqItem(header) {
+  const item = header.parentElement;
+  if (item) item.classList.toggle('active');
 }
 
 document.addEventListener('DOMContentLoaded', initTool);

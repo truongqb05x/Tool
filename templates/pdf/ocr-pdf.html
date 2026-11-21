@@ -280,6 +280,13 @@
           </div>
         </div>
 
+        <!-- Nút nổi thêm / đổi file -->
+        <div class="floating-add-wrap">
+          <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Chọn file khác">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+
         <!-- Nút chọn file khác -->
         <button type="button" class="btn-add-more" onclick="resetFileSelection()">
           <i class="fas fa-sync-alt"></i> Chọn file khác
@@ -290,28 +297,43 @@
     <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-sliders-h"></i> Thiết lập quét OCR văn bản
       </div>
 
       <div class="options-body">
+        <!-- 1. Ngôn ngữ OCR -->
         <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
+          <label class="form-label"><i class="fas fa-language"></i> Ngôn ngữ tài liệu gốc</label>
           <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
-              <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
+            <div class="ws-radio-box selected" onclick="selectOcrLang(this, 'vie+eng')">
+              <input type="radio" name="ocrLang" value="vie+eng" checked>
+              <div class="ws-radio-info">
+                <strong>Tiếng Việt &amp; Tiếng Anh (Khuyên dùng)</strong>
+                <span>Nhận diện chuẩn xác tài liệu song ngữ hoặc tiếng Việt có dấu.</span>
               </div>
-            </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
-              <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
+            </div>
+            <div class="ws-radio-box" onclick="selectOcrLang(this, 'eng')">
+              <input type="radio" name="ocrLang" value="eng">
+              <div class="ws-radio-info">
+                <strong>Chỉ Tiếng Anh (English)</strong>
+                <span>Tối ưu tốc độ cao cho văn bản, hợp đồng hoàn toàn bằng tiếng Anh.</span>
               </div>
-            </label>
+            </div>
+            <div class="ws-radio-box" onclick="selectOcrLang(this, 'vie')">
+              <input type="radio" name="ocrLang" value="vie">
+              <div class="ws-radio-info">
+                <strong>Thuần Tiếng Việt</strong>
+                <span>Chuyên biệt cho sách báo, văn bản pháp quy tiếng Việt scan.</span>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <!-- 2. Hướng dẫn tính năng Searchable PDF -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; font-size:0.85rem; color:#475569; margin-top:12px;">
+          <div style="font-weight:700; color:#1e293b; margin-bottom:6px;"><i class="fas fa-check-circle text-success"></i> Kết quả xuất ra:</div>
+          <p style="margin:0 0 6px 0;">• Tệp PDF mới sẽ có lớp văn bản ẩn nằm trùng khớp với vị trí ảnh scan.</p>
+          <p style="margin:0;">• Bạn có thể dễ dàng nhấn <kbd>Ctrl + F</kbd> để tìm kiếm từ khóa hoặc bôi đen sao chép nội dung.</p>
         </div>
       </div>
 
@@ -328,27 +350,27 @@
     <!-- BƯỚC 1: KHUNG TẢI FILE (UPLOAD PANEL) -->
     <div class="upload-panel" id="uploadPanel">
       <div class="upload-panel-header">
-        <i class="fas fa-eye"></i> Tải tệp lên để thực hiện OCR PDF
+        <i class="fas fa-eye"></i> Tải tệp PDF scan lên để nhận dạng OCR
       </div>
       <div class="drop-zone" id="dropZone">
-        <div class="dz-icon"><i class="fas fa-eye"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>Kéo &amp; thả file PDF scan vào đây</h3>
+        <p>hoặc nhấn nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Hỗ trợ file PDF scan hoặc chụp hình tối đa 50 MB · Xử lý bảo mật cao</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Văn bản trong file scan đã được nhận dạng thành công!</h3>
-      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
-      <button type="button" class="btn-download-result" onclick="downloadResultFile()">
-        <i class="fas fa-download"></i> Tải xuống tài liệu có thể tìm kiếm
+      <h3>Văn bản trong file scan đã được nhận dạng OCR thành công!</h3>
+      <p id="downloadMeta">Tài liệu đã được tạo lớp văn bản tìm kiếm và sẵn sàng tải về.</p>
+      <button type="button" class="btn-download-result" id="btnDownloadResult" onclick="downloadResultFile()">
+        <i class="fas fa-download"></i> Tải xuống Searchable PDF
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
@@ -359,22 +381,22 @@
 
     <!-- ===== NỘI DUNG CHUẨN SEO ===== -->
     <section class="seo-section">
-      <h2>Hướng dẫn sử dụng OCR PDF trực tuyến trong 3 bước</h2>
+      <h2>Hướng dẫn nhận dạng chữ OCR file PDF trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file PDF scan lên</h4>
+          <p>Kéo và thả tài liệu PDF scan hoặc nhấn nút Chọn tệp PDF từ thiết bị của bạn.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Lựa chọn ngôn ngữ</h4>
+          <p>Chọn ngôn ngữ Tiếng Việt hoặc Tiếng Anh phù hợp với tài liệu gốc để đạt độ chính xác cao nhất.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
-          <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <h4>Tải PDF có thể tìm kiếm</h4>
+          <p>Bấm Quét OCR văn bản và tải ngay tệp Searchable PDF cho phép tìm kiếm và sao chép dễ dàng.</p>
         </div>
       </div>
     </section>
@@ -408,50 +430,69 @@
       <h2>Câu hỏi thường gặp về OCR PDF (FAQ)</h2>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Sử dụng công cụ OCR PDF tại ToolHub có mất phí không?
+          Searchable PDF (PDF có thể tìm kiếm) là gì?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Searchable PDF là định dạng PDF vẫn giữ nguyên hình ảnh scan gốc nhưng có thêm một lớp văn bản trong suốt lồng bên dưới, cho phép bạn dùng phím Ctrl + F để tra cứu từ khóa và bôi đen chuột để sao chép văn bản sang Word hay Notepad.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Công cụ có nhận diện được chữ viết tay không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Công nghệ OCR của ToolHub tối ưu hóa cao nhất cho chữ in (sách, hóa đơn, hợp đồng in từ máy). Đối với chữ viết tay nắn nót rõ ràng, hệ thống vẫn nhận diện được với tỷ lệ tương đối tốt.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tôi có cần cài đặt thêm phần mềm gì vào máy không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Không cần cài đặt bất kỳ thứ gì. Toàn bộ tiến trình phân tích quang học và ghép lớp chữ được máy chủ đám mây của ToolHub xử lý tự động 100%.
         </div>
       </div>
     </section>
 
-  
     <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
     <section class="seo-section seo-article">
       <h2>Giới thiệu công cụ OCR PDF — Nhận diện ký tự quang học tại ToolHub</h2>
 
-      <p>Các tài liệu PDF dạng scan từ máy quét hoặc ảnh chụp tài liệu thường là ảnh tĩnh, không thể bôi đen để sao chép văn bản, tra cứu từ khóa hay biên tập nội dung.</p>
+      <p>Các tài liệu PDF được tạo ra từ máy scan văn phòng hoặc chụp ảnh từ điện thoại thông minh thực chất chỉ là những tấm ảnh tĩnh được đóng gói vào tệp PDF. Do đó, bạn không thể tra cứu nội dung nhanh, không thể bôi đen để trích dẫn vào báo cáo và không thể chỉnh sửa.</p>
 
-      <p>Công cụ <strong>OCR PDF ToolHub</strong> áp dụng công nghệ nhận dạng ký tự quang học AI tiên tiến, quét và chuyển đổi toàn bộ chữ viết trong file scan thành văn bản có thể tìm kiếm (Searchable PDF) và sao chép dễ dàng.</p>
+      <p>Công cụ <strong>OCR PDF trực tuyến</strong> tại <strong>ToolHub</strong> giải quyết hoàn hảo rào cản này: ứng dụng công nghệ nhận dạng ký tự quang học thế hệ mới, tự động phát hiện mọi chữ cái trong ảnh scan và tạo ra tệp <em>Searchable PDF</em> chuẩn mực mà không làm giảm độ sắc nét của hình ảnh gốc.</p>
 
       <div class="seo-grid-cols">
         <div class="seo-col-card">
           <h4><i class="fas fa-language"></i> Nhận diện tiếng Việt chuẩn xác</h4>
-          <p>Hỗ trợ ngôn ngữ tiếng Việt có dấu với độ chính xác nhận diện trên 98%.</p>
+          <p>Hỗ trợ đầy đủ bộ ký tự tiếng Việt có dấu, nguyên âm và dấu thanh với độ chính xác cao.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-search"></i> Tạo Searchable PDF</h4>
-          <p>Cho phép bôi đen, sao chép văn bản và tra cứu từ khóa (Ctrl+F) dễ dàng.</p>
+          <h4><i class="fas fa-search"></i> Bôi đen &amp; Tra cứu Ctrl+F</h4>
+          <p>Dễ dàng tra cứu số liệu, tên người hoặc điều khoản quan trọng trong tài liệu scan hàng trăm trang.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-globe"></i> Tương thích đa ngôn ngữ</h4>
-          <p>Quét và nhận diện cùng lúc nhiều ngôn ngữ như tiếng Anh, Pháp, Nhật, Hàn, v.v.</p>
+          <h4><i class="fas fa-copy"></i> Sao chép văn bản tức thì</h4>
+          <p>Cho phép chọn và sao chép nhanh các đoạn chữ từ bản scan sang Word, Excel hoặc Email mà không cần gõ lại thủ công.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-clone"></i> Giữ nguyên bố cục trang</h4>
-          <p>Bảo toàn vị trí các khối văn bản, hình ảnh và bảng biểu trong tài liệu.</p>
+          <h4><i class="fas fa-shield-alt"></i> Bảo mật tài liệu tuyệt đối</h4>
+          <p>Mã hóa dữ liệu HTTPS SSL 256-bit, máy chủ tự động hủy tệp sau 60 phút bảo vệ tuyệt đối bí mật thông tin.</p>
         </div>
+      </div>
+
+      <h3>Các trường hợp ứng dụng thực tế phổ biến</h3>
+      <ul>
+        <li><strong>Số hóa tài liệu lưu trữ cơ quan:</strong> Chuyển đổi các hồ sơ công văn, quyết định cũ từ dạng scan sang kho dữ liệu có thể tìm kiếm toàn văn.</li>
+        <li><strong>Trích xuất nội dung sách báo &amp; giáo trình:</strong> Sinh viên và nhà nghiên cứu dễ dàng sao chép các đoạn trích từ tài liệu scan vào luận văn.</li>
+        <li><strong>Xử lý hóa đơn và hợp đồng scan:</strong> Tìm nhanh mã số thuế, số hóa đơn hoặc giá trị hợp đồng mà không phải đọc thủ công từng trang.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo nhận diện OCR đạt kết quả tốt nhất:</strong> Để độ chính xác đạt mức cao nhất, bản scan cần có độ phân giải từ 150 DPI đến 300 DPI, trang tài liệu ngay ngắn không bị cong nghiêng và ánh sáng chụp đồng đều.
       </div>
     </section>
 

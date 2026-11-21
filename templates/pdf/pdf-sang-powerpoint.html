@@ -257,6 +257,13 @@
   <div class="tool-workspace full-bleed" id="toolWorkspace">
     <!-- Cột trái: Khu vực xem trước file đã chọn -->
     <div class="file-area">
+      <!-- Nút nổi thêm file góc phải trên của khung xem trước -->
+      <div class="floating-add-wrap">
+        <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Chọn file PDF khác">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+
       <div class="file-area-content">
         <div class="file-card-wrap" id="fileCardWrap">
           <div class="file-card" id="fileCard">
@@ -264,15 +271,9 @@
               <i class="fas fa-times"></i>
             </button>
             <div class="file-preview" id="filePreview">
-              <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
-                <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
-                <div class="line title"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
-                <div class="line"></div>
-                <div class="line block"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
+              <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <div style="font-size:3rem; color:#e74c3c; margin-bottom:10px;"><i class="fas fa-file-pdf"></i></div>
+                <div style="font-size:1.8rem; color:#d24726;"><i class="fas fa-file-powerpoint"></i></div>
               </div>
             </div>
             <div class="file-name" id="selectedFileName">tai_lieu.pdf</div>
@@ -290,34 +291,53 @@
     <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-sliders-h"></i> Thiết lập chuyển PDF sang PowerPoint
       </div>
 
       <div class="options-body">
-        <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
-          <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
+        <!-- Chế độ chuyển đổi -->
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" style="font-weight:600; margin-bottom:8px; display:block;">Độ phân giải slide</label>
+          <div class="ws-option-group" style="display:flex; flex-direction:column; gap:8px;">
+            <label class="ws-radio-box selected" id="optSlideHd" style="padding:10px; cursor:pointer;">
+              <input type="radio" name="pptMode" value="hd" checked>
               <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
+                <strong style="font-size:0.88rem;"><i class="fas fa-tv" style="color:#d24726;"></i> Slide sắc nét HD (Khuyên dùng)</strong>
+                <span style="font-size:0.75rem; color:#666;">Bảo toàn nguyên vẹn màu sắc đồ họa, gradient và hình ảnh minh họa.</span>
               </div>
             </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
+            <label class="ws-radio-box" id="optSlideEditable" style="padding:10px; cursor:pointer;">
+              <input type="radio" name="pptMode" value="editable">
               <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
+                <strong style="font-size:0.88rem;"><i class="fas fa-font" style="color:#1e5b9c;"></i> Tối ưu chỉnh sửa văn bản</strong>
+                <span style="font-size:0.75rem; color:#666;">Tự động tạo các khung Text Box để dễ dàng gõ và đổi font chữ.</span>
               </div>
             </label>
+          </div>
+        </div>
+
+        <!-- Box lưu ý -->
+        <div class="ws-info-box" style="margin-bottom:14px; font-size:0.82rem; line-height:1.5;">
+          <i class="fas fa-presentation" style="color:#d24726;"></i>
+          <div>Tệp xuất ra là <strong>Microsoft PowerPoint (.pptx)</strong> chuẩn, mỗi trang PDF tương ứng với một slide riêng biệt sẵn sàng trình chiếu.</div>
+        </div>
+
+        <!-- Tóm tắt thông tin file -->
+        <div class="ws-file-summary" style="margin-bottom:12px;">
+          <div class="ws-summary-row">
+            <span><i class="fas fa-file-pdf"></i> Tệp gốc:</span>
+            <strong id="summaryFileName" style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">tai_lieu.pdf</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-file-powerpoint"></i> Xuất định dạng:</span>
+            <strong style="color:#d24726;">PPTX (PowerPoint)</strong>
           </div>
         </div>
       </div>
 
       <div class="action-area">
         <button type="button" class="btn-convert btn-execute" id="btnExecute" onclick="executeToolAction()">
-          Chuyển sang PowerPoint <i class="fas fa-arrow-right"></i>
+          <i class="fas fa-file-powerpoint" style="margin-right:6px;"></i> Chuyển sang PowerPoint ngay
         </button>
       </div>
     </aside>
@@ -331,50 +351,51 @@
         <i class="fas fa-file-powerpoint"></i> Tải tệp lên để thực hiện Chuyển PDF sang PowerPoint
       </div>
       <div class="drop-zone" id="dropZone">
-        <div class="dz-icon"><i class="fas fa-file-powerpoint"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>Kéo &amp; thả file PDF vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Hỗ trợ file PDF tối đa 50 MB · Tách slide chuẩn xác từng trang trình chiếu</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Đã chuyển các slide PDF sang PowerPoint (.pptx)!</h3>
+      <h3 id="downloadSuccessTitle">Đã chuyển các slide PDF sang PowerPoint (.pptx) thành công!</h3>
       <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultFile()">
-        <i class="fas fa-download"></i> Tải xuống file PowerPoint
+        <i class="fas fa-download"></i> Tải xuống file PowerPoint (.pptx)
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
-          <i class="fas fa-redo"></i> Xử lý tệp khác
+          <i class="fas fa-redo"></i> Chuyển đổi tệp khác
         </button>
       </div>
     </div>
 
     <!-- ===== NỘI DUNG CHUẨN SEO ===== -->
     <section class="seo-section">
-      <h2>Hướng dẫn sử dụng Chuyển PDF sang PowerPoint trực tuyến trong 3 bước</h2>
+      <h2>Hướng dẫn chuyển PDF sang PowerPoint trực tuyến trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file PDF lên</h4>
+          <p>Kéo và thả tài liệu PDF vào khung tải lên hoặc chọn từ máy tính, điện thoại.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Kiểm tra chế độ</h4>
+          <p>Hệ thống tự động căn chỉnh kích thước tỷ lệ slide theo kích thước gốc của tài liệu.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
-          <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <h4>Lưu file PowerPoint</h4>
+          <p>Bấm "Chuyển sang PowerPoint ngay" và tải về bài thuyết trình .pptx hoàn chỉnh.</p>
         </div>
       </div>
     </section>
@@ -386,19 +407,19 @@
         <div class="sec-item">
           <div>
             <strong>Mã hóa SSL 256-bit</strong>
-            <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức HTTPS.</span>
+            <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức HTTPS bảo mật.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
             <strong>Tự động xóa sau 1 giờ</strong>
-            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút.</span>
+            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút, không lưu trữ lâu dài.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
-            <strong>Bảo mật thông tin</strong>
-            <span>Không chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
+            <strong>Bảo mật thông tin tuyệt đối</strong>
+            <span>Không sao lưu bài thuyết trình, không xem trộm hay chia sẻ dữ liệu với bên thứ ba.</span>
           </div>
         </div>
       </div>
@@ -408,50 +429,115 @@
       <h2>Câu hỏi thường gặp về Chuyển PDF sang PowerPoint (FAQ)</h2>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Sử dụng công cụ Chuyển PDF sang PowerPoint tại ToolHub có mất phí không?
+          Tài liệu sau khi chuyển sang PPTX có trình chiếu được ngay không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Có. File xuất ra là định dạng Microsoft PowerPoint (.pptx) chuẩn, bạn có thể nhấn F5 để trình chiếu toàn màn hình ngay lập tức hoặc chèn thêm hiệu ứng chuyển slide (Transitions).
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Hình ảnh và biểu đồ trong slide có bị vỡ hạt không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Không. Động cơ kết xuất hình ảnh của ToolHub render ở độ phân giải cao, đảm bảo logo, hình vẽ kỹ thuật và sơ đồ đều hiển thị sắc nét trên máy chiếu lớn.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          File PowerPoint có mở được trên Google Trang trình bày (Google Slides) không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Có. Định dạng .pptx tương thích hoàn hảo 100% với Google Slides, Keynote trên Mac, Canva và Microsoft PowerPoint mọi phiên bản.
         </div>
       </div>
     </section>
 
-  
-    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
+    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO 4 KHỐI CHUẨN ===== -->
     <section class="seo-section seo-article">
-      <h2>Giới thiệu công cụ Chuyển PDF sang PowerPoint (PPTX) tại ToolHub</h2>
+      <h2>Giới thiệu công cụ Chuyển PDF sang PowerPoint (PPTX) trực tuyến tại ToolHub</h2>
 
-      <p>Khi cần tái sử dụng bài thuyết trình, bản giới thiệu dự án hoặc slide đào tạo lưu dưới dạng PDF, bạn không thể chỉnh sửa trực tiếp các hiệu ứng, khối chữ hay hình minh họa.</p>
+      <!-- KHỐI 1: GIỚI THIỆU CHUNG (SEO-INTRO) -->
+      <div class="seo-intro">
+        <p>Các tài liệu đào tạo, hồ sơ thầu, pitch deck giới thiệu sản phẩm và slide bài giảng thường được gửi dưới định dạng PDF để tiện xem trên điện thoại. Tuy nhiên, khi cần thuyết trình trước hội đồng hoặc bổ sung nội dung mới, việc không thể chỉnh sửa trực tiếp trên file PDF gây ra rất nhiều bất tiện. Công cụ <strong>Chuyển PDF sang PowerPoint trực tuyến tại ToolHub</strong> giúp bạn tái tạo trọn vẹn từng trang tài liệu thành các slide trình chiếu chuyên nghiệp.</p>
+        <p>Mỗi trang PDF được phân giải thành một slide PowerPoint riêng biệt, bảo toàn sắc nét hình ảnh minh họa, biểu đồ và bố cục slide để bạn thỏa sức biên tập và trình diễn.</p>
+      </div>
 
-      <p>Công cụ <strong>Chuyển PDF sang PowerPoint ToolHub</strong> chuyển đổi mỗi trang tài liệu PDF thành một slide trình chiếu PPTX chuẩn, cho phép bạn tự do thêm bớt nội dung, thay đổi font chữ và chèn hiệu ứng trình diễn.</p>
+      <!-- KHỐI 2: TÍNH NĂNG NỔI BẬT (SEO-FEATURES-GRID) -->
+      <h3 style="margin-top:28px; margin-bottom:16px; font-size:1.2rem; color:#1e293b;">
+        <i class="fas fa-star" style="color:#f39c12; margin-right:6px;"></i> Các ưu điểm vượt trội khi chuyển PDF sang PowerPoint tại ToolHub
+      </h3>
+      <div class="seo-features-grid">
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-tv"></i></div>
+          <h4>Tái tạo Slide chuẩn kích thước</h4>
+          <p>Tự động phát hiện kích thước slide 16:9 hoặc 4:3, giữ tỷ lệ khung hình cân đối hoàn mỹ.</p>
+        </div>
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-edit"></i></div>
+          <h4>Thêm Text Box chỉnh sửa dễ dàng</h4>
+          <p>Trích xuất các khối chữ thành hộp văn bản để bạn dễ dàng sửa số liệu, đổi tiêu đề.</p>
+        </div>
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-image"></i></div>
+          <h4>Bảo toàn đồ họa sắc nét</h4>
+          <p>Hình ảnh, logo và biểu đồ vector được giữ nguyên chất lượng độ phân giải cao.</p>
+        </div>
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+          <h4>Tốc độ xử lý siêu tốc</h4>
+          <p>Chuyển đổi bài thuyết trình hàng chục slide chỉ trong vài giây, tiết kiệm tối đa thời gian chuẩn bị.</p>
+        </div>
+      </div>
 
-      <div class="seo-grid-cols">
-        <div class="seo-col-card">
-          <h4><i class="fas fa-file-powerpoint"></i> Chuyển thành Slide PPTX</h4>
-          <p>Từng trang PDF được phân giải thành từng slide riêng biệt chuẩn chỉnh.</p>
+      <!-- KHỐI 3: HƯỚNG DẪN CHI TIẾT (SEO-STEPS-DETAILED) -->
+      <h3 style="margin-top:28px; margin-bottom:16px; font-size:1.2rem; color:#1e293b;">
+        <i class="fas fa-list-ol" style="color:#1e5b9c; margin-right:6px;"></i> Hướng dẫn các bước đổi file PDF sang bài thuyết trình PPTX
+      </h3>
+      <div class="seo-steps-detailed">
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 1</div>
+          <div class="step-content">
+            <h4>Tải tệp PDF lên hệ thống</h4>
+            <p>Bấm nút <strong>"Chọn tệp PDF"</strong> hoặc kéo thả trực tiếp tệp slide PDF vào khung tải tệp trên màn hình.</p>
+          </div>
         </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-edit"></i> Biên tập nội dung tự do</h4>
-          <p>Cho phép chỉnh sửa lại văn bản, đổi màu sắc và sắp xếp lại bố cục slide.</p>
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 2</div>
+          <div class="step-content">
+            <h4>Kiểm tra thông số cấu hình</h4>
+            <p>Hệ thống tự động áp dụng chế độ slide HD tối ưu nhất cho bài trình chiếu của bạn.</p>
+          </div>
         </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-vector-square"></i> Giữ nguyên hình ảnh & vector</h4>
-          <p>Các logo, biểu đồ và hình vẽ được giữ nguyên độ nét cao.</p>
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 3</div>
+          <div class="step-content">
+            <h4>Bấm chuyển đổi sang PowerPoint</h4>
+            <p>Bấm nút <strong>"Chuyển sang PowerPoint ngay"</strong>. Hệ thống sẽ bóc tách và tạo bài thuyết trình .pptx.</p>
+          </div>
         </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-check-circle"></i> Miễn phí & tiện lợi</h4>
-          <p>Chuyển đổi trực tuyến nhanh gọn không cần cài đặt ứng dụng trả phí.</p>
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 4</div>
+          <div class="step-content">
+            <h4>Tải tệp PowerPoint (.pptx) về máy</h4>
+            <p>Bấm nút <strong>"Tải xuống file PowerPoint (.pptx)"</strong> để lưu tệp về máy và bắt đầu thuyết trình.</p>
+          </div>
         </div>
+      </div>
+
+      <!-- KHỐI 4: MẸO & LƯU Ý HỮU ÍCH (SEO-TIPS-BOX) -->
+      <div class="seo-tips-box" style="margin-top:28px; background:#eff6ff; border-left:4px solid #3b82f6; padding:18px 20px; border-radius:0 8px 8px 0;">
+        <h4 style="margin:0 0 10px 0; color:#1e40af; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+          <i class="fas fa-lightbulb" style="color:#f59e0b;"></i> Một số mẹo hữu ích khi làm việc với file PowerPoint:
+        </h4>
+        <ul style="margin:0; padding-left:20px; color:#334155; line-height:1.6; font-size:0.92rem;">
+          <li><strong>Thêm hiệu ứng trình diễn:</strong> Sau khi mở file PPTX bằng PowerPoint, bạn có thể tự do thêm hiệu ứng Animations và Transitions để bài nói thêm sinh động.</li>
+          <li><strong>Dễ dàng ghép thêm slide:</strong> Bạn có thể sao chép các slide vừa chuyển đổi vào bài thuyết trình mẫu công ty đang dùng rất tiện lợi.</li>
+          <li><strong>Bảo mật tối đa:</strong> Mọi file chuyển đổi đều được dọn dẹp sạch sẽ khỏi máy chủ sau 60 phút, an toàn 100% cho bí mật kinh doanh.</li>
+        </ul>
       </div>
     </section>
 

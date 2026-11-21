@@ -1,6 +1,6 @@
 from .main_routes import main_bp
 from .pdf import pdf_bp
-from .image_routes import image_bp
+from .anh import image_bp
 from .utility_routes import utility_bp
 from .conversion_routes import conversion_bp
 from .auth_routes import auth_bp

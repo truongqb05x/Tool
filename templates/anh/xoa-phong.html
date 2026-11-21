@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xóa Phông Nền Ảnh Trực Tuyến — Tách Nền Ảnh AI Trong Suốt 100% | ToolHub</title>
+  <meta name="description" content="Xóa phông ảnh online miễn phí, tự động tách nền ảnh bằng AI chính xác từng sợi tóc. Xuất file PNG trong suốt hoặc thay nền trắng cho sàn TMĐT.">
+  <meta name="keywords" content="xóa phông ảnh, tách nền ảnh, remove background online, tách nền png trong suốt, xóa nền ảnh ai">
+
+  <!-- Font Awesome & CSS Layout -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../static/css/layout/layout.css">
+  <link rel="stylesheet" href="../../static/css/layout/modal.css">
+  <link rel="stylesheet" href="../../static/css/tools/tool-page.css">
+  <link rel="icon" type="image/png" href="../../static/img/logo.png">
+</head>
+<body>
+
+  <!-- ===== HEADER CHUẨN ===== -->
+  <header class="header">
+    <div class="container">
+      <a href="/" class="logo" style="text-decoration:none;">
+        <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+        <div class="logo-text">ToolHub</div>
+      </a>
+
+      <div class="header-search-wrap">
+        <div class="header-search">
+          <input type="text" id="searchInput" placeholder="Tìm công cụ: nén PDF, ghép ảnh, chuyển đổi..." autocomplete="off">
+          <button type="button" id="searchSubmitBtn" aria-label="Tìm kiếm"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+
+      <div class="header-actions" id="headerActions">
+        <div id="guestActions" style="display:flex; gap:8px;">
+          <a href="/?auth=login" class="btn btn-login">Đăng nhập</a>
+          <a href="/?auth=register" class="btn btn-register">Đăng ký</a>
+        </div>
+
+        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu công cụ">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <div id="userActions" class="user-menu" style="display:none;">
+          <div class="user-menu-trigger" id="userMenuTrigger">
+            <div class="user-avatar" id="headerAvatar">U</div>
+            <span class="user-name" id="headerUserName">Người dùng</span>
+            <i class="fas fa-chevron-down caret"></i>
+          </div>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-header">
+              <strong id="dropdownName">Người dùng</strong>
+              <small id="dropdownEmail">user@example.com</small>
+            </div>
+            <a href="/" class="user-dropdown-item">
+              <i class="fas fa-history"></i> Lịch sử xử lý
+            </a>
+            <a href="/" class="user-dropdown-item">
+              <i class="fas fa-cog"></i> Cài đặt tài khoản
+            </a>
+            <div class="user-dropdown-divider"></div>
+            <a href="#" class="user-dropdown-item danger" onclick="logout(); return false;">
+              <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Lớp phủ màn hình khi mở Menu Drawer trên Mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Drawer Menu dành riêng cho Mobile trên các trang con -->
+  <aside class="sidebar drawer-only" id="sidebar">
+    <div class="sidebar-drawer-header">
+      <div class="sidebar-drawer-brand">
+        <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+        <span>Danh mục công cụ</span>
+      </div>
+      <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng menu">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Auth Box bên trong Mobile Drawer -->
+    <div class="sidebar-auth-box">
+      <div id="drawerGuestActions" class="drawer-guest-actions">
+        <a href="/?auth=login" class="btn btn-login">
+          <i class="fas fa-sign-in-alt"></i> Đăng nhập
+        </a>
+        <a href="/?auth=register" class="btn btn-register">
+          <i class="fas fa-user-plus"></i> Đăng ký
+        </a>
+      </div>
+      <div id="drawerUserActions" class="drawer-user-actions" style="display:none;">
+        <div class="drawer-user-info">
+          <div class="user-avatar" id="drawerAvatar">U</div>
+          <div class="drawer-user-details">
+            <strong id="drawerUserName">Người dùng</strong>
+            <small id="drawerUserEmail">user@example.com</small>
+          </div>
+        </div>
+        <a href="#" class="drawer-logout-btn" onclick="logout(); closeMobileSidebar(); return false;">
+          <i class="fas fa-sign-out-alt"></i> Đăng xuất
+        </a>
+      </div>
+    </div>
+
+    <div class="side-box">
+      <div class="side-box-header"><i class="fas fa-list" style="margin-right:6px;"></i> Danh mục công cụ</div>
+      <div class="side-box-body">
+        <ul class="side-menu">
+          <li>
+            <a href="#" class="menu-toggle">
+              <i class="fas fa-file-pdf"></i>
+              <span>Công cụ PDF</span>
+              <i class="fas fa-chevron-right arrow"></i>
+            </a>
+            <ul class="submenu">
+              <li><a href="/pdf" style="font-weight:700; color:#1e5b9c;"><i class="fas fa-th-list"></i> Xem tất cả công cụ PDF</a></li>
+              <li><a href="/pdf/nen-pdf"><i class="fas fa-compress-alt"></i> Nén PDF</a></li>
+              <li><a href="/pdf/gop-pdf"><i class="fas fa-object-group"></i> Gộp PDF</a></li>
+              <li><a href="/pdf/tach-pdf"><i class="fas fa-cut"></i> Tách PDF</a></li>
+              <li><a href="/pdf/pdf-sang-word"><i class="fas fa-file-word"></i> PDF sang Word</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#" class="menu-toggle active">
+              <i class="fas fa-image"></i>
+              <span>Chỉnh sửa ảnh</span>
+              <i class="fas fa-chevron-right arrow"></i>
+            </a>
+            <ul class="submenu" style="display:block;">
+              <li><a href="/anh" style="font-weight:700; color:#1e5b9c;"><i class="fas fa-th-list"></i> Xem tất cả công cụ ảnh</a></li>
+              <li><a href="/anh/nen-anh"><i class="fas fa-compress-alt"></i> Nén ảnh</a></li>
+              <li><a href="/anh/thay-doi-kich-thuoc"><i class="fas fa-expand-arrows-alt"></i> Thay đổi kích thước</a></li>
+              <li><a href="/anh/cat-anh"><i class="fas fa-crop-alt"></i> Cắt ảnh</a></li>
+              <li><a href="/anh/chuyen-sang-jpg"><i class="fas fa-file-image"></i> Chuyển sang JPG</a></li>
+              <li><a href="/anh/chuyen-tu-jpg"><i class="fas fa-exchange-alt"></i> Chuyển từ JPG</a></li>
+              <li><a href="/anh/chinh-sua-anh"><i class="fas fa-sliders-h"></i> Trình chỉnh sửa ảnh</a></li>
+              <li><a href="/anh/nang-cap-anh"><i class="fas fa-wand-magic-sparkles"></i> Nâng cấp chất lượng ảnh</a></li>
+              <li><a href="/anh/xoa-phong"><i class="fas fa-magic"></i> Xóa phông</a></li>
+              <li><a href="/anh/dong-dau-anh"><i class="fas fa-stamp"></i> Đóng dấu bản quyền</a></li>
+              <li><a href="/anh/tao-anh-che"><i class="fas fa-laugh-squint"></i> Tạo ảnh chế</a></li>
+              <li><a href="/anh/xoay-anh"><i class="fas fa-redo"></i> Xoay ảnh</a></li>
+              <li><a href="/anh/html-sang-anh"><i class="fas fa-code"></i> Chuyển HTML sang ảnh</a></li>
+              <li><a href="/anh/lam-mo-mat"><i class="fas fa-user-secret"></i> Làm mờ khuôn mặt</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#" class="menu-toggle">
+              <i class="fas fa-mobile-alt"></i>
+              <span>Ứng dụng App</span>
+              <i class="fas fa-chevron-right arrow"></i>
+            </a>
+            <ul class="submenu">
+              <li><a href="/tien-ich/tao-ma-qr"><i class="fas fa-qrcode"></i> Tạo mã QR</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== BREADCRUMB (SEO) ===== -->
+  <nav class="breadcrumb-nav sr-only" aria-label="Breadcrumb">
+    <a href="/"><i class="fas fa-home"></i> Trang chủ</a>
+    <span>/</span>
+    <a href="/anh">Chỉnh sửa ảnh</a>
+    <span>/</span>
+    <strong>Xóa phông</strong>
+  </nav>
+
+  <div class="tool-hero" id="toolHero">
+    <h1>Xóa phông nền hình ảnh bằng AI</h1>
+    <p>Tự động nhận diện người, động vật hoặc sản phẩm và tách sạch phông nền phức tạp chỉ trong 1 chạm, xuất file ảnh PNG trong suốt chất lượng cao.</p>
+  </div>
+
+  <!-- BƯỚC 2: WORKSPACE XỬ LÝ TOÀN CHIỀU RỘNG (SÁT LỀ PHẢI THEO CHUẨN XULY.HTML) -->
+  <div class="tool-workspace full-bleed" id="toolWorkspace">
+    <!-- Cột trái: Khu vực xem trước file đã chọn -->
+    <div class="file-area">
+      <!-- Nút nổi thêm / đổi file -->
+      <div class="floating-add-wrap">
+        <div class="floating-add-tooltip" onclick="document.getElementById('fileInput').click()">Chọn ảnh khác</div>
+        <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Chọn ảnh khác">
+          <span class="floating-badge">1</span>
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+
+      <div class="file-area-content">
+        <div class="file-card-wrap" id="fileCardWrap">
+          <div class="file-card" id="fileCard">
+            <!-- Nút xóa file -->
+            <button type="button" class="btn-remove-file" onclick="resetFileSelection()" title="Xóa file">
+              <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Tùy chọn khi hover: Xoay 90 độ & Phóng to -->
+            <div class="file-card-actions">
+              <button type="button" class="btn-card-action" onclick="rotatePreview(90)" title="Xoay 90 độ">
+                <i class="fas fa-redo"></i>
+              </button>
+              <button type="button" class="btn-card-action" onclick="openImageZoomModal()" title="Phóng to xem trước">
+                <i class="fas fa-search-plus"></i>
+              </button>
+            </div>
+
+            <div class="file-preview" id="filePreview" style="display:flex; align-items:center; justify-content:center; background:#f0f2f5; min-height:160px; overflow:hidden;">
+              <img id="imagePreview" src="" alt="Xem trước ảnh" style="max-width:100%; max-height:160px; object-fit:contain; transition:transform 0.2s ease;">
+            </div>
+            <div class="file-name" id="selectedFileName">hinh_anh.jpg</div>
+            <div style="font-size:0.75rem; color:#888; margin-top:4px;" id="selectedFileMeta">Kích thước: 1920 x 1080 px</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
+    <aside class="options-area">
+      <div class="options-header">
+        <i class="fas fa-magic"></i> Tùy chọn nền xuất ra
+      </div>
+
+      <div class="options-body">
+        <div class="form-group">
+            <label class="form-label">Chọn kiểu phông nền thay thế</label>
+            <div class="ws-option-group">
+              <div class="ws-radio-box selected" onclick="selectRadio(this)">
+                <input type="radio" name="bgType" value="transparent" checked>
+                <div class="ws-radio-info">
+                  <strong>Trong suốt (Transparent PNG)</strong>
+                  <span>Phù hợp ghép ảnh, thiết kế banner và chèn vào slide thuyết trình.</span>
+                </div>
+              </div>
+              <div class="ws-radio-box" onclick="selectRadio(this)">
+                <input type="radio" name="bgType" value="white">
+                <div class="ws-radio-info">
+                  <strong>Phông trắng tinh (Pure White)</strong>
+                  <span>Chuẩn hóa ảnh sản phẩm bán hàng trên sàn Shopee, Lazada, Amazon.</span>
+                </div>
+              </div>
+              <div class="ws-radio-box" onclick="selectRadio(this)">
+                <input type="radio" name="bgType" value="gray">
+                <div class="ws-radio-info">
+                  <strong>Màu xám Studio nhẹ nhàng</strong>
+                  <span>Tông màu thanh lịch tạo cảm giác hiện đại và nổi bật chủ thể.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <div class="action-area">
+        <button type="button" class="btn-convert" id="btnExecuteAction" onclick="executeToolAction()">
+          Tách phông nền ngay <i class="fas fa-cut"></i>
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="tool-container" id="toolContainer">
+
+    <!-- BƯỚC 1: KHUNG TẢI FILE (UPLOAD PANEL) -->
+    <div class="upload-panel" id="uploadPanel">
+      <div class="upload-panel-header">
+        <i class="fas fa-magic"></i> Tải hình ảnh lên để tách phông nền
+      </div>
+      <div class="drop-zone" id="dropZone">
+        <div class="dz-icon"><i class="fas fa-images"></i></div>
+        <h3>Kéo &amp; thả file hình ảnh vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp hình ảnh
+        </button>
+        <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+        <div class="dz-note">Hỗ trợ JPG, PNG, WEBP, GIF, SVG dung lượng tối đa 25 MB</div>
+      </div>
+    </div>
+
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <div class="download-card" id="downloadCard" style="display:none;">
+      <div class="download-card-icon"><i class="fas fa-check"></i></div>
+      <h3 id="downloadSuccessTitle">Đã xóa phông nền thành công!</h3>
+      <p id="downloadMeta">Chủ thể đã được tách nền sắc nét, file ảnh PNG trong suốt đã sẵn sàng tải về.</p>
+      <button type="button" class="btn-download-result" onclick="downloadResultImage()">
+        <i class="fas fa-download"></i> Tải xuống hình ảnh đã xử lý
+      </button>
+      <div>
+        <button type="button" class="btn-redo" onclick="resetFileSelection()">
+          <i class="fas fa-redo"></i> Tách nền bức ảnh khác
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== NỘI DUNG CHUẨN SEO (SEO ARTICLE) ===== -->
+    <section class="seo-section">
+      <h2>Cách sử dụng Xóa phông trực tuyến chỉ trong 3 bước</h2>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h4>Tải ảnh cần tách nền</h4>
+          <p>Chọn ảnh chân dung, ảnh đồ vật hoặc thú cưng chụp trên bất kỳ phông nền nào.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h4>Hệ thống AI xử lý</h4>
+          <p>Thuật toán AI tự động vẽ viền chính xác từng sợi tóc và loại bỏ sạch sẽ hậu cảnh phía sau.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h4>Tải ảnh trong suốt về</h4>
+          <p>Lưu file PNG không nền về máy để dễ dàng ghép vào bất kỳ hình nền nào khác.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="seo-section">
+      <h2>Bảo mật tài liệu &amp; Quyền riêng tư tối đa</h2>
+      <p>ToolHub cam kết bảo vệ dữ liệu người dùng ở mức cao nhất:</p>
+      <div class="security-features">
+        <div class="sec-item">
+          <div>
+            <strong>Mã hóa SSL 256-bit</strong>
+            <span>Tất cả file hình ảnh được truyền tải an toàn tuyệt đối qua giao thức HTTPS.</span>
+          </div>
+        </div>
+        <div class="sec-item">
+          <div>
+            <strong>Tự động xóa sau 1 giờ</strong>
+            <span>File của bạn được xóa vĩnh viễn khỏi máy chủ sau 60 phút, không lưu trữ dài hạn.</span>
+          </div>
+        </div>
+        <div class="sec-item">
+          <div>
+            <strong>Không ai xem file của bạn</strong>
+            <span>Quá trình xử lý ảnh hoàn toàn tự động bởi thuật toán, không nhân viên nào có quyền xem.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seo-section">
+      <h2>Câu hỏi thường gặp về Xóa phông (FAQ)</h2>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          AI có thể tách được những chi tiết khó như sợi tóc bay không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Có. Thuật toán phân đoạn hình ảnh (Image Segmentation) được huấn luyện chuyên sâu để xử lý mượt mà các vùng biên giới phức tạp như sợi tóc tơ, lông thú nuôi và các góc cạnh quần áo.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Ảnh sản phẩm chụp trên bàn gỗ có tách sạch được không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Hoàn toàn được. Dù phông nền có nhiều vân gỗ, ánh sáng bóng đổ phức tạp thì AI vẫn nhận diện chính xác hình dáng vật thể để loại bỏ nền sạch 100%.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tôi có phải trả phí hay bị gắn bản quyền lên ảnh không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Không. Công cụ xóa phông tại ToolHub miễn phí 100% và xuất file ảnh không hề bị dính watermark hay logo quảng cáo.
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
+    <section class="seo-section seo-article">
+      <h2>Giới thiệu công cụ Xóa phông trực tuyến tại ToolHub</h2>
+
+      <p>Tách nền ảnh thủ công bằng công cụ Pen Tool trong Photoshop thường tốn từ 15 đến 30 phút cho mỗi bức ảnh phức tạp. Với <strong>Công cụ Xóa phông nền bằng AI</strong> tại ToolHub, công việc đó giờ đây chỉ mất vỏn vẹn 3 giây với độ chính xác kinh ngạc, giúp người bán hàng online và nhà thiết kế tiết kiệm tối đa thời gian.</p>
+
+      <div class="seo-grid-cols">
+        <div class="seo-col-card">
+          <h4><i class="fas fa-bolt"></i> Tách nền tự động 100%</h4>
+          <p>Không cần khoanh vùng thủ công, AI tự động nhận diện chủ thể và cắt nền tức thì.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-sliders-h"></i> Xử lý chuẩn xác từng sợi tóc</h4>
+          <p>Công nghệ phân tích viền tinh xảo giữ trọn từng sợi tóc và chi tiết lông tơ mềm mại.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-lock"></i> Xuất file PNG trong suốt</h4>
+          <p>File kết quả giữ trọn lớp alpha channel để bạn thoải mái thả vào bất kỳ phông nền mới nào.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-mobile-alt"></i> Chuẩn thương mại điện tử</h4>
+          <p>Dễ dàng chọn nền trắng tinh để đáp ứng tiêu chuẩn khắt khe của sàn TMĐT quốc tế.</p>
+        </div>
+      </div>
+
+      <h3>Trường hợp sử dụng phổ biến của Xóa phông:</h3>
+      <ul>
+        <li><strong>Làm ảnh sản phẩm bán hàng trực tuyến:</strong> Tách sạch nền phòng ngủ, sàn nhà để thay bằng nền trắng chuyên nghiệp cho gian hàng Shopee.</li>
+        <li><strong>Tạo ảnh thẻ & Hồ sơ xin việc (CV):</strong> Tách nền ảnh chụp đời thường để thay bằng nền xanh hoặc trắng chuẩn ảnh thẻ.</li>
+        <li><strong>Thiết kế Banner, Poster quảng cáo:</strong> Tách hình ảnh người mẫu hoặc sản phẩm để đưa vào phông nền đồ họa tiếp thị bắt mắt.</li>
+        <li><strong>Tạo ảnh ghép vui nhộn & Nhãn dán Sticker:</strong> Tách hình bạn bè, thú cưng để làm sticker nhắn tin Zalo, Telegram hài hước.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo sử dụng đạt hiệu quả cao nhất:</strong> Để kết quả tách nền đẹp nhất, hãy chọn những bức ảnh có độ tương phản rõ ràng giữa chủ thể chính và phông nền phía sau!
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ===== FOOTER CHUẨN ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-cols">
+        <div class="footer-col footer-about">
+          <div class="footer-logo">
+            <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img" style="width:26px; height:26px;">
+            <div class="footer-logo-text">ToolHub</div>
+          </div>
+          <p>ToolHub là nền tảng tổng hợp công cụ tiện ích trực tuyến miễn phí, giúp bạn xử lý PDF, hình ảnh và công cụ web ngay trên trình duyệt — an toàn và bảo mật 100%.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Công cụ PDF</h4>
+          <ul>
+            <li><a href="/pdf/nen-pdf"><i class="fas fa-angle-right"></i> Nén PDF</a></li>
+            <li><a href="/pdf/gop-pdf"><i class="fas fa-angle-right"></i> Gộp PDF</a></li>
+            <li><a href="/pdf/tach-pdf"><i class="fas fa-angle-right"></i> Tách PDF</a></li>
+            <li><a href="/pdf/pdf-sang-word"><i class="fas fa-angle-right"></i> PDF sang Word</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Chỉnh sửa ảnh &amp; Tiện ích</h4>
+          <ul>
+            <li><a href="/anh/nen-anh"><i class="fas fa-angle-right"></i> Nén ảnh</a></li>
+            <li><a href="/anh/cat-anh"><i class="fas fa-angle-right"></i> Cắt &amp; xoay ảnh</a></li>
+            <li><a href="/anh/xoa-phong"><i class="fas fa-angle-right"></i> Xóa phông</a></li>
+            <li><a href="/anh/nang-cap-anh"><i class="fas fa-angle-right"></i> Nâng cấp chất lượng ảnh</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Hỗ trợ &amp; Điều khoản</h4>
+          <ul>
+            <li><a href="/trogiup"><i class="fas fa-angle-right"></i> Trung tâm trợ giúp</a></li>
+            <li><a href="/dieukhoan"><i class="fas fa-angle-right"></i> Điều khoản sử dụng</a></li>
+            <li><a href="/dieukhoan"><i class="fas fa-angle-right"></i> Chính sách bảo mật</a></li>
+            <li><a href="/trogiup"><i class="fas fa-angle-right"></i> Câu hỏi thường gặp</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== THANH DƯỚI FOOTER (BOTTOM BAR) ===== -->
+  <div class="bottom-bar">
+    <div class="container">
+      <div>© 2025 ToolHub — Nền tảng tiện ích trực tuyến</div>
+      <div>
+        <a href="/trogiup">Trợ giúp</a>
+        <a href="/dieukhoan">Điều khoản</a>
+        <a href="/dieukhoan">Bảo mật</a>
+        <a href="#"><i class="fas fa-globe"></i> Ngôn ngữ: VI</a>
+      </div>
+    </div>
+  </div>
+
+    <!-- SCRIPTS -->
+  <script src="../../static/js/ultis/anh/image-preview.js"></script>
+  <script src="../../static/js/app.js"></script>
+  <script src="../../static/js/tools/anh/xoa-phong.js"></script>
+</body>
+</html>

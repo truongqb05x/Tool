@@ -1,0 +1,250 @@
+/* =========================================================
+   TRANG DANH MỤC TẤT CẢ CÔNG CỤ HÌNH ẢNH - IMAGE-LIST.CSS
+   Phong cách Classic Web / Vintage UI đồng bộ ToolHub
+   ========================================================= */
+
+.image-catalog-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 16px 48px;
+}
+
+/* Hero Section */
+.image-catalog-hero {
+  text-align: center;
+  padding: 24px 16px 20px;
+  background: #fbfbf9;
+  border: 1px solid #d4d4cc;
+  border-radius: 4px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.image-catalog-hero h1 {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+
+.image-catalog-hero p {
+  color: #555;
+  font-size: 0.92rem;
+  max-width: 680px;
+  margin: 0 auto 18px;
+  line-height: 1.5;
+}
+
+/* Quick Filter Bar */
+.image-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+.image-filter-input-wrap {
+  position: relative;
+  flex: 1;
+}
+
+.image-filter-input-wrap i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.image-filter-input {
+  width: 100%;
+  padding: 8px 12px 8px 34px;
+  font-size: 0.88rem;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.image-filter-input:focus {
+  border-color: #1e5b9c;
+  box-shadow: 0 0 0 2px rgba(30, 91, 156, 0.15);
+}
+
+.image-count-badge {
+  font-size: 0.8rem;
+  color: #555;
+  background: #e8e8e0;
+  border: 1px solid #ccc;
+  padding: 7px 12px;
+  border-radius: 3px;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+/* Category Groups */
+.image-group-section {
+  margin-bottom: 28px;
+}
+
+.image-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #e8e8e0;
+  border: 1px solid #ccc;
+  border-radius: 3px 3px 0 0;
+  padding: 9px 14px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #333;
+  border-bottom: 2px solid #1e5b9c;
+}
+
+.image-group-header i {
+  margin-right: 6px;
+  color: #1e5b9c;
+}
+
+.image-group-count {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #666;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* Tools Grid */
+.image-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 3px 3px;
+  padding: 16px;
+}
+
+/* Tool Card */
+.image-tool-card {
+  display: flex;
+  flex-direction: column;
+  background: #fafaf7;
+  border: 1px solid #dcdcd4;
+  border-radius: 3px;
+  padding: 14px 14px 10px;
+  text-decoration: none !important;
+  color: inherit;
+  transition: all 0.15s ease-in-out;
+  position: relative;
+}
+
+.image-tool-card:hover {
+  background: #fff;
+  border-color: #1e5b9c;
+  box-shadow: 0 3px 10px rgba(30, 91, 156, 0.12);
+  transform: translateY(-2px);
+}
+
+.image-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.image-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  background: #eef4fb;
+  border: 1px solid #cbe0f5;
+  color: #1e5b9c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.image-tool-card:hover .image-card-icon {
+  background: #1e5b9c;
+  color: #fff;
+  border-color: #1e5b9c;
+}
+
+.image-card-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #1e5b9c;
+  margin-bottom: 0;
+  line-height: 1.3;
+}
+
+.image-card-desc {
+  font-size: 0.8rem;
+  color: #555;
+  line-height: 1.45;
+  margin-bottom: 12px;
+  flex: 1;
+}
+
+.image-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 0.75rem;
+  padding-top: 8px;
+  border-top: 1px dashed #e4e4dc;
+}
+
+.image-card-btn {
+  color: #1e5b9c;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.image-tool-card:hover .image-card-btn {
+  color: #154374;
+}
+
+/* Empty State */
+.image-empty-state {
+  display: none;
+  text-align: center;
+  padding: 40px 16px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  color: #666;
+}
+
+.image-empty-state i {
+  font-size: 2.2rem;
+  color: #bbb;
+  margin-bottom: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .image-catalog-container {
+    padding-top: 18px;
+  }
+  .image-tools-grid {
+    grid-template-columns: 1fr;
+  }
+  .image-catalog-hero h1 {
+    font-size: 1.35rem;
+  }
+}

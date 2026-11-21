@@ -280,6 +280,13 @@
           </div>
         </div>
 
+        <!-- Nút nổi thêm / đổi file -->
+        <div class="floating-add-wrap">
+          <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Chọn file khác">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+
         <!-- Nút chọn file khác -->
         <button type="button" class="btn-add-more" onclick="resetFileSelection()">
           <i class="fas fa-sync-alt"></i> Chọn file khác
@@ -290,28 +297,84 @@
     <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-sliders-h"></i> Tùy chọn chỉnh sửa PDF
       </div>
 
       <div class="options-body">
+        <!-- 1. Kiểu chỉnh sửa -->
         <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
+          <label class="form-label"><i class="fas fa-magic"></i> Kiểu chỉnh sửa</label>
           <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
-              <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
+            <div class="ws-radio-box selected" onclick="selectEditType(this, 'text')">
+              <input type="radio" name="editType" value="text" checked>
+              <div class="ws-radio-info">
+                <strong>Thêm văn bản / Ghi chú</strong>
+                <span>Chèn đoạn ghi chú hoặc chú thích vào vị trí chỉ định.</span>
               </div>
-            </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
-              <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
+            </div>
+            <div class="ws-radio-box" onclick="selectEditType(this, 'header_footer')">
+              <input type="radio" name="editType" value="header_footer">
+              <div class="ws-radio-info">
+                <strong>Tiêu đề & Chân trang</strong>
+                <span>Đánh dấu tiêu đề đầu trang hoặc ghi chú chân trang.</span>
               </div>
-            </label>
+            </div>
+            <div class="ws-radio-box" onclick="selectEditType(this, 'stamp')">
+              <input type="radio" name="editType" value="stamp">
+              <div class="ws-radio-info">
+                <strong>Đóng dấu nhãn trạng thái</strong>
+                <span>Chèn khung tem xác nhận (APPROVED, DRAFT, BẢO MẬT).</span>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <!-- 2. Nội dung văn bản -->
+        <div class="form-group">
+          <label class="form-label" for="editContentInput"><i class="fas fa-font"></i> Nội dung văn bản chèn</label>
+          <input type="text" id="editContentInput" class="form-control" placeholder="Nhập nội dung ghi chú / nhãn cần chèn..." value="Tài liệu đã duyệt bởi ToolHub" style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:8px; font-size:0.95rem;">
+        </div>
+
+        <!-- 3. Vị trí chèn -->
+        <div class="form-group" id="groupPosition">
+          <label class="form-label"><i class="fas fa-map-marker-alt"></i> Vị trí hiển thị</label>
+          <select id="editPositionSelect" class="form-control" style="width:100%; padding:9px 12px; border:1px solid #d1d5db; border-radius:8px;">
+            <option value="bottom" selected>Cuối trang (Bottom)</option>
+            <option value="center">Giữa trang (Center)</option>
+            <option value="top">Đầu trang (Top)</option>
+          </select>
+        </div>
+
+        <!-- 4. Màu sắc & Cỡ chữ -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;" class="form-group">
+          <div>
+            <label class="form-label"><i class="fas fa-palette"></i> Màu chữ</label>
+            <select id="editColorSelect" class="form-control" style="width:100%; padding:9px 12px; border:1px solid #d1d5db; border-radius:8px;">
+              <option value="#e74c3c" selected>Đỏ nổi bật</option>
+              <option value="#1e5b9c">Xanh dương</option>
+              <option value="#27ae60">Xanh lá cây</option>
+              <option value="#111827">Đen tiêu chuẩn</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label"><i class="fas fa-text-height"></i> Cỡ chữ</label>
+            <select id="editFontSizeSelect" class="form-control" style="width:100%; padding:9px 12px; border:1px solid #d1d5db; border-radius:8px;">
+              <option value="11">Nhỏ (11pt)</option>
+              <option value="14" selected>Vừa (14pt)</option>
+              <option value="18">Lớn (18pt)</option>
+              <option value="24">Rất lớn (24pt)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 5. Phạm vi trang áp dụng -->
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-copy"></i> Áp dụng cho trang</label>
+          <select id="editPageScopeSelect" class="form-control" style="width:100%; padding:9px 12px; border:1px solid #d1d5db; border-radius:8px;">
+            <option value="all" selected>Tất cả các trang</option>
+            <option value="first">Chỉ trang đầu tiên (Trang bìa)</option>
+            <option value="last">Chỉ trang cuối cùng (Trang ký)</option>
+          </select>
         </div>
       </div>
 
@@ -328,26 +391,26 @@
     <!-- BƯỚC 1: KHUNG TẢI FILE (UPLOAD PANEL) -->
     <div class="upload-panel" id="uploadPanel">
       <div class="upload-panel-header">
-        <i class="fas fa-edit"></i> Tải tệp lên để thực hiện Chỉnh sửa PDF
+        <i class="fas fa-edit"></i> Tải tệp PDF lên để chỉnh sửa
       </div>
       <div class="drop-zone" id="dropZone">
-        <div class="dz-icon"><i class="fas fa-edit"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>Kéo &amp; thả file PDF vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Hỗ trợ file PDF tài liệu tối đa 50 MB · Xử lý an toàn bảo mật</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
       <h3>Tài liệu PDF đã được lưu lại các chỉnh sửa thành công!</h3>
-      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
-      <button type="button" class="btn-download-result" onclick="downloadResultFile()">
+      <p id="downloadMeta">Tài liệu đã được biên tập hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <button type="button" class="btn-download-result" id="btnDownloadResult" onclick="downloadResultFile()">
         <i class="fas fa-download"></i> Tải xuống PDF đã chỉnh sửa
       </button>
       <div>
@@ -359,22 +422,22 @@
 
     <!-- ===== NỘI DUNG CHUẨN SEO ===== -->
     <section class="seo-section">
-      <h2>Hướng dẫn sử dụng Chỉnh sửa PDF trực tuyến trong 3 bước</h2>
+      <h2>Hướng dẫn Chỉnh sửa file PDF trực tuyến trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file PDF lên</h4>
+          <p>Kéo và thả tài liệu PDF vào khung hoặc nhấn nút Chọn tệp PDF từ máy tính hoặc điện thoại.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Tùy chỉnh nội dung biên tập</h4>
+          <p>Chọn kiểu chỉnh sửa (Ghi chú, Tiêu đề hoặc Tem nhãn), nhập chữ, chọn màu sắc và vị trí đặt.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
-          <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <h4>Lưu và tải tài liệu</h4>
+          <p>Bấm Lưu file PDF đã sửa và tải ngay ấn bản PDF hoàn thiện về máy tính chỉ sau vài giây.</p>
         </div>
       </div>
     </section>
@@ -408,50 +471,69 @@
       <h2>Câu hỏi thường gặp về Chỉnh sửa PDF (FAQ)</h2>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Sử dụng công cụ Chỉnh sửa PDF tại ToolHub có mất phí không?
+          Chỉnh sửa PDF trên ToolHub có làm thay đổi font chữ gốc của tài liệu không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Không. ToolHub sử dụng công nghệ chèn lớp đối tượng mới của PyMuPDF độc lập với nội dung gốc, giữ nguyên độ nét của font chữ, hình ảnh và bố cục sẵn có.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Tôi có thể chèn nhãn bản quyền hay đóng dấu phê duyệt không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Có. Bạn chỉ cần chọn kiểu "Đóng dấu nhãn trạng thái", nhập chữ như APPROVED, DRAFT hay BẢO MẬT, hệ thống sẽ tự động tạo khung tem trang trọng ở góc tài liệu.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Công cụ có hoạt động tốt trên điện thoại di động không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Có, giao diện ToolHub được tối ưu hóa chuẩn Responsive 100%, thao tác mượt mà trên iPhone, iPad và điện thoại Android.
         </div>
       </div>
     </section>
 
-  
     <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
     <section class="seo-section seo-article">
       <h2>Giới thiệu công cụ Chỉnh sửa PDF trực tuyến tại ToolHub</h2>
 
-      <p>Chỉnh sửa tài liệu PDF trước đây luôn đòi hỏi cài đặt các phần mềm cồng kềnh, đắt tiền. Với ToolHub, bạn có thể chỉnh sửa văn bản, thêm hình ảnh và ghi chú trực tiếp ngay trên trình duyệt web.</p>
+      <p>Trong môi trường công sở hiện đại, việc cần ghi chú nhanh phản hồi, thêm tiêu đề trang hoặc đóng dấu phê duyệt vào hợp đồng, báo cáo tài chính là tác vụ diễn ra liên tục. Tuy nhiên, việc phải mở các phần mềm biên tập PDF đắt tiền hoặc tải về máy gây tốn thời gian và rủi ro virus.</p>
 
-      <p>Công cụ <strong>Chỉnh sửa PDF ToolHub</strong> mang lại trải nghiệm biên tập trực quan và mượt mà: điền biểu mẫu, thêm chữ ký, làm nổi bật nội dung (highlight), vẽ hình hoặc thêm ghi chú tiện lợi mà không làm vỡ bố cục gốc.</p>
+      <p>Công cụ <strong>Chỉnh sửa PDF trực tuyến</strong> tại <strong>ToolHub</strong> mang đến giải pháp biên tập nhanh chóng, trực quan ngay trên trình duyệt web, giúp bạn chèn văn bản, ghi chú, tiêu đề trang và nhãn xác nhận mà vẫn bảo toàn 100% bố cục gốc của văn bản.</p>
 
       <div class="seo-grid-cols">
         <div class="seo-col-card">
-          <h4><i class="fas fa-font"></i> Thêm văn bản & hình ảnh</h4>
-          <p>Dễ dàng chèn thêm đoạn văn, chèn ảnh minh họa hoặc biểu tượng vào tài liệu.</p>
+          <h4><i class="fas fa-font"></i> Thêm văn bản &amp; Ghi chú</h4>
+          <p>Dễ dàng bổ sung các đoạn giải trình, chú giải hoặc chỉ dẫn bổ sung vào vị trí mong muốn trên từng trang hoặc toàn bộ tài liệu.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-highlighter"></i> Công cụ chú thích trực quan</h4>
-          <p>Highlight văn bản, gạch chân, khoanh tròn các thông tin quan trọng cần lưu ý.</p>
+          <h4><i class="fas fa-stamp"></i> Đóng dấu nhãn trạng thái</h4>
+          <p>Tạo tem nhãn phê duyệt chuyên nghiệp như ĐÃ DUYỆT, BẢN THẢO, BẢO MẬT với viền nổi bật đóng ở góc tài liệu.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-file-signature"></i> Điền form & ký tài liệu</h4>
-          <p>Hoàn thiện biểu mẫu, ký xác nhận hợp đồng và giấy tờ trực tuyến nhanh chóng.</p>
+          <h4><i class="fas fa-heading"></i> Tiêu đề &amp; Chân trang</h4>
+          <p>Tự động chèn tiêu đề nhận diện tài liệu ở đầu trang và ghi chú lưu trữ ở chân trang đồng bộ trên toàn bộ hồ sơ.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-check-circle"></i> Giữ nguyên định dạng gốc</h4>
-          <p>Bảo toàn cấu trúc, font chữ và hình ảnh nguyên bản của tài liệu.</p>
+          <h4><i class="fas fa-shield-alt"></i> An toàn dữ liệu tuyệt đối</h4>
+          <p>Toàn bộ quá trình mã hóa qua HTTPS SSL 256-bit, cam kết tự động xóa sạch file sau 60 phút bảo mật thông tin nội bộ.</p>
         </div>
+      </div>
+
+      <h3>Các trường hợp ứng dụng thực tế phổ biến</h3>
+      <ul>
+        <li><strong>Phê duyệt và rà soát hợp đồng:</strong> Thêm nhãn xác nhận "ĐÃ DUYỆT" hoặc "BẢN THẢO" vào tài liệu hợp đồng trước khi gửi cho đối tác.</li>
+        <li><strong>Ghi chú bài giảng và tài liệu học tập:</strong> Bổ sung lưu ý của giảng viên hoặc đáp án tóm tắt vào tài liệu ôn tập của sinh viên.</li>
+        <li><strong>Đánh dấu bảo mật hồ sơ nội bộ:</strong> Gắn nhãn "BẢO MẬT - LƯU HÀNH NỘI BỘ" lên các báo cáo tài chính, chiến lược công ty.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo chỉnh sửa PDF hiệu quả:</strong> Để nhãn trạng thái nổi bật và dễ nhận biết nhất, bạn nên chọn màu chữ <em>"Đỏ nổi bật"</em> kết hợp kích thước chữ vừa phải. Nếu đóng dấu cho hợp đồng đã duyệt, hãy chọn phạm vi <em>"Chỉ trang đầu tiên"</em> hoặc <em>"Chỉ trang cuối cùng"</em> để giữ trang trọng.
       </div>
     </section>
 

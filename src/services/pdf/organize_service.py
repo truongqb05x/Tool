@@ -287,9 +287,138 @@ def extract_pages(input_path: str, output_path: str, page_numbers: list[int], ex
         }
 
 
-def edit_pdf(input_path: str, output_path: str, annotations: list = None) -> dict:
-    """Thêm văn bản, ghi chú, biểu tượng vào file PDF."""
-    return {'status': 'success', 'output_path': output_path}
+def edit_pdf(
+    input_path: str,
+    output_path: str,
+    text: str = "",
+    edit_type: str = "text",
+    position: str = "bottom",
+    font_size: float = 14,
+    color_hex: str = "#e74c3c",
+    page_scope: str = "all",
+    annotations: list = None
+) -> dict:
+    """
+    Thêm văn bản, ghi chú, tiêu đề trang hoặc nhãn trạng thái vào file PDF bằng PyMuPDF.
+    :param input_path: Đường dẫn file PDF nguồn
+    :param output_path: Đường dẫn lưu file kết quả
+    :param text: Nội dung văn bản chèn vào
+    :param edit_type: 'text' (chèn văn bản/ghi chú), 'header_footer' (tiêu đề/chân trang), 'stamp' (đóng dấu nhãn)
+    :param position: 'top', 'center', 'bottom'
+    :param font_size: Cỡ chữ (mặc định 14)
+    :param color_hex: Mã màu HEX (mặc định #e74c3c)
+    :param page_scope: 'all' (tất cả các trang), 'first' (trang đầu), 'last' (trang cuối)
+    :param annotations: Danh sách tùy chỉnh nâng cao (nếu có)
+    """
+    if not os.path.exists(input_path):
+        raise FileNotFoundError(f"Không tìm thấy file nguồn: {input_path}")
+
+    orig_size = os.path.getsize(input_path)
+    if orig_size == 0:
+        raise ValueError("File PDF rỗng (0 bytes).")
+
+    out_dir = os.path.dirname(output_path)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
+
+    doc = fitz.open(input_path)
+    if doc.is_encrypted:
+        doc.close()
+        raise ValueError("File PDF đang được cài mật khẩu bảo vệ. Vui lòng mở khóa trước khi chỉnh sửa.")
+
+    total_pages = len(doc)
+    if total_pages == 0:
+        doc.close()
+        raise ValueError("File PDF không có trang nào.")
+
+    # Parse color tuple
+    c_hex = color_hex.lstrip('#')
+    if len(c_hex) == 6:
+        r = int(c_hex[0:2], 16) / 255.0
+        g = int(c_hex[2:4], 16) / 255.0
+        b = int(c_hex[4:6], 16) / 255.0
+        color_tuple = (r, g, b)
+    else:
+        color_tuple = (0.9, 0.2, 0.2)
+
+    font_size = float(font_size) if font_size else 14.0
+
+    # Xác định các trang cần chỉnh sửa
+    target_pages = []
+    if page_scope == 'first':
+        target_pages = [0]
+    elif page_scope == 'last':
+        target_pages = [total_pages - 1]
+    else:
+        target_pages = list(range(total_pages))
+
+    insert_content = str(text).strip() if text else "Nội dung ghi chú PDF"
+
+    for idx in target_pages:
+        page = doc[idx]
+        w = page.rect.width
+        h = page.rect.height
+
+        if edit_type == 'stamp':
+            # Vẽ hộp viền nhãn phong cách Stamp (như APPROVED, DRAFT, BẢO MẬT)
+            stamp_w = min(220.0, w - 40)
+            stamp_h = 44.0
+            margin_right = 30.0
+            margin_top = 40.0
+            rect = fitz.Rect(w - stamp_w - margin_right, margin_top, w - margin_right, margin_top + stamp_h)
+            page.draw_rect(rect, color=color_tuple, width=2.0, fill=(1, 1, 1), fill_opacity=0.85)
+            page.insert_textbox(
+                rect,
+                insert_content.upper(),
+                fontsize=min(font_size, 16),
+                fontname="helv",
+                color=color_tuple,
+                align=fitz.TEXT_ALIGN_CENTER
+            )
+        elif edit_type == 'header_footer':
+            # Tiêu đề ở đầu và ghi chú ở chân trang
+            margin = 36.0
+            header_rect = fitz.Rect(margin, margin - 15, w - margin, margin + 15)
+            page.insert_textbox(
+                header_rect,
+                insert_content,
+                fontsize=font_size,
+                fontname="helv",
+                color=color_tuple,
+                align=fitz.TEXT_ALIGN_CENTER
+            )
+        else:
+            # Chèn văn bản / ghi chú theo vị trí top, center, bottom
+            margin = 36.0
+            if position == 'top':
+                rect = fitz.Rect(margin, margin, w - margin, margin + 50)
+            elif position == 'center':
+                rect = fitz.Rect(margin, (h - 60) / 2, w - margin, (h + 60) / 2)
+            else:
+                rect = fitz.Rect(margin, h - margin - 40, w - margin, h - margin)
+
+            page.insert_textbox(
+                rect,
+                insert_content,
+                fontsize=font_size,
+                fontname="helv",
+                color=color_tuple,
+                align=fitz.TEXT_ALIGN_CENTER if position == 'center' else fitz.TEXT_ALIGN_LEFT
+            )
+
+    doc.save(output_path, garbage=3, deflate=True)
+    doc.close()
+
+    result_size = os.path.getsize(output_path)
+    return {
+        'status': 'success',
+        'edited_pages': len(target_pages),
+        'total_pages': total_pages,
+        'edit_type': edit_type,
+        'result_size': result_size,
+        'result_size_formatted': format_size(result_size),
+        'output_path': output_path
+    }
 
 
 def add_page_numbers(

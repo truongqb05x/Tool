@@ -280,6 +280,13 @@
           </div>
         </div>
 
+        <!-- Nút nổi thêm / đổi file -->
+        <div class="floating-add-wrap">
+          <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Chọn file khác">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+
         <!-- Nút chọn file khác -->
         <button type="button" class="btn-add-more" onclick="resetFileSelection()">
           <i class="fas fa-sync-alt"></i> Chọn file khác
@@ -290,28 +297,87 @@
     <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-sliders-h"></i> Thiết lập chữ ký PDF
       </div>
 
       <div class="options-body">
+        <!-- 1. Kiểu chữ ký -->
         <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
+          <label class="form-label"><i class="fas fa-pen-nib"></i> Cách tạo chữ ký</label>
           <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
-              <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
+            <div class="ws-radio-box selected" onclick="selectSignatureType(this, 'draw')">
+              <input type="radio" name="sigType" value="draw" checked>
+              <div class="ws-radio-info">
+                <strong>Vẽ chữ ký tay</strong>
+                <span>Dùng chuột hoặc ngón tay vẽ nét ký trực tiếp.</span>
               </div>
-            </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
-              <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
+            </div>
+            <div class="ws-radio-box" onclick="selectSignatureType(this, 'text')">
+              <input type="radio" name="sigType" value="text">
+              <div class="ws-radio-info">
+                <strong>Gõ chữ ký điện tử</strong>
+                <span>Nhập họ tên tạo tem xác nhận chữ ký số chuẩn.</span>
               </div>
-            </label>
+            </div>
+            <div class="ws-radio-box" onclick="selectSignatureType(this, 'image')">
+              <input type="radio" name="sigType" value="image">
+              <div class="ws-radio-info">
+                <strong>Tải ảnh con dấu / chữ ký</strong>
+                <span>Tải tệp ảnh chữ ký PNG tách nền hoặc JPG từ máy.</span>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <!-- Khung vẽ chữ ký tay (Canvas) -->
+        <div class="form-group" id="canvasWrap">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label class="form-label" style="margin-bottom:0;"><i class="fas fa-signature"></i> Bảng vẽ chữ ký</label>
+            <button type="button" class="btn-clear-canvas" onclick="clearSignatureCanvas()" style="background:none; border:none; color:#e74c3c; font-size:0.85rem; cursor:pointer;">
+              <i class="fas fa-eraser"></i> Xóa nét vẽ
+            </button>
+          </div>
+          <canvas id="signatureCanvas" width="320" height="130" style="width:100%; height:130px; border:2px dashed #cbd5e1; border-radius:8px; background:#fafafa; cursor:crosshair; touch-action:none;"></canvas>
+          <small style="color:#64748b; font-size:0.75rem;">Ký tên của bạn vào khung bên trên.</small>
+        </div>
+
+        <!-- Khung tải ảnh chữ ký -->
+        <div class="form-group" id="imageSigWrap" style="display:none;">
+          <label class="form-label"><i class="fas fa-file-image"></i> Tải ảnh chữ ký (PNG/JPG)</label>
+          <input type="file" id="sigImageInput" accept="image/png,image/jpeg" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:8px; font-size:0.85rem;">
+          <small style="color:#64748b; font-size:0.75rem;">Nên dùng ảnh PNG nền trong suốt để đạt thẩm mỹ cao nhất.</small>
+        </div>
+
+        <!-- Họ tên người ký -->
+        <div class="form-group">
+          <label class="form-label" for="signNameInput"><i class="fas fa-user-check"></i> Họ và tên người ký</label>
+          <input type="text" id="signNameInput" class="form-control" placeholder="Nguyễn Văn A" value="Nguyễn Văn A" style="width:100%; padding:9px 12px; border:1px solid #d1d5db; border-radius:8px; font-size:0.95rem;">
+        </div>
+
+        <!-- Vị trí đặt chữ ký & Trang áp dụng -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;" class="form-group">
+          <div>
+            <label class="form-label"><i class="fas fa-map-marker-alt"></i> Vị trí</label>
+            <select id="sigPositionSelect" class="form-control" style="width:100%; padding:9px 12px; border:1px solid #d1d5db; border-radius:8px;">
+              <option value="bottom-right" selected>Góc dưới phải</option>
+              <option value="bottom-left">Góc dưới trái</option>
+              <option value="bottom-center">Giữa chân trang</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label"><i class="fas fa-file-alt"></i> Trang ký</label>
+            <select id="sigPageTargetSelect" class="form-control" style="width:100%; padding:9px 12px; border:1px solid #d1d5db; border-radius:8px;">
+              <option value="last" selected>Trang cuối (Hợp đồng)</option>
+              <option value="first">Trang đầu tiên</option>
+              <option value="all">Tất cả các trang</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Ngày ký -->
+        <div class="form-group">
+          <label class="form-label" for="signDateInput"><i class="fas fa-calendar-alt"></i> Ngày ký</label>
+          <input type="text" id="signDateInput" class="form-control" style="width:100%; padding:9px 12px; border:1px solid #d1d5db; border-radius:8px; font-size:0.95rem;">
         </div>
       </div>
 
@@ -328,26 +394,26 @@
     <!-- BƯỚC 1: KHUNG TẢI FILE (UPLOAD PANEL) -->
     <div class="upload-panel" id="uploadPanel">
       <div class="upload-panel-header">
-        <i class="fas fa-signature"></i> Tải tệp lên để thực hiện Ký PDF
+        <i class="fas fa-signature"></i> Tải tệp PDF lên để ký tên
       </div>
       <div class="drop-zone" id="dropZone">
-        <div class="dz-icon"><i class="fas fa-signature"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>Kéo &amp; thả file PDF vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Hỗ trợ file PDF tài liệu tối đa 50 MB · Bảo mật tuyệt đối</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
       <h3>Chữ ký của bạn đã được gắn vào tài liệu PDF thành công!</h3>
-      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
-      <button type="button" class="btn-download-result" onclick="downloadResultFile()">
+      <p id="downloadMeta">Tài liệu đã được ký xác nhận hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <button type="button" class="btn-download-result" id="btnDownloadResult" onclick="downloadResultFile()">
         <i class="fas fa-download"></i> Tải xuống PDF đã ký
       </button>
       <div>
@@ -359,22 +425,22 @@
 
     <!-- ===== NỘI DUNG CHUẨN SEO ===== -->
     <section class="seo-section">
-      <h2>Hướng dẫn sử dụng Ký PDF trực tuyến trong 3 bước</h2>
+      <h2>Hướng dẫn Ký tài liệu PDF trực tuyến trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file PDF hợp đồng lên</h4>
+          <p>Kéo và thả văn bản cần ký vào khung hoặc nhấn nút Chọn tệp PDF từ máy tính, điện thoại.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Vẽ hoặc nhập chữ ký</h4>
+          <p>Vẽ tay trực tiếp trên bảng ký, tải ảnh con dấu/chữ ký hoặc gõ họ tên xác nhận điện tử.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
-          <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <h4>Hoàn tất &amp; Tải file</h4>
+          <p>Bấm Hoàn tất chữ ký và tải ngay tài liệu PDF đã ký chuẩn xác về thiết bị chỉ sau 2 giây.</p>
         </div>
       </div>
     </section>
@@ -408,50 +474,69 @@
       <h2>Câu hỏi thường gặp về Ký PDF (FAQ)</h2>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Sử dụng công cụ Ký PDF tại ToolHub có mất phí không?
+          Chữ ký điện tử tạo trên ToolHub có giá trị pháp lý không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Có. Chữ ký điện tử chèn bằng ToolHub tuân thủ tiêu chuẩn tài liệu số quốc tế, thể hiện ý chí cam kết của các bên đối với hợp đồng dịch vụ, đơn xin phép và thỏa thuận dân sự.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Tôi có thể ký trên điện thoại iPhone hoặc màn hình cảm ứng không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Hoàn toàn được! Bảng vẽ chữ ký của ToolHub hỗ trợ cảm ứng đa điểm độ mượt cao trên smartphone và máy tính bảng, cho nét ký chân thực như ký trên giấy thật.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tài liệu hợp đồng có bị lưu giữ hay chia sẻ không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Tuyệt đối không. ToolHub tự động xóa toàn bộ file và dữ liệu chữ ký khỏi máy chủ sau 60 phút, đảm bảo bảo mật thông tin nội bộ của doanh nghiệp và cá nhân.
         </div>
       </div>
     </section>
 
-  
     <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
     <section class="seo-section seo-article">
       <h2>Giới thiệu công cụ Ký PDF trực tuyến tại ToolHub</h2>
 
-      <p>Ký kết hợp đồng, hóa đơn hoặc văn bản ủy quyền từ xa ngày nay trở nên phổ biến và cấp thiết, loại bỏ hoàn toàn quy trình in ấn, ký tay rồi scan lại tốn nhiều thời gian và chi phí.</p>
+      <p>Ký kết hợp đồng kinh tế, biên bản bàn giao, hóa đơn hoặc văn bản ủy quyền từ xa ngày nay trở thành tiêu chuẩn bắt buộc trong thời đại chuyển đổi số. Quy trình in ấn, ký bút mực rồi scan lại tốn kém nhiều chi phí giấy tờ, mực in và làm chậm tiến độ công việc.</p>
 
-      <p>Công cụ <strong>Ký PDF trực tuyến ToolHub</strong> cung cấp giải pháp tạo chữ ký số linh hoạt: vẽ chữ ký trực tiếp bằng chuột/cảm ứng, tải ảnh chữ ký có sẵn hoặc gõ chữ ký bằng font viết tay nghệ thuật, sau đó chèn vào vị trí chính xác trên trang PDF.</p>
+      <p>Công cụ <strong>Ký PDF trực tuyến ToolHub</strong> cung cấp giải pháp ký tài liệu số toàn diện: cho phép vẽ chữ ký tay trực tiếp với nét mực sắc nét, tải ảnh con dấu hoặc chữ ký có sẵn, chèn họ tên và ngày tháng vào vị trí chính xác trên hợp đồng mà không làm thay đổi bố cục gốc.</p>
 
       <div class="seo-grid-cols">
         <div class="seo-col-card">
-          <h4><i class="fas fa-signature"></i> Đa dạng kiểu ký tên</h4>
-          <p>Hỗ trợ vẽ trực tiếp, chèn ảnh chữ ký nét mảnh hoặc gõ tên tạo chữ ký nghệ thuật.</p>
+          <h4><i class="fas fa-pen-fancy"></i> Vẽ chữ ký tay chân thực</h4>
+          <p>Bảng vẽ cảm ứng thông minh cho nét ký thanh mảnh, mượt mà trên cả chuột máy tính và màn hình điện thoại.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-arrows-alt"></i> Đặt chữ ký chính xác</h4>
-          <p>Tự do kéo thả, phóng to, thu nhỏ và định vị chữ ký tại bất kỳ trang nào.</p>
+          <h4><i class="fas fa-stamp"></i> Tải ảnh con dấu / Chữ ký</h4>
+          <p>Hỗ trợ chèn con dấu doanh nghiệp hoặc chữ ký PNG nền trong suốt với tỷ lệ kích thước chuẩn mực.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-award"></i> Hợp pháp & bảo mật</h4>
-          <p>Tạo tài liệu ký điện tử đạt chuẩn, bảo vệ tính toàn vẹn của hợp đồng.</p>
+          <h4><i class="fas fa-calendar-check"></i> Tự động gắn ngày ký</h4>
+          <p>Bổ sung thông tin xác thực họ tên người ký và thời điểm ký văn bản giúp hợp đồng rõ ràng, minh bạch.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-mobile-alt"></i> Xử lý tức thì</h4>
-          <p>Ký nhanh trên cả máy tính, máy tính bảng và điện thoại di động mọi lúc mọi nơi.</p>
+          <h4><i class="fas fa-lock"></i> Bảo mật hợp đồng tuyệt đối</h4>
+          <p>Mã hóa truyền tải SSL 256-bit, máy chủ tự động hủy tệp sau 60 phút bảo vệ tuyệt đối bí mật kinh doanh.</p>
         </div>
+      </div>
+
+      <h3>Các trường hợp ứng dụng thực tế phổ biến</h3>
+      <ul>
+        <li><strong>Ký kết hợp đồng lao động và tuyển dụng:</strong> Giúp nhân sự và ứng viên hoàn thiện hợp đồng làm việc từ xa nhanh chóng mà không cần gặp mặt trực tiếp.</li>
+        <li><strong>Hợp đồng kinh tế và cung cấp dịch vụ:</strong> Doanh nghiệp ký kết báo giá, đơn đặt hàng và hợp đồng nguyên tắc với đối tác xuyên tỉnh thành.</li>
+        <li><strong>Đơn xin phép và thủ tục hành chính:</strong> Ký xác nhận đơn xin nghỉ phép, đề xuất phê duyệt chi tiêu nội bộ trong cơ quan tổ chức.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo ký hợp đồng đẹp mắt nhất:</strong> Khi sử dụng tính năng tải ảnh chữ ký, bạn nên dùng ảnh chữ ký được chụp rõ nét trên nền trắng, sau đó tách nền thành định dạng PNG trong suốt để chữ ký hòa quyện hoàn hảo vào văn bản.
       </div>
     </section>
 

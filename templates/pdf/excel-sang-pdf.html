@@ -257,6 +257,13 @@
   <div class="tool-workspace full-bleed" id="toolWorkspace">
     <!-- Cột trái: Khu vực xem trước file đã chọn -->
     <div class="file-area">
+      <!-- Nút nổi thêm file góc phải trên của khung xem trước -->
+      <div class="floating-add-wrap">
+        <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Chọn file Excel khác">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+
       <div class="file-area-content">
         <div class="file-card-wrap" id="fileCardWrap">
           <div class="file-card" id="fileCard">
@@ -264,18 +271,12 @@
               <i class="fas fa-times"></i>
             </button>
             <div class="file-preview" id="filePreview">
-              <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
-                <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
-                <div class="line title"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
-                <div class="line"></div>
-                <div class="line block"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
+              <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <div style="font-size:3rem; color:#217346; margin-bottom:10px;"><i class="fas fa-file-excel"></i></div>
+                <div style="font-size:1.8rem; color:#e74c3c;"><i class="fas fa-file-pdf"></i></div>
               </div>
             </div>
-            <div class="file-name" id="selectedFileName">tai_lieu.pdf</div>
+            <div class="file-name" id="selectedFileName">bang_tinh.xlsx</div>
             <div class="file-meta" id="selectedFileSize" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 0 KB</div>
           </div>
         </div>
@@ -290,34 +291,53 @@
     <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-sliders-h"></i> Thiết lập chuyển Excel sang PDF
       </div>
 
       <div class="options-body">
-        <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
-          <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
+        <!-- Chế độ chuyển đổi -->
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" style="font-weight:600; margin-bottom:8px; display:block;">Căn chỉnh trang in</label>
+          <div class="ws-option-group" style="display:flex; flex-direction:column; gap:8px;">
+            <label class="ws-radio-box selected" id="optAutoFit" style="padding:10px; cursor:pointer;">
+              <input type="radio" name="printMode" value="autofit" checked>
               <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
+                <strong style="font-size:0.88rem;"><i class="fas fa-arrows-alt-h" style="color:#217346;"></i> Tự động vừa chiều rộng trang (Khuyên dùng)</strong>
+                <span style="font-size:0.75rem; color:#666;">Căn chỉnh các cột bảng tính không bị tràn hoặc cắt rời sang trang khác.</span>
               </div>
             </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
+            <label class="ws-radio-box" id="optActualSize" style="padding:10px; cursor:pointer;">
+              <input type="radio" name="printMode" value="actual">
               <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
+                <strong style="font-size:0.88rem;"><i class="fas fa-expand" style="color:#1e5b9c;"></i> Tỷ lệ nguyên bản 100%</strong>
+                <span style="font-size:0.75rem; color:#666;">Giữ nguyên kích thước font chữ và ô theo thiết lập gốc trong Excel.</span>
               </div>
             </label>
+          </div>
+        </div>
+
+        <!-- Box lưu ý -->
+        <div class="ws-info-box" style="margin-bottom:14px; font-size:0.82rem; line-height:1.5;">
+          <i class="fas fa-info-circle" style="color:#217346;"></i>
+          <div>Tất cả các sheet có dữ liệu trong file Excel sẽ được kết xuất thành các trang PDF sắc nét, có đường kẻ ô và căn lề chuyên nghiệp.</div>
+        </div>
+
+        <!-- Tóm tắt thông tin file -->
+        <div class="ws-file-summary" style="margin-bottom:12px;">
+          <div class="ws-summary-row">
+            <span><i class="fas fa-file-excel"></i> Tệp gốc:</span>
+            <strong id="summaryFileName" style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">bang_tinh.xlsx</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-file-pdf"></i> Xuất định dạng:</span>
+            <strong style="color:#e74c3c;">PDF chuẩn in ấn</strong>
           </div>
         </div>
       </div>
 
       <div class="action-area">
         <button type="button" class="btn-convert btn-execute" id="btnExecute" onclick="executeToolAction()">
-          Chuyển Excel sang PDF <i class="fas fa-arrow-right"></i>
+          <i class="fas fa-file-pdf" style="margin-right:6px;"></i> Chuyển sang PDF ngay
         </button>
       </div>
     </aside>
@@ -332,49 +352,50 @@
       </div>
       <div class="drop-zone" id="dropZone">
         <div class="dz-icon"><i class="fas fa-file-excel"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <h3>Kéo &amp; thả file Excel vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp Excel (.xlsx, .xls)
+        </button>
+        <input type="file" id="fileInput" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" style="display:none;">
+        <div class="dz-note">Hỗ trợ file Excel (.xlsx, .xls) tối đa 50 MB · Căn chuẩn trang in ấn A4 không mất cột</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Bảng tính Excel đã được chuyển đổi thành tài liệu PDF!</h3>
+      <h3 id="downloadSuccessTitle">Bảng tính Excel đã được chuyển đổi thành PDF thành công!</h3>
       <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultFile()">
         <i class="fas fa-download"></i> Tải xuống file PDF
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
-          <i class="fas fa-redo"></i> Xử lý tệp khác
+          <i class="fas fa-redo"></i> Chuyển đổi tệp khác
         </button>
       </div>
     </div>
 
     <!-- ===== NỘI DUNG CHUẨN SEO ===== -->
     <section class="seo-section">
-      <h2>Hướng dẫn sử dụng Chuyển Excel sang PDF trực tuyến trong 3 bước</h2>
+      <h2>Hướng dẫn chuyển Excel sang PDF trực tuyến trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file Excel lên</h4>
+          <p>Kéo và thả tệp bảng tính (.xlsx, .xls) vào khung tải lên hoặc chọn từ máy tính.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Tùy chỉnh trang in</h4>
+          <p>Chọn căn chỉnh tự động vừa chiều rộng khổ giấy để bảng tính không bị cắt đôi.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
-          <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <h4>Lưu file PDF</h4>
+          <p>Bấm "Chuyển sang PDF ngay" và tải về tài liệu PDF đã căn chỉnh hoàn mỹ.</p>
         </div>
       </div>
     </section>
@@ -386,19 +407,19 @@
         <div class="sec-item">
           <div>
             <strong>Mã hóa SSL 256-bit</strong>
-            <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức HTTPS.</span>
+            <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức HTTPS bảo mật.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
             <strong>Tự động xóa sau 1 giờ</strong>
-            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút.</span>
+            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút, không lưu trữ lâu dài.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
-            <strong>Bảo mật thông tin</strong>
-            <span>Không chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
+            <strong>Bảo mật thông tin tuyệt đối</strong>
+            <span>Không sao lưu bảng tính, không xem trộm hay chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
           </div>
         </div>
       </div>
@@ -408,50 +429,115 @@
       <h2>Câu hỏi thường gặp về Chuyển Excel sang PDF (FAQ)</h2>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Sử dụng công cụ Chuyển Excel sang PDF tại ToolHub có mất phí không?
+          Bảng tính có nhiều cột thì khi xuất PDF có bị cắt thành 2 trang không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Không. Hệ thống thông minh tự động nhận diện nếu bảng tính có nhiều cột (trên 5 cột) sẽ tự động chuyển sang khổ giấy A4 Ngang và co giãn tỷ lệ cột vừa vặn với chiều ngang trang in.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          File Excel có nhiều Sheet thì kết xuất sang PDF như thế nào?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Toàn bộ các Sheet có dữ liệu trong file Excel đều sẽ được tuần tự kết xuất vào cùng một file PDF duy nhất với tiêu đề phân định rõ ràng từng Sheet.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Các định dạng số tiền VND, USD và ngày tháng có bị thay đổi không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Hoàn toàn giữ nguyên. Giá trị hiển thị và định dạng số, ký hiệu tiền tệ, phần trăm đều được giữ đúng như khi bạn nhìn thấy trên Excel.
         </div>
       </div>
     </section>
 
-  
-    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
+    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO 4 KHỐI CHUẨN ===== -->
     <section class="seo-section seo-article">
-      <h2>Giới thiệu công cụ Chuyển Excel sang PDF trực tuyến tại ToolHub</h2>
+      <h2>Giới thiệu công cụ Chuyển Excel sang PDF trực tuyến miễn phí tại ToolHub</h2>
 
-      <p>Chia sẻ file bảng tính Excel (XLSX, XLS) trực tiếp dễ khiến người nhận bị lệch bảng, mất định dạng in ấn hoặc vô tình thay đổi công thức tính toán nhạy cảm.</p>
+      <!-- KHỐI 1: GIỚI THIỆU CHUNG (SEO-INTRO) -->
+      <div class="seo-intro">
+        <p>Bảng tính Excel (.xlsx, .xls) là công cụ tuyệt vời để tính toán, nhưng khi gửi file cho đối tác, sếp hoặc khách hàng, việc mở file trên các thiết bị khác nhau rất dễ làm xáo trộn độ rộng cột, mất đường kẻ lưới hoặc vô tình bị sửa đổi số liệu nhạy cảm. Công cụ <strong>Chuyển Excel sang PDF trực tuyến tại ToolHub</strong> giúp bạn khóa chặt dữ liệu báo cáo, căn chỉnh trang in ấn A4 chuẩn chỉnh và xuất ra tài liệu PDF hoàn mỹ.</p>
+        <p>Hỗ trợ đầy đủ định dạng Excel hiện đại và đời cũ, hệ thống tự động xử lý độ rộng cột thông minh giúp các bảng số liệu tài chính, kế toán hiển thị cân đối, ngay ngắn mà không cần bạn phải mất công căn chỉnh Print Area phức tạp.</p>
+      </div>
 
-      <p>Công cụ <strong>Chuyển Excel sang PDF ToolHub</strong> giúp bạn cố định trang tính, chuyển toàn bộ bảng dữ liệu, biểu đồ và số liệu kế toán thành tài liệu PDF sắc nét, căn chỉnh vừa vặn khổ giấy in ấn chuyên nghiệp.</p>
+      <!-- KHỐI 2: TÍNH NĂNG NỔI BẬT (SEO-FEATURES-GRID) -->
+      <h3 style="margin-top:28px; margin-bottom:16px; font-size:1.2rem; color:#1e293b;">
+        <i class="fas fa-star" style="color:#f39c12; margin-right:6px;"></i> Các ưu điểm vượt trội khi chuyển Excel sang PDF tại ToolHub
+      </h3>
+      <div class="seo-features-grid">
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-arrows-alt-h"></i></div>
+          <h4>Tự động căn chiều rộng trang</h4>
+          <p>Không lo bị tràn cột hay rách bảng, thuật toán tự động cân đối kích thước cột vừa khít trang giấy.</p>
+        </div>
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-lock"></i></div>
+          <h4>Khóa cố định số liệu</h4>
+          <p>Bảo vệ toàn bộ công thức và số liệu kế toán không bị thay đổi ngoài ý muốn khi chia sẻ ra bên ngoài.</p>
+        </div>
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-layer-group"></i></div>
+          <h4>Hỗ trợ nhiều Sheet liên tục</h4>
+          <p>Tự động chuyển đổi trọn vẹn toàn bộ các trang tính trong workbook vào một tài liệu PDF duy nhất.</p>
+        </div>
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+          <h4>Xử lý tức thì</h4>
+          <p>Tốc độ chuyển đổi siêu tốc ngay trên nền tảng đám mây, tải về file PDF chỉ sau vài giây.</p>
+        </div>
+      </div>
 
-      <div class="seo-grid-cols">
-        <div class="seo-col-card">
-          <h4><i class="fas fa-table"></i> Căn chuẩn trang in ấn</h4>
-          <p>Tự động căn chỉnh bảng biểu vừa vặn khổ giấy A4, không lo bị tràn hay cắt chữ.</p>
+      <!-- KHỐI 3: HƯỚNG DẪN CHI TIẾT (SEO-STEPS-DETAILED) -->
+      <h3 style="margin-top:28px; margin-bottom:16px; font-size:1.2rem; color:#1e293b;">
+        <i class="fas fa-list-ol" style="color:#1e5b9c; margin-right:6px;"></i> Hướng dẫn các bước chuyển đổi bảng tính Excel sang file PDF
+      </h3>
+      <div class="seo-steps-detailed">
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 1</div>
+          <div class="step-content">
+            <h4>Tải tệp Excel lên hệ thống</h4>
+            <p>Bấm nút <strong>"Chọn tệp Excel (.xlsx, .xls)"</strong> hoặc kéo thả trực tiếp tệp bảng tính vào khung tải tệp trên màn hình.</p>
+          </div>
         </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-lock"></i> Bảo vệ công thức & số liệu</h4>
-          <p>Khóa dữ liệu nguyên vẹn, ngăn chặn việc sửa đổi số liệu ngoài ý muốn.</p>
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 2</div>
+          <div class="step-content">
+            <h4>Kiểm tra thông số căn trang</h4>
+            <p>Chọn chế độ tự động vừa chiều rộng trang để hệ thống tự động co giãn tỷ lệ cột đẹp nhất.</p>
+          </div>
         </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-file-excel"></i> Hỗ trợ định dạng XLSX & XLS</h4>
-          <p>Tương thích hoàn hảo với mọi phiên bản Microsoft Excel từ cũ đến mới nhất.</p>
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 3</div>
+          <div class="step-content">
+            <h4>Tiến hành chuyển đổi</h4>
+            <p>Bấm nút <strong>"Chuyển sang PDF ngay"</strong>. Hệ thống sẽ bóc tách và vẽ bảng tính sang PDF chuẩn.</p>
+          </div>
         </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-bolt"></i> Tốc độ xử lý vượt trội</h4>
-          <p>Chuyển đổi bảng tính lớn hàng chục sheet chỉ trong vài giây ngắn ngủi.</p>
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 4</div>
+          <div class="step-content">
+            <h4>Tải tệp PDF về máy</h4>
+            <p>Bấm nút <strong>"Tải xuống file PDF"</strong> để lưu tệp hoàn tất về máy và gửi đi in ấn hoặc báo cáo.</p>
+          </div>
         </div>
+      </div>
+
+      <!-- KHỐI 4: MẸO & LƯU Ý HỮU ÍCH (SEO-TIPS-BOX) -->
+      <div class="seo-tips-box" style="margin-top:28px; background:#eff6ff; border-left:4px solid #3b82f6; padding:18px 20px; border-radius:0 8px 8px 0;">
+        <h4 style="margin:0 0 10px 0; color:#1e40af; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+          <i class="fas fa-lightbulb" style="color:#f59e0b;"></i> Một số mẹo giúp file PDF sau chuyển đổi đẹp nhất:
+        </h4>
+        <ul style="margin:0; padding-left:20px; color:#334155; line-height:1.6; font-size:0.92rem;">
+          <li><strong>Xóa các hàng cột rỗng:</strong> Bạn nên xóa các hàng/cột trống không dùng đến ở cuối bảng tính để trang in PDF gọn gàng nhất.</li>
+          <li><strong>Tự động xoay ngang:</strong> Khi bảng tính có từ 6 cột trở lên, hệ thống sẽ tự động dùng khổ A4 ngang để số liệu không bị ép chữ.</li>
+          <li><strong>Bảo mật tối đa:</strong> Toàn bộ dữ liệu của bạn được xóa hoàn toàn sau 60 phút, an toàn tuyệt đối cho số liệu kế toán công ty.</li>
+        </ul>
       </div>
     </section>
 

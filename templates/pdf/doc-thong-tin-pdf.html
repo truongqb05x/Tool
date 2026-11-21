@@ -280,6 +280,13 @@
           </div>
         </div>
 
+        <!-- Nút nổi thêm / đổi file -->
+        <div class="floating-add-wrap">
+          <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Chọn file khác">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+
         <!-- Nút chọn file khác -->
         <button type="button" class="btn-add-more" onclick="resetFileSelection()">
           <i class="fas fa-sync-alt"></i> Chọn file khác
@@ -290,27 +297,18 @@
     <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-sliders-h"></i> Tùy chọn đọc Metadata
       </div>
 
       <div class="options-body">
         <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
-          <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
-              <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
-              </div>
-            </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
-              <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
-              </div>
-            </label>
+          <label class="form-label"><i class="fas fa-list-alt"></i> Các trường thông tin trích xuất</label>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; font-size:0.85rem; color:#475569;">
+            <p style="margin:0 0 6px 0;"><i class="fas fa-check text-success"></i> Tiêu đề &amp; Tác giả khởi tạo</p>
+            <p style="margin:0 0 6px 0;"><i class="fas fa-check text-success"></i> Ngày tạo &amp; Ngày chỉnh sửa gần nhất</p>
+            <p style="margin:0 0 6px 0;"><i class="fas fa-check text-success"></i> Số trang &amp; Kích thước khổ giấy chuẩn</p>
+            <p style="margin:0 0 6px 0;"><i class="fas fa-check text-success"></i> Phần mềm biên soạn (Producer / Creator)</p>
+            <p style="margin:0;"><i class="fas fa-check text-success"></i> Trạng thái mã hóa &amp; Mật khẩu bảo vệ</p>
           </div>
         </div>
       </div>
@@ -328,53 +326,59 @@
     <!-- BƯỚC 1: KHUNG TẢI FILE (UPLOAD PANEL) -->
     <div class="upload-panel" id="uploadPanel">
       <div class="upload-panel-header">
-        <i class="fas fa-info-circle"></i> Tải tệp lên để thực hiện Đọc thông tin PDF
+        <i class="fas fa-info-circle"></i> Tải tệp lên để đọc thông tin siêu dữ liệu PDF
       </div>
       <div class="drop-zone" id="dropZone">
-        <div class="dz-icon"><i class="fas fa-info-circle"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>Kéo &amp; thả file PDF vào đây</h3>
+        <p>hoặc nhấn nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Hỗ trợ file PDF tối đa 50 MB · Đọc thông số kỹ thuật an toàn</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Đã trích xuất toàn bộ thông tin chi tiết của tài liệu!</h3>
-      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
-      <button type="button" class="btn-download-result" onclick="downloadResultFile()">
-        <i class="fas fa-download"></i> Tải báo cáo thông tin PDF
+      <h3>Đã trích xuất toàn bộ siêu dữ liệu PDF thành công!</h3>
+      <p id="downloadMeta">Thông tin chi tiết của tài liệu được hiển thị bên dưới.</p>
+
+      <!-- Bảng thông tin Metadata -->
+      <div id="metadataDisplayTable" style="margin:20px 0; text-align:left; background:#fff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        <!-- Nội dung bảng sẽ được điền bằng JS -->
+      </div>
+
+      <button type="button" class="btn-download-result" id="btnDownloadResult" onclick="downloadResultFile()">
+        <i class="fas fa-file-code"></i> Tải báo cáo Metadata (JSON)
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
-          <i class="fas fa-redo"></i> Xử lý tệp khác
+          <i class="fas fa-redo"></i> Đọc thông tin tệp khác
         </button>
       </div>
     </div>
 
     <!-- ===== NỘI DUNG CHUẨN SEO ===== -->
     <section class="seo-section">
-      <h2>Hướng dẫn sử dụng Đọc thông tin PDF trực tuyến trong 3 bước</h2>
+      <h2>Hướng dẫn Xem thông tin &amp; Metadata PDF trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file PDF lên</h4>
+          <p>Kéo và thả tài liệu PDF vào khung hoặc nhấn nút Chọn tệp PDF từ thiết bị của bạn.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Trích xuất tự động</h4>
+          <p>Hệ thống tự động giải mã cấu trúc file, đọc các trường dữ liệu tác giả, ngày tạo và kích thước.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
-          <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <h4>Xem &amp; Tải dữ liệu</h4>
+          <p>Xem bảng thống kê chi tiết trên màn hình hoặc tải file báo cáo JSON metadata về máy.</p>
         </div>
       </div>
     </section>
@@ -408,50 +412,69 @@
       <h2>Câu hỏi thường gặp về Đọc thông tin PDF (FAQ)</h2>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Sử dụng công cụ Đọc thông tin PDF tại ToolHub có mất phí không?
+          Metadata của file PDF bao gồm những thông tin nào?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Metadata bao gồm tiêu đề văn bản, tên tác giả, chủ đề, phần mềm tạo ra tệp (Microsoft Word, Canva, Adobe InDesign, v.v.), thời gian tạo, ngày sửa đổi cuối cùng, số trang, kích thước khổ giấy và trạng thái bảo mật.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Đọc thông tin PDF có làm thay đổi hay làm hỏng file gốc không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Tuyệt đối không. Đây là thao tác chỉ đọc (read-only) để phân tích cấu trúc, không làm ảnh hưởng hay thay đổi bất kỳ nội dung nào trong tài liệu.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          File PDF bị đặt mật khẩu có đọc được metadata không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Công cụ sẽ phát hiện và thông báo chính xác trạng thái tài liệu đang được mã hóa bảo vệ, số trang và dung lượng của tệp.
         </div>
       </div>
     </section>
 
-  
     <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
     <section class="seo-section seo-article">
-      <h2>Giới thiệu công cụ Đọc thông tin & Metadata PDF tại ToolHub</h2>
+      <h2>Giới thiệu công cụ Đọc thông tin &amp; Metadata PDF tại ToolHub</h2>
 
-      <p>Mỗi tệp PDF đều chứa siêu dữ liệu (Metadata) quan trọng như tác giả tạo lập, phần mềm biên soạn, ngày tạo, ngày sửa đổi lần cuối, số trang và phiên bản chuẩn PDF mà người đọc thông thường khó thấy được.</p>
+      <p>Mỗi tài liệu PDF khi được xuất bản đều được gắn kèm một tập hợp siêu dữ liệu (Metadata) ẩn. Đây là thông tin đóng vai trò then chốt trong việc xác định nguồn gốc tài liệu, bản quyền tác giả, phần mềm khởi tạo và lịch sử chỉnh sửa văn bản.</p>
 
-      <p>Công cụ <strong>Đọc thông tin PDF ToolHub</strong> giúp bạn trích xuất toàn bộ siêu dữ liệu chi tiết của file PDF một cách nhanh chóng, minh bạch và chính xác, phục vụ công tác kiểm tra bản quyền, tính toàn vẹn và nguồn gốc tài liệu.</p>
+      <p>Công cụ <strong>Đọc thông tin PDF ToolHub</strong> cung cấp giải pháp tra cứu siêu dữ liệu trực tuyến toàn diện, giúp bạn kiểm tra toàn bộ thông số kỹ thuật của tài liệu chỉ trong 1 giây mà không cần cài đặt các phần mềm chuyên sâu.</p>
 
       <div class="seo-grid-cols">
         <div class="seo-col-card">
-          <h4><i class="fas fa-info-circle"></i> Trích xuất Metadata toàn diện</h4>
-          <p>Xem thông tin tác giả, tiêu đề, chủ đề, từ khóa và nhà sản xuất PDF.</p>
+          <h4><i class="fas fa-user-edit"></i> Nguồn gốc &amp; Tác giả</h4>
+          <p>Hiển thị rõ ràng tên tác giả, tiêu đề gốc và phần mềm đã tạo ra tệp PDF.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-cogs"></i> Kiểm tra thông số kỹ thuật</h4>
-          <p>Hiển thị chuẩn PDF, số trang, kích thước trang in và thuật toán mã hóa.</p>
+          <h4><i class="fas fa-calendar-alt"></i> Dấu mốc thời gian</h4>
+          <p>Xác định chính xác thời điểm tài liệu được tạo và lần chỉnh sửa gần nhất.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-shield-alt"></i> Hỗ trợ rà soát bản quyền</h4>
-          <p>Xác minh tính hợp lệ và thời gian khởi tạo của tài liệu điện tử.</p>
+          <h4><i class="fas fa-ruler-combined"></i> Khổ giấy &amp; Số trang</h4>
+          <p>Nhận diện chuẩn xác kích thước trang (A4, Letter, A3) và tổng số trang tài liệu.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-check-circle"></i> Trực quan & dễ tra cứu</h4>
-          <p>Trình bày dữ liệu khoa học, rõ ràng và có thể sao chép nhanh chóng.</p>
+          <h4><i class="fas fa-shield-alt"></i> Kiểm tra mã hóa</h4>
+          <p>Kiểm tra tình trạng tài liệu có bị khóa mật khẩu bảo vệ hay không.</p>
         </div>
+      </div>
+
+      <h3>Các trường hợp ứng dụng thực tế phổ biến</h3>
+      <ul>
+        <li><strong>Xác thực bản quyền tài liệu:</strong> Giúp nhà báo, luật sư và nhà nghiên cứu kiểm tra nguồn gốc và tác giả thực sự của tài liệu điện tử.</li>
+        <li><strong>Kiểm tra in ấn chuyên nghiệp:</strong> Thợ in kiểm tra chính xác khổ giấy chuẩn (A4 hay Letter) và tỷ lệ kích thước trước khi đưa vào máy in.</li>
+        <li><strong>Giám định kỹ thuật số:</strong> Rà soát lịch sử thời gian chỉnh sửa văn bản phục vụ quản lý hồ sơ nội bộ doanh nghiệp.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo kiểm tra tài liệu:</strong> Nếu bạn chuẩn bị gửi tài liệu ra ngoài mà muốn bảo mật thông tin nội bộ, hãy dùng công cụ này để kiểm tra xem tên tác giả hoặc phần mềm của công ty có vô tình bị lưu trong metadata hay không.
       </div>
     </section>
 

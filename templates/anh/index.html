@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tất Cả Công Cụ Hình Ảnh Trực Tuyến — 13 Tiện Ích Ảnh Miễn Phí | ToolHub</title>
+  <meta name="description" content="Trọn bộ 13 công cụ xử lý và chỉnh sửa hình ảnh trực tuyến miễn phí: Nén ảnh, Thay đổi kích thước, Cắt ảnh, Xóa phông, Nâng cấp AI, Chuyển đổi JPG, Làm mờ mặt, Đóng dấu bản quyền... An toàn, nhanh chóng và không giảm chất lượng.">
+  <meta name="keywords" content="chỉnh sửa ảnh trực tuyến, nén ảnh, cắt ảnh, xóa phông, thay đổi kích thước ảnh, chuyển đổi jpg, làm mờ mặt, nâng cấp ảnh ai">
+
+  <!-- Font Awesome & CSS Layout -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../static/css/layout/layout.css">
+  <link rel="stylesheet" href="../../static/css/layout/modal.css">
+  <link rel="stylesheet" href="../../static/css/pages/image-list.css">
+  <link rel="icon" type="image/png" href="../../static/img/logo.png">
+</head>
+<body>
+
+  <!-- ===== HEADER CHUẨN ===== -->
+  <header class="header">
+    <div class="container">
+      <a href="/" class="logo" style="text-decoration:none;">
+        <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+        <div class="logo-text">ToolHub</div>
+      </a>
+
+      <div class="header-search-wrap">
+        <div class="header-search">
+          <input type="text" id="searchInput" placeholder="Tìm công cụ: nén ảnh, xóa phông, cắt ảnh..." autocomplete="off">
+          <button type="button" id="searchSubmitBtn" aria-label="Tìm kiếm"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+
+      <div class="header-actions" id="headerActions">
+        <div id="guestActions" style="display:flex; gap:8px;">
+          <a href="/?auth=login" class="btn btn-login">Đăng nhập</a>
+          <a href="/?auth=register" class="btn btn-register">Đăng ký</a>
+        </div>
+
+        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu công cụ">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <div id="userActions" class="user-menu" style="display:none;">
+          <div class="user-menu-trigger" id="userMenuTrigger">
+            <div class="user-avatar" id="headerAvatar">U</div>
+            <span class="user-name" id="headerUserName">Người dùng</span>
+            <i class="fas fa-chevron-down caret"></i>
+          </div>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-header">
+              <strong id="dropdownName">Người dùng</strong>
+              <small id="dropdownEmail">user@example.com</small>
+            </div>
+            <a href="/" class="user-dropdown-item">
+              <i class="fas fa-history"></i> Lịch sử xử lý
+            </a>
+            <a href="/" class="user-dropdown-item">
+              <i class="fas fa-cog"></i> Cài đặt tài khoản
+            </a>
+            <div class="user-dropdown-divider"></div>
+            <a href="#" class="user-dropdown-item danger" onclick="logout(); return false;">
+              <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Lớp phủ màn hình khi mở Menu Drawer trên Mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Drawer Menu dành riêng cho Mobile trên các trang con -->
+  <aside class="sidebar drawer-only" id="sidebar">
+    <div class="sidebar-drawer-header">
+      <div class="sidebar-drawer-brand">
+        <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
+        <span>Danh mục công cụ</span>
+      </div>
+      <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng menu">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Auth Box bên trong Mobile Drawer -->
+    <div class="sidebar-auth-box">
+      <div id="drawerGuestActions" class="drawer-guest-actions">
+        <a href="/?auth=login" class="btn btn-login">
+          <i class="fas fa-sign-in-alt"></i> Đăng nhập
+        </a>
+        <a href="/?auth=register" class="btn btn-register">
+          <i class="fas fa-user-plus"></i> Đăng ký
+        </a>
+      </div>
+      <div id="drawerUserActions" class="drawer-user-actions" style="display:none;">
+        <div class="drawer-user-info">
+          <div class="user-avatar" id="drawerAvatar">U</div>
+          <div class="drawer-user-details">
+            <strong id="drawerUserName">Người dùng</strong>
+            <small id="drawerUserEmail">user@example.com</small>
+          </div>
+        </div>
+        <a href="#" class="drawer-logout-btn" onclick="logout(); closeMobileSidebar(); return false;">
+          <i class="fas fa-sign-out-alt"></i> Đăng xuất
+        </a>
+      </div>
+    </div>
+
+    <div class="side-box">
+      <div class="side-box-header"><i class="fas fa-list" style="margin-right:6px;"></i> Danh mục công cụ</div>
+      <div class="side-box-body">
+        <ul class="side-menu">
+          <li>
+            <a href="#" class="menu-toggle">
+              <i class="fas fa-file-pdf"></i>
+              <span>Công cụ PDF</span>
+              <i class="fas fa-chevron-right arrow"></i>
+            </a>
+            <ul class="submenu">
+              <li><a href="/pdf" style="font-weight:700; color:#1e5b9c;"><i class="fas fa-th-list"></i> Xem tất cả công cụ PDF</a></li>
+              <li><a href="/pdf/nen-pdf"><i class="fas fa-compress-alt"></i> Nén PDF</a></li>
+              <li><a href="/pdf/gop-pdf"><i class="fas fa-object-group"></i> Gộp PDF</a></li>
+              <li><a href="/pdf/tach-pdf"><i class="fas fa-cut"></i> Tách PDF</a></li>
+              <li><a href="/pdf/pdf-sang-word"><i class="fas fa-file-word"></i> PDF sang Word</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#" class="menu-toggle active">
+              <i class="fas fa-image"></i>
+              <span>Chỉnh sửa ảnh</span>
+              <i class="fas fa-chevron-right arrow"></i>
+            </a>
+            <ul class="submenu" style="display:block;">
+              <li><a href="/anh" style="font-weight:700; color:#1e5b9c;"><i class="fas fa-th-list"></i> Xem tất cả công cụ ảnh</a></li>
+              <li><a href="/anh/nen-anh"><i class="fas fa-compress-alt"></i> Nén ảnh</a></li>
+              <li><a href="/anh/thay-doi-kich-thuoc"><i class="fas fa-expand-arrows-alt"></i> Thay đổi kích thước</a></li>
+              <li><a href="/anh/cat-anh"><i class="fas fa-crop-alt"></i> Cắt ảnh</a></li>
+              <li><a href="/anh/chuyen-sang-jpg"><i class="fas fa-file-image"></i> Chuyển sang JPG</a></li>
+              <li><a href="/anh/chuyen-tu-jpg"><i class="fas fa-exchange-alt"></i> Chuyển từ JPG</a></li>
+              <li><a href="/anh/chinh-sua-anh"><i class="fas fa-sliders-h"></i> Trình chỉnh sửa ảnh</a></li>
+              <li><a href="/anh/nang-cap-anh"><i class="fas fa-wand-magic-sparkles"></i> Nâng cấp chất lượng ảnh</a></li>
+              <li><a href="/anh/xoa-phong"><i class="fas fa-magic"></i> Xóa phông</a></li>
+              <li><a href="/anh/dong-dau-anh"><i class="fas fa-stamp"></i> Đóng dấu bản quyền</a></li>
+              <li><a href="/anh/tao-anh-che"><i class="fas fa-laugh-squint"></i> Tạo ảnh chế</a></li>
+              <li><a href="/anh/xoay-anh"><i class="fas fa-redo"></i> Xoay ảnh</a></li>
+              <li><a href="/anh/html-sang-anh"><i class="fas fa-code"></i> Chuyển HTML sang ảnh</a></li>
+              <li><a href="/anh/lam-mo-mat"><i class="fas fa-user-secret"></i> Làm mờ khuôn mặt</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#" class="menu-toggle">
+              <i class="fas fa-mobile-alt"></i>
+              <span>Ứng dụng &amp; Tiện ích</span>
+              <i class="fas fa-chevron-right arrow"></i>
+            </a>
+            <ul class="submenu">
+              <li><a href="/tien-ich/tao-ma-qr"><i class="fas fa-qrcode"></i> Tạo mã QR</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== BREADCRUMB (SEO) ===== -->
+  <nav class="breadcrumb-nav sr-only" aria-label="Breadcrumb">
+    <a href="/"><i class="fas fa-home"></i> Trang chủ</a>
+    <span>/</span>
+    <strong>Chỉnh sửa ảnh</strong>
+  </nav>
+
+  <!-- ===== NỘI DUNG DANH MỤC CÔNG CỤ HÌNH ẢNH ===== -->
+  <div class="image-catalog-container">
+
+    <!-- HERO SECTION -->
+    <div class="image-catalog-hero">
+      <h1>Tất cả công cụ chỉnh sửa hình ảnh trực tuyến</h1>
+      <p>Trọn bộ 13 công cụ chỉnh sửa, tối ưu hóa và chuyển đổi hình ảnh chuyên nghiệp, hoạt động mượt mà trên mọi thiết bị. Xử lý nhanh chóng, an toàn và hoàn toàn miễn phí.</p>
+      
+      <!-- BỘ LỌC TÌM KIẾM NHANH TRÊN TRANG -->
+      <div class="image-filter-bar">
+        <div class="image-filter-input-wrap">
+          <i class="fas fa-search"></i>
+          <input type="text" id="imageCatalogFilter" class="image-filter-input" placeholder="Lọc nhanh: nén, xóa phông, cắt, resize, nâng cấp AI, xoay..." autocomplete="off">
+        </div>
+        <div class="image-count-badge" id="imageCountBadge">13 công cụ</div>
+      </div>
+    </div>
+
+    <!-- THÔNG BÁO KHI KHÔNG TÌM THẤY KẾT QUẢ -->
+    <div class="image-empty-state" id="imageEmptyState">
+      <i class="fas fa-search-minus"></i>
+      <h3>Không tìm thấy công cụ hình ảnh phù hợp</h3>
+      <p>Vui lòng thử từ khóa khác như "nén", "cắt", "xóa phông", "jpg", "kích thước"...</p>
+    </div>
+
+    <!-- NHÓM 1: TỐI ƯU & CHỈNH SỬA KÍCH THƯỚC -->
+    <div class="image-group-section" data-group="size">
+      <div class="image-group-header">
+        <span><i class="fas fa-ruler-combined"></i> Tối ưu hóa &amp; Chỉnh sửa kích thước</span>
+        <span class="image-group-count">4 công cụ</span>
+      </div>
+      <div class="image-tools-grid">
+        <a href="/anh/nen-anh" class="image-tool-card" data-title="Nén ảnh" data-keywords="nen anh giam dung luong compress giam size jpg png webp">
+          <div class="image-card-top">
+            <div class="image-card-icon"><i class="fas fa-compress-alt"></i></div>
+            <div>
+              <div class="image-card-title">Nén ảnh</div>
+            </div>
+          </div>
+          <div class="image-card-desc">Giảm dung lượng ảnh JPG, PNG, WEBP tối đa mà vẫn giữ nguyên độ nét và chất lượng.</div>
+          <div class="image-card-footer">
+            <span class="image-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="/anh/thay-doi-kich-thuoc" class="image-tool-card" data-title="Thay đổi kích thước ảnh" data-keywords="thay doi kich thuoc resize anh kich co pixel scale phong to thu nho">
+          <div class="image-card-top">
+            <div class="image-card-icon"><i class="fas fa-expand-arrows-alt"></i></div>
+            <div>
+              <div class="image-card-title">Thay đổi kích thước ảnh</div>
+            </div>
+          </div>
+          <div class="image-card-desc">Thu phóng, điều chỉnh chiều rộng và chiều cao ảnh chính xác theo pixel hoặc tỉ lệ %.</div>
+          <div class="image-card-footer">
+            <span class="image-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="/anh/cat-anh" class="image-tool-card" data-title="Cắt ảnh" data-keywords="cat anh crop anh xe anh ti le cat hinh avatar">
+          <div class="image-card-top">
+            <div class="image-card-icon"><i class="fas fa-crop-alt"></i></div>
+            <div>
+              <div class="image-card-title">Cắt ảnh</div>
+            </div>
+          </div>
+          <div class="image-card-desc">Cắt xén hình ảnh trực tuyến theo khung tỉ lệ 1:1, 16:9, 4:3 hoặc tự do theo vùng chọn.</div>
+          <div class="image-card-footer">
+            <span class="image-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="/anh/xoay-anh" class="image-tool-card" data-title="Xoay ảnh" data-keywords="xoay anh rotate lat anh flip 90 do doi chieu">
+          <div class="image-card-top">
+            <div class="image-card-icon"><i class="fas fa-redo"></i></div>
+            <div>
+              <div class="image-card-title">Xoay ảnh</div>
+            </div>
+          </div>
+          <div class="image-card-desc">Xoay chiều bức ảnh 90 độ, 180 độ hoặc lật ngang, lật dọc hàng loạt file ảnh nhanh chóng.</div>
+          <div class="image-card-footer">
+            <span class="image-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- NHÓM 2: CHUYỂN ĐỔI ĐỊNH DẠNG HÌNH ẢNH -->
+    <div class="image-group-section" data-group="convert">
+      <div class="image-group-header">
+        <span><i class="fas fa-exchange-alt"></i> Chuyển đổi định dạng hình ảnh</span>
+        <span class="image-group-count">3 công cụ</span>
+      </div>
+      <div class="image-tools-grid">
+        <a href="/anh/chuyen-sang-jpg" class="image-tool-card" data-title="Chuyển đổi sang JPG" data-keywords="chuyen sang jpg png sang jpg webp sang jpg convert to jpg gif sang jpg">
+          <div class="image-card-top">
+            <div class="image-card-icon"><i class="fas fa-file-image"></i></div>
+            <div>
+              <div class="image-card-title">Chuyển đổi sang JPG</div>
+            </div>
+          </div>
+          <div class="image-card-desc">Chuyển đổi các định dạng PNG, GIF, TIF, PSD, SVG, WEBP sang file JPG nhanh chóng.</div>
+          <div class="image-card-footer">
+            <span class="image-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="/anh/chuyen-tu-jpg" class="image-tool-card" data-title="Chuyển đổi từ JPG" data-keywords="chuyen tu jpg jpg sang png jpg sang webp convert from jpg jpg sang gif">
+          <div class="image-card-top">
+            <div class="image-card-icon"><i class="fas fa-exchange-alt"></i></div>
+            <div>
+              <div class="image-card-title">Chuyển đổi từ JPG</div>
+            </div>
+          </div>
+          <div class="image-card-desc">Chuyển đổi ảnh JPG sang PNG, GIF, WEBP hoặc các định dạng đồ họa phổ biến khác.</div>
+          <div class="image-card-footer">
+            <span class="image-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="/anh/html-sang-anh" class="image-tool-card" data-title="Chuyển HTML sang ảnh" data-keywords="html sang anh chup trang web web to image screenshot url ma nguon html">
+          <div class="image-card-top">
+            <div class="image-card-icon"><i class="fas fa-code"></i></div>
+            <div>
+              <div class="image-card-title">Chuyển HTML sang ảnh</div>
+            </div>
+          </div>
+          <div class="image-card-desc">Chụp toàn bộ trang web từ liên kết URL hoặc render mã nguồn HTML/CSS thành hình ảnh.</div>
+          <div class="image-card-footer">
+            <span class="image-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- NHÓM 3: CHỈNH SỬA SÁNG TẠO & NÂNG CẤP AI -->
+    <div class="image-group-section" data-group="edit">
+      <div class="image-group-header">
+        <span><i class="fas fa-magic"></i> Chỉnh sửa sáng tạo &amp; Nâng cấp AI</span>
+        <span class="image-group-count">4 công cụ</span>
+      </div>
+      <div class="image-tools-grid">
+        <a href="/anh/chinh-sua-anh" class="image-tool-card" data-title="Trình chỉnh sửa ảnh" data-keywords="chinh sua anh editor photo edit bo loc mau text chu sticker ve anh">
+          <div class="image-card-top">
+            <div class="image-card-icon"><i class="fas fa-sliders-h"></i></div>
+            <div>
+              <div class="image-card-title">Trình chỉnh sửa ảnh</div>
+            </div>
+          </div>
+          <div class="image-card-desc">Thêm văn bản, sticker, bộ lọc màu nghệ thuật, hiệu ứng ánh sáng và vẽ lên ảnh online.</div>
+          <div class="image-card-footer">
+            <span class="image-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="/anh/nang-cap-anh" class="image-tool-card" data-title="Nâng cấp chất lượng ảnh" data-keywords="nang cap chat luong anh tang do phan giai upscale lam net ai enhance khu nhieu">
+          <div class="image-card-top">
+            <div class="image-card-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
+            <div>
+              <div class="image-card-title">Nâng cấp chất lượng ảnh</div>
+            </div>
+          </div>
+          <div class="image-card-desc">Tăng độ phân giải, khử mờ, khử nhiễu và làm sắc nét hình ảnh tự động bằng công nghệ AI.</div>
+          <div class="image-card-footer">
+            <span class="image-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="/anh/xoa-phong" class="image-tool-card" data-title="Xóa phông" data-keywords="xoa phong tach nen remove background transparent png trong suot tach chu the">
+          <div class="image-card-top">
+            <div class="image-card-icon"><i class="fas fa-magic"></i></div>
+            <div>
+              <div class="image-card-title">Xóa phông</div>
+            </div>
+          </div>
+          <div class="image-card-desc">Tự động tách nền khỏi chủ thể chỉ trong 1 chạm, xuất file PNG trong suốt chất lượng cao.</div>
+          <div class="image-card-footer">
+            <span class="image-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="/anh/tao-anh-che" class="image-tool-card" data-title="Tạo ảnh chế" data-keywords="tao anh che meme generator che anh vui hai huoc tao meme">
+          <div class="image-card-top">
+            <div class="image-card-icon"><i class="fas fa-laugh-squint"></i></div>
+            <div>
+              <div class="image-card-title">Tạo ảnh chế</div>
+            </div>
+          </div>
+          <div class="image-card-desc">Tạo ảnh meme hài hước vui nhộn nhanh chóng từ hàng trăm mẫu meme thịnh hành nhất.</div>
+          <div class="image-card-footer">
+            <span class="image-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- NHÓM 4: BẢO MẬT & BẢN QUYỀN HÌNH ẢNH -->
+    <div class="image-group-section" data-group="security">
+      <div class="image-group-header">
+        <span><i class="fas fa-shield-alt"></i> Bảo mật &amp; Bản quyền hình ảnh</span>
+        <span class="image-group-count">2 công cụ</span>
+      </div>
+      <div class="image-tools-grid">
+        <a href="/anh/dong-dau-anh" class="image-tool-card" data-title="Đóng dấu bản quyền ảnh" data-keywords="dong dau ban quyen anh watermark chen logo chu ban quyen copyright">
+          <div class="image-card-top">
+            <div class="image-card-icon"><i class="fas fa-stamp"></i></div>
+            <div>
+              <div class="image-card-title">Đóng dấu bản quyền ảnh</div>
+            </div>
+          </div>
+          <div class="image-card-desc">Chèn Watermark logo hoặc chữ bản quyền lên nhiều bức ảnh để bảo vệ quyền sở hữu trí tuệ.</div>
+          <div class="image-card-footer">
+            <span class="image-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+
+        <a href="/anh/lam-mo-mat" class="image-tool-card" data-title="Làm mờ khuôn mặt" data-keywords="lam mo khuon mat blur face che mat an danh rieng tu pixelate bao mat">
+          <div class="image-card-top">
+            <div class="image-card-icon"><i class="fas fa-user-secret"></i></div>
+            <div>
+              <div class="image-card-title">Làm mờ khuôn mặt</div>
+            </div>
+          </div>
+          <div class="image-card-desc">Tự động phát hiện khuôn mặt và che mờ hoặc pixelate để bảo vệ sự riêng tư cá nhân.</div>
+          <div class="image-card-footer">
+            <span class="image-card-btn">Sử dụng <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== FOOTER CHUẨN ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-cols">
+        <div class="footer-col footer-about">
+          <div class="footer-logo">
+            <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img" style="width:26px; height:26px;">
+            <div class="footer-logo-text">ToolHub</div>
+          </div>
+          <p>ToolHub là nền tảng tổng hợp công cụ tiện ích trực tuyến miễn phí, giúp bạn xử lý PDF, hình ảnh và công cụ web ngay trên trình duyệt — an toàn và bảo mật 100%.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Công cụ PDF</h4>
+          <ul>
+            <li><a href="/pdf/nen-pdf"><i class="fas fa-angle-right"></i> Nén PDF</a></li>
+            <li><a href="/pdf/gop-pdf"><i class="fas fa-angle-right"></i> Gộp PDF</a></li>
+            <li><a href="/pdf/tach-pdf"><i class="fas fa-angle-right"></i> Tách PDF</a></li>
+            <li><a href="/pdf/pdf-sang-word"><i class="fas fa-angle-right"></i> PDF sang Word</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Chỉnh sửa ảnh &amp; Tiện ích</h4>
+          <ul>
+            <li><a href="/anh/nen-anh"><i class="fas fa-angle-right"></i> Nén ảnh</a></li>
+            <li><a href="/anh/cat-anh"><i class="fas fa-angle-right"></i> Cắt &amp; xoay ảnh</a></li>
+            <li><a href="/anh/xoa-phong"><i class="fas fa-angle-right"></i> Xóa phông</a></li>
+            <li><a href="/anh/nang-cap-anh"><i class="fas fa-angle-right"></i> Nâng cấp chất lượng ảnh</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Hỗ trợ &amp; Điều khoản</h4>
+          <ul>
+            <li><a href="/trogiup"><i class="fas fa-angle-right"></i> Trung tâm trợ giúp</a></li>
+            <li><a href="/dieukhoan"><i class="fas fa-angle-right"></i> Điều khoản sử dụng</a></li>
+            <li><a href="/dieukhoan"><i class="fas fa-angle-right"></i> Chính sách bảo mật</a></li>
+            <li><a href="/trogiup"><i class="fas fa-angle-right"></i> Câu hỏi thường gặp</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== THANH DƯỚI FOOTER (BOTTOM BAR) ===== -->
+  <div class="bottom-bar">
+    <div class="container">
+      <div>© 2025 ToolHub — Nền tảng tiện ích trực tuyến</div>
+      <div>
+        <a href="/trogiup">Trợ giúp</a>
+        <a href="/dieukhoan">Điều khoản</a>
+        <a href="/dieukhoan">Bảo mật</a>
+        <a href="#"><i class="fas fa-globe"></i> Ngôn ngữ: VI</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="../../static/js/app.js"></script>
+  <script>
+    // Logic tìm kiếm / lọc nhanh công cụ trên trang danh mục hình ảnh
+    document.addEventListener('DOMContentLoaded', function() {
+      const filterInput = document.getElementById('imageCatalogFilter');
+      const cards = document.querySelectorAll('.image-tool-card');
+      const groups = document.querySelectorAll('.image-group-section');
+      const emptyState = document.getElementById('imageEmptyState');
+      const countBadge = document.getElementById('imageCountBadge');
+
+      if (!filterInput) return;
+
+      filterInput.addEventListener('input', function() {
+        const query = this.value.trim().toLowerCase();
+        let visibleTotal = 0;
+
+        cards.forEach(function(card) {
+          const title = (card.getAttribute('data-title') || '').toLowerCase();
+          const desc = card.querySelector('.image-card-desc').textContent.toLowerCase();
+          const keywords = (card.getAttribute('data-keywords') || '').toLowerCase();
+
+          // Kiểm tra khớp từ khóa
+          const isMatch = !query || title.includes(query) || desc.includes(query) || keywords.includes(query);
+          if (isMatch) {
+            card.style.display = 'flex';
+            visibleTotal++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // Ẩn nhóm nếu không có card nào bên trong hiển thị
+        groups.forEach(function(group) {
+          const groupCards = group.querySelectorAll('.image-tool-card');
+          const hasVisible = Array.from(groupCards).some(c => c.style.display !== 'none');
+          group.style.display = hasVisible ? 'block' : 'none';
+        });
+
+        // Cập nhật số lượng đếm
+        if (countBadge) {
+          countBadge.textContent = visibleTotal + ' công cụ';
+        }
+
+        // Hiển thị trạng thái rỗng nếu 0 kết quả
+        if (emptyState) {
+          emptyState.style.display = visibleTotal === 0 ? 'block' : 'none';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

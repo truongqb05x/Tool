@@ -257,6 +257,13 @@
   <div class="tool-workspace full-bleed" id="toolWorkspace">
     <!-- Cột trái: Khu vực xem trước file đã chọn -->
     <div class="file-area">
+      <!-- Nút nổi thêm file góc phải trên của khung xem trước -->
+      <div class="floating-add-wrap">
+        <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Chọn file PDF khác">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+
       <div class="file-area-content">
         <div class="file-card-wrap" id="fileCardWrap">
           <div class="file-card" id="fileCard">
@@ -264,15 +271,9 @@
               <i class="fas fa-times"></i>
             </button>
             <div class="file-preview" id="filePreview">
-              <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
-                <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
-                <div class="line title"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
-                <div class="line"></div>
-                <div class="line block"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
+              <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <div style="font-size:3rem; color:#e74c3c; margin-bottom:10px;"><i class="fas fa-file-pdf"></i></div>
+                <div style="font-size:1.8rem; color:#2b579a;"><i class="fas fa-file-word"></i></div>
               </div>
             </div>
             <div class="file-name" id="selectedFileName">tai_lieu.pdf</div>
@@ -290,34 +291,53 @@
     <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-sliders-h"></i> Thiết lập chuyển PDF sang Word
       </div>
 
       <div class="options-body">
-        <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
-          <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
+        <!-- Chế độ chuyển đổi -->
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" style="font-weight:600; margin-bottom:8px; display:block;">Chế độ chuyển đổi</label>
+          <div class="ws-option-group" style="display:flex; flex-direction:column; gap:8px;">
+            <label class="ws-radio-box selected" id="optLayoutStandard" style="padding:10px; cursor:pointer;">
+              <input type="radio" name="wordMode" value="layout" checked>
               <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
+                <strong style="font-size:0.88rem;"><i class="fas fa-th-large" style="color:#2b579a;"></i> Giữ nguyên bố cục (Khuyến nghị)</strong>
+                <span style="font-size:0.75rem; color:#666;">Bảo toàn nguyên vẹn cột, bảng tính, hình ảnh và vị trí font chữ.</span>
               </div>
             </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
+            <label class="ws-radio-box" id="optLayoutFlow" style="padding:10px; cursor:pointer;">
+              <input type="radio" name="wordMode" value="flow">
               <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
+                <strong style="font-size:0.88rem;"><i class="fas fa-align-left" style="color:#27ae60;"></i> Dễ dàng chỉnh sửa văn bản</strong>
+                <span style="font-size:0.75rem; color:#666;">Tối ưu dạng dòng văn bản liền mạch để gõ và biên tập tiện lợi hơn.</span>
               </div>
             </label>
+          </div>
+        </div>
+
+        <!-- Box thông báo công nghệ -->
+        <div class="ws-info-box" style="margin-bottom:14px; font-size:0.82rem; line-height:1.5;">
+          <i class="fas fa-check-circle" style="color:#27ae60;"></i>
+          <div>Tài liệu xuất ra có định dạng chuẩn <strong>Microsoft Word (.docx)</strong>, tương thích hoàn toàn với MS Office 2010 - 2024, Office 365 và Google Docs.</div>
+        </div>
+
+        <!-- Tóm tắt thông tin file -->
+        <div class="ws-file-summary" style="margin-bottom:12px;">
+          <div class="ws-summary-row">
+            <span><i class="fas fa-file-pdf"></i> Tệp gốc:</span>
+            <strong id="summaryFileName" style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">tai_lieu.pdf</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-file-word"></i> Xuất định dạng:</span>
+            <strong style="color:#2b579a;">DOCX (Word)</strong>
           </div>
         </div>
       </div>
 
       <div class="action-area">
         <button type="button" class="btn-convert btn-execute" id="btnExecute" onclick="executeToolAction()">
-          Chuyển đổi sang Word ngay <i class="fas fa-arrow-right"></i>
+          <i class="fas fa-file-word" style="margin-right:6px;"></i> Chuyển sang Word ngay
         </button>
       </div>
     </aside>
@@ -331,50 +351,51 @@
         <i class="fas fa-file-word"></i> Tải tệp lên để thực hiện Chuyển PDF sang Word
       </div>
       <div class="drop-zone" id="dropZone">
-        <div class="dz-icon"><i class="fas fa-file-word"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>Kéo &amp; thả file PDF vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Hỗ trợ file PDF tối đa 50 MB · Chuyển đổi chính xác 100% bố cục và bảng biểu</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Tài liệu PDF đã được chuyển đổi thành file Word (.docx)!</h3>
+      <h3 id="downloadSuccessTitle">Tài liệu PDF đã được chuyển đổi thành file Word (.docx) thành công!</h3>
       <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultFile()">
         <i class="fas fa-download"></i> Tải xuống file Word (.docx)
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
-          <i class="fas fa-redo"></i> Xử lý tệp khác
+          <i class="fas fa-redo"></i> Chuyển đổi tệp khác
         </button>
       </div>
     </div>
 
     <!-- ===== NỘI DUNG CHUẨN SEO ===== -->
     <section class="seo-section">
-      <h2>Hướng dẫn sử dụng Chuyển PDF sang Word trực tuyến trong 3 bước</h2>
+      <h2>Hướng dẫn chuyển PDF sang Word trực tuyến trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file PDF lên</h4>
+          <p>Kéo và thả tài liệu PDF vào khung tải lên hoặc chọn từ máy tính, điện thoại của bạn.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Chọn chế độ chuyển đổi</h4>
+          <p>Lựa chọn giữ nguyên bố cục bảng biểu hoặc tối ưu hóa dòng chảy văn bản để dễ biên tập.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
-          <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <h4>Lưu file Word kết quả</h4>
+          <p>Bấm "Chuyển sang Word ngay" và tải về tài liệu .docx có thể chỉnh sửa tự do 100%.</p>
         </div>
       </div>
     </section>
@@ -386,19 +407,19 @@
         <div class="sec-item">
           <div>
             <strong>Mã hóa SSL 256-bit</strong>
-            <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức HTTPS.</span>
+            <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức HTTPS bảo mật.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
             <strong>Tự động xóa sau 1 giờ</strong>
-            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút.</span>
+            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút, không lưu trữ lâu dài.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
-            <strong>Bảo mật thông tin</strong>
-            <span>Không chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
+            <strong>Bảo mật thông tin tuyệt đối</strong>
+            <span>Không sao lưu văn bản, không xem trộm hay chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
           </div>
         </div>
       </div>
@@ -408,49 +429,115 @@
       <h2>Câu hỏi thường gặp về Chuyển PDF sang Word (FAQ)</h2>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Sử dụng công cụ Chuyển PDF sang Word tại ToolHub có mất phí không?
+          Tài liệu sau khi chuyển sang Word có chỉnh sửa được font chữ và bảng biểu không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Hoàn toàn có! Tệp xuất ra là định dạng Microsoft Word (.docx) chuẩn, cho phép bạn chỉnh sửa từng ký tự, thay đổi màu sắc, canh lề, nhập thêm hàng/cột vào bảng tính như một tài liệu Word thông thường.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Công cụ có hỗ trợ tiếng Việt có dấu đầy đủ không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Có. Hệ thống hỗ trợ hoàn hảo bộ mã Unicode tiếng Việt, không bị lỗi font hay vỡ dấu câu khi chuyển đổi từ PDF sang Word.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          File Word có mở được trên điện thoại và Google Docs không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Có. Tệp .docx tương thích 100% với ứng dụng Microsoft Word trên điện thoại iOS/Android, Google Docs, WPS Office và LibreOffice trên máy tính.
         </div>
       </div>
     </section>
 
-    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
+    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO 4 KHỐI CHUẨN ===== -->
     <section class="seo-section seo-article">
-      <h2>Giới thiệu công cụ Chuyển PDF sang Word trực tuyến tại ToolHub</h2>
+      <h2>Giới thiệu công cụ Chuyển PDF sang Word trực tuyến miễn phí tại ToolHub</h2>
 
-      <p>Việc sao chép văn bản, chỉnh sửa bảng biểu hoặc cập nhật số liệu từ tài liệu PDF luôn là thách thức lớn đối với dân văn phòng và sinh viên nếu không có phần mềm chỉnh sửa chuyên dụng đắt đỏ. Chuyển đổi định dạng PDF sang file Word (.docx) là giải pháp tối ưu nhất để tự do biên tập và tái sử dụng nội dung.</p>
+      <!-- KHỐI 1: GIỚI THIỆU CHUNG (SEO-INTRO) -->
+      <div class="seo-intro">
+        <p>Tài liệu PDF là định dạng chuẩn mực để trao đổi và in ấn, nhưng khi cần sao chép văn bản, cập nhật số liệu hợp đồng, chỉnh sửa báo cáo hoặc dịch thuật thì việc sửa trực tiếp trên file PDF rất khó khăn và tốn kém. Công cụ <strong>Chuyển PDF sang Word trực tuyến tại ToolHub</strong> mang đến giải pháp chuyển đổi nhanh chóng, miễn phí 100% và giữ nguyên vẹn bố cục văn bản ban đầu.</p>
+        <p>Ứng dụng công nghệ phân tích cấu trúc tài liệu thông minh hàng đầu, hệ thống tự động nhận diện các khối văn bản, tiêu đề, bảng số liệu và hình ảnh để tái hiện lại chuẩn xác dưới dạng tệp tin <strong>Microsoft Word (.docx)</strong> quen thuộc.</p>
+      </div>
 
-      <p>Công cụ <strong>Chuyển PDF sang Word ToolHub</strong> ứng dụng trí tuệ nhân tạo và công nghệ OCR nhận diện nâng cao, giúp chuyển đổi chuẩn xác từng đoạn văn bản, font chữ, bảng tính Excel nhúng và hình ảnh sang định dạng Word có thể chỉnh sửa 100%.</p>
+      <!-- KHỐI 2: TÍNH NĂNG NỔI BẬT (SEO-FEATURES-GRID) -->
+      <h3 style="margin-top:28px; margin-bottom:16px; font-size:1.2rem; color:#1e293b;">
+        <i class="fas fa-star" style="color:#f39c12; margin-right:6px;"></i> Các ưu điểm vượt trội khi chuyển PDF sang Word tại ToolHub
+      </h3>
+      <div class="seo-features-grid">
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-font"></i></div>
+          <h4>Bảo toàn bố cục &amp; Font chữ</h4>
+          <p>Giữ nguyên kích thước chữ, in đậm, in nghiêng, màu sắc, canh lề cột và khoảng cách đoạn văn như bản gốc.</p>
+        </div>
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-table"></i></div>
+          <h4>Chuyển đổi bảng biểu nguyên vẹn</h4>
+          <p>Các bảng dữ liệu phức tạp trong PDF được chuyển thành bảng Word có thể nhập số liệu và tính toán trực tiếp.</p>
+        </div>
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+          <h4>Xử lý siêu tốc trên máy chủ</h4>
+          <p>Tốc độ chuyển đổi tài liệu chỉ trong vài giây, tiết kiệm thời gian tối đa cho công việc văn phòng gấp rút.</p>
+        </div>
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+          <h4>Bảo mật riêng tư tuyệt đối</h4>
+          <p>Mọi tài liệu tải lên được mã hóa đường truyền SSL và xóa vĩnh viễn khỏi hệ thống sau 1 giờ xử lý.</p>
+        </div>
+      </div>
 
-      <div class="seo-grid-cols">
-        <div class="seo-col-card">
-          <h4><i class="fas fa-font"></i> Giữ nguyên định dạng gốc</h4>
-          <p>Bảo toàn chính xác font chữ, canh lề, cấu trúc cột, bảng biểu và thứ tự đoạn văn của file PDF ban đầu.</p>
+      <!-- KHỐI 3: HƯỚNG DẪN CHI TIẾT (SEO-STEPS-DETAILED) -->
+      <h3 style="margin-top:28px; margin-bottom:16px; font-size:1.2rem; color:#1e293b;">
+        <i class="fas fa-list-ol" style="color:#1e5b9c; margin-right:6px;"></i> Hướng dẫn chi tiết cách đổi tệp PDF sang Word (.docx)
+      </h3>
+      <div class="seo-steps-detailed">
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 1</div>
+          <div class="step-content">
+            <h4>Tải tệp PDF cần chuyển đổi lên</h4>
+            <p>Bấm nút <strong>"Chọn tệp PDF"</strong> hoặc kéo thả trực tiếp tệp PDF từ máy tính của bạn vào vùng khung tải lên.</p>
+          </div>
         </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-edit"></i> Chỉnh sửa Word dễ dàng</h4>
-          <p>Tệp kết quả .docx hoàn toàn tương thích với Microsoft Word 2007-2024, Google Docs và LibreOffice.</p>
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 2</div>
+          <div class="step-content">
+            <h4>Kiểm tra thông số cấu hình</h4>
+            <p>Hệ thống tự động thiết lập chế độ giữ nguyên bố cục tối ưu nhất cho tài liệu của bạn.</p>
+          </div>
         </div>
-        <div class="seo-col-card">
-          <h4>Bảo mật tài liệu</h4>
-          <p>Dữ liệu được bảo vệ an toàn bằng SSL 256-bit và tự động hủy sau 60 phút, không lưu trữ thông tin nhạy cảm.</p>
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 3</div>
+          <div class="step-content">
+            <h4>Bấm chuyển đổi sang Word</h4>
+            <p>Bấm nút <strong>"Chuyển sang Word ngay"</strong>. Thuật toán thông minh sẽ tiến hành phân tích và trích xuất tài liệu.</p>
+          </div>
         </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-magic"></i> Nhận diện văn bản OCR</h4>
-          <p>Hỗ trợ trích xuất văn bản từ tài liệu scan và file PDF dạng ảnh một cách chuẩn xác và thông minh.</p>
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 4</div>
+          <div class="step-content">
+            <h4>Tải tệp Word (.docx) về máy</h4>
+            <p>Bấm nút <strong>"Tải xuống file Word (.docx)"</strong> để lưu tệp về máy và bắt đầu chỉnh sửa nội dung dễ dàng.</p>
+          </div>
         </div>
+      </div>
+
+      <!-- KHỐI 4: MẸO & LƯU Ý HỮU ÍCH (SEO-TIPS-BOX) -->
+      <div class="seo-tips-box" style="margin-top:28px; background:#eff6ff; border-left:4px solid #3b82f6; padding:18px 20px; border-radius:0 8px 8px 0;">
+        <h4 style="margin:0 0 10px 0; color:#1e40af; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+          <i class="fas fa-lightbulb" style="color:#f59e0b;"></i> Một số mẹo giúp file Word sau chuyển đổi đẹp nhất:
+        </h4>
+        <ul style="margin:0; padding-left:20px; color:#334155; line-height:1.6; font-size:0.92rem;">
+          <li><strong>File PDF gốc kỹ thuật số:</strong> Tài liệu PDF được tạo trực tiếp từ Word, Excel hoặc xuất từ phần mềm sẽ cho kết quả chuyển đổi hoàn hảo 100% về font chữ và bố cục.</li>
+          <li><strong>Tài liệu scan:</strong> Với file PDF scan chụp từ điện thoại hoặc máy scan quang học, văn bản dạng ảnh sẽ được trích xuất hình ảnh hoặc văn bản tối đa theo độ nét của bản chụp.</li>
+          <li><strong>Dung lượng hỗ trợ:</strong> ToolHub hỗ trợ file PDF lên đến 50 MB, đáp ứng hầu hết các giáo trình, hợp đồng và hồ sơ dự án dày hàng trăm trang.</li>
+        </ul>
       </div>
     </section>
 

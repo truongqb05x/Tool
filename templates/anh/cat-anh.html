@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cắt &amp; Xoay Ảnh Trực Tuyến — Chỉnh Sửa Kích Thước Ảnh Miễn Phí | ToolHub</title>
-  <meta name="description" content="Cắt ảnh online, xoay ảnh 90 độ, thay đổi tỉ lệ khung hình ảnh (1:1, 16:9, 4:3) trực tuyến miễn phí. Hỗ trợ JPG, PNG, WEBP, không giảm chất lượng ảnh.">
-  <meta name="keywords" content="cắt ảnh, xoay ảnh, crop ảnh online, chỉnh tỉ lệ ảnh, cắt ảnh trực tuyến miễn phí">
+  <title>Cắt Ảnh Trực Tuyến — Cắt Hình Ảnh Theo Tỉ Lệ Khung Hình Miễn Phí | ToolHub</title>
+  <meta name="description" content="Cắt ảnh online miễn phí, crop hình ảnh theo các tỉ lệ 1:1, 16:9, 4:3, 9:16 hoặc tự do chọn vùng. Nhanh chóng, chính xác và bảo mật.">
+  <meta name="keywords" content="cắt ảnh, crop ảnh online, cắt ảnh trực tuyến, xén ảnh, chỉnh tỉ lệ ảnh, crop image online">
 
   <!-- Font Awesome & CSS Layout -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -16,7 +16,7 @@
 </head>
 <body>
 
-    <!-- ===== HEADER CHUẨN ===== -->
+  <!-- ===== HEADER CHUẨN ===== -->
   <header class="header">
     <div class="container">
       <a href="/" class="logo" style="text-decoration:none;">
@@ -74,7 +74,6 @@
 
   <!-- Drawer Menu dành riêng cho Mobile trên các trang con -->
   <aside class="sidebar drawer-only" id="sidebar">
-    <!-- Header Drawer dành riêng cho Mobile -->
     <div class="sidebar-drawer-header">
       <div class="sidebar-drawer-brand">
         <img src="../../static/img/logo.png" alt="ToolHub Logo" class="logo-img">
@@ -110,259 +109,304 @@
     </div>
 
     <div class="side-box">
-          <div class="side-box-header"><i class="fas fa-list" style="margin-right:6px;"></i> Danh mục công cụ</div>
-          <div class="side-box-body">
-            <ul class="side-menu">
-              <li>
-                <a href="#" class="menu-toggle active">
-                  <i class="fas fa-th-large"></i>
-                  <span>Tất cả công cụ</span>
-                  <i class="fas fa-chevron-right arrow"></i>
-                </a>
-                <ul class="submenu">
-                  <li><a href="#"><i class="fas fa-star"></i> Mới nhất</a></li>
-                  <li><a href="#"><i class="fas fa-fire"></i> Phổ biến</a></li>
-                  <li><a href="#"><i class="fas fa-clock"></i> Dùng gần đây</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#" class="menu-toggle">
-                  <i class="fas fa-file-pdf"></i>
-                  <span>Công cụ PDF</span>
-                  <i class="fas fa-chevron-right arrow"></i>
-                </a>
-                <ul class="submenu">
-                  <li><a href="/pdf" style="font-weight:700; color:#1e5b9c;"><i class="fas fa-th-list"></i> Xem tất cả công cụ PDF</a></li>
-                  <li><a href="/pdf/nen-pdf"><i class="fas fa-compress-alt"></i> Nén PDF</a></li>
-                  <li><a href="/pdf/gop-pdf"><i class="fas fa-object-group"></i> Gộp PDF</a></li>
-                  <li><a href="/pdf/tach-pdf"><i class="fas fa-cut"></i> Tách PDF</a></li>
-                  <li><a href="/pdf/xoay-pdf"><i class="fas fa-redo"></i> Xoay PDF</a></li>
-                  <li><a href="/pdf/xoa-trang-pdf"><i class="fas fa-trash-alt"></i> Xóa trang PDF</a></li>
-                  <li><a href="/pdf/sap-xep-trang-pdf"><i class="fas fa-sort-amount-down"></i> Sắp xếp trang PDF</a></li>
-                  <li><a href="/pdf/trich-xuat-trang-pdf"><i class="fas fa-file-export"></i> Trích xuất trang PDF</a></li>
-                  <li><a href="/pdf/pdf-sang-word"><i class="fas fa-file-word"></i> PDF sang Word</a></li>
-                  <li><a href="/pdf/pdf-sang-excel"><i class="fas fa-file-excel"></i> PDF sang Excel</a></li>
-                  <li><a href="/pdf/pdf-sang-powerpoint"><i class="fas fa-file-powerpoint"></i> PDF sang PowerPoint</a></li>
-                  <li><a href="/pdf/word-sang-pdf"><i class="fas fa-file-word"></i> Word sang PDF</a></li>
-                  <li><a href="/pdf/excel-sang-pdf"><i class="fas fa-file-excel"></i> Excel sang PDF</a></li>
-                  <li><a href="/pdf/powerpoint-sang-pdf"><i class="fas fa-file-powerpoint"></i> PowerPoint sang PDF</a></li>
-                  <li><a href="/pdf/pdf-sang-anh"><i class="fas fa-file-image"></i> PDF sang ảnh</a></li>
-                  <li><a href="/pdf/anh-sang-pdf"><i class="fas fa-images"></i> Ảnh sang PDF</a></li>
-                  <li><a href="/pdf/chinh-sua-pdf"><i class="fas fa-edit"></i> Chỉnh sửa PDF</a></li>
-                  <li><a href="/pdf/them-so-trang-pdf"><i class="fas fa-list-ol"></i> Thêm số trang PDF</a></li>
-                  <li><a href="/pdf/them-watermark-pdf"><i class="fas fa-stamp"></i> Thêm watermark PDF</a></li>
-                  <li><a href="/pdf/bao-ve-pdf"><i class="fas fa-lock"></i> Bảo vệ PDF</a></li>
-                  <li><a href="/pdf/mo-khoa-pdf"><i class="fas fa-unlock-alt"></i> Mở khóa PDF</a></li>
-                  <li><a href="/pdf/ky-pdf"><i class="fas fa-signature"></i> Ký PDF</a></li>
-                  <li><a href="/pdf/so-sanh-pdf"><i class="fas fa-columns"></i> So sánh PDF</a></li>
-                  <li><a href="/pdf/ocr-pdf"><i class="fas fa-eye"></i> OCR PDF</a></li>
-                  <li><a href="/pdf/doc-thong-tin-pdf"><i class="fas fa-info-circle"></i> Đọc thông tin PDF</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#" class="menu-toggle">
-                  <i class="fas fa-image"></i>
-                  <span>Chỉnh sửa ảnh</span>
-                  <i class="fas fa-chevron-right arrow"></i>
-                </a>
-                <ul class="submenu">
-                  <li><a href="/anh/cat-anh"><i class="fas fa-crop-alt"></i> Cắt &amp; xoay ảnh</a></li>
-                  <li><a href="/anh/cat-anh"><i class="fas fa-images"></i> Ghép ảnh</a></li>
-                  <li><a href="/anh/cat-anh"><i class="fas fa-magic"></i> Xóa phông nền</a></li>
-                  <li><a href="/anh/cat-anh"><i class="fas fa-adjust"></i> Chỉnh màu</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#" class="menu-toggle">
-                  <i class="fas fa-mobile-alt"></i>
-                  <span>Ứng dụng App</span>
-                  <i class="fas fa-chevron-right arrow"></i>
-                </a>
-                <ul class="submenu">
-                  <li><a href="#"><i class="fas fa-calculator"></i> Máy tính online</a></li>
-                  <li><a href="/tien-ich/tao-ma-qr"><i class="fas fa-qrcode"></i> Tạo mã QR</a></li>
-                  <li><a href="#"><i class="fas fa-clock"></i> Đồng hồ đếm ngược</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#" class="menu-toggle">
-                  <i class="fas fa-exchange-alt"></i>
-                  <span>Chuyển đổi</span>
-                  <i class="fas fa-chevron-right arrow"></i>
-                </a>
-                <ul class="submenu">
-                  <li><a href="#"><i class="fas fa-file-word"></i> Word sang PDF</a></li>
-                  <li><a href="#"><i class="fas fa-file-excel"></i> Excel sang PDF</a></li>
-                  <li><a href="#"><i class="fas fa-file-image"></i> Ảnh sang PDF</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#" class="menu-toggle">
-                  <i class="fas fa-file-alt"></i>
-                  <span>Văn bản</span>
-                  <i class="fas fa-chevron-right arrow"></i>
-                </a>
-                <ul class="submenu">
-                  <li><a href="#"><i class="fas fa-spell-check"></i> Kiểm tra chính tả</a></li>
-                  <li><a href="#"><i class="fas fa-text-width"></i> Đếm ký tự</a></li>
-                  <li><a href="#"><i class="fas fa-language"></i> Dịch văn bản</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#" class="menu-toggle">
-                  <i class="fas fa-video"></i>
-                  <span>Video</span>
-                  <i class="fas fa-chevron-right arrow"></i>
-                </a>
-                <ul class="submenu">
-                  <li><a href="#"><i class="fas fa-cut"></i> Cắt video</a></li>
-                  <li><a href="#"><i class="fas fa-compress"></i> Nén video</a></li>
-                  <li><a href="#"><i class="fas fa-exchange-alt"></i> Chuyển đổi định dạng</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#" class="menu-toggle">
-                  <i class="fas fa-tools"></i>
-                  <span>Tiện ích khác</span>
-                  <i class="fas fa-chevron-right arrow"></i>
-                </a>
-                <ul class="submenu">
-                  <li><a href="#"><i class="fas fa-ruler"></i> Chuyển đổi đơn vị</a></li>
-                  <li><a href="#"><i class="fas fa-key"></i> Tạo mật khẩu</a></li>
-                  <li><a href="#"><i class="fas fa-random"></i> Tạo số ngẫu nhiên</a></li>
-                </ul>
-              </li>
+      <div class="side-box-header"><i class="fas fa-list" style="margin-right:6px;"></i> Danh mục công cụ</div>
+      <div class="side-box-body">
+        <ul class="side-menu">
+          <li>
+            <a href="#" class="menu-toggle">
+              <i class="fas fa-file-pdf"></i>
+              <span>Công cụ PDF</span>
+              <i class="fas fa-chevron-right arrow"></i>
+            </a>
+            <ul class="submenu">
+              <li><a href="/pdf" style="font-weight:700; color:#1e5b9c;"><i class="fas fa-th-list"></i> Xem tất cả công cụ PDF</a></li>
+              <li><a href="/pdf/nen-pdf"><i class="fas fa-compress-alt"></i> Nén PDF</a></li>
+              <li><a href="/pdf/gop-pdf"><i class="fas fa-object-group"></i> Gộp PDF</a></li>
+              <li><a href="/pdf/tach-pdf"><i class="fas fa-cut"></i> Tách PDF</a></li>
+              <li><a href="/pdf/pdf-sang-word"><i class="fas fa-file-word"></i> PDF sang Word</a></li>
             </ul>
-          </div>
-        </div>
+          </li>
+          <li>
+            <a href="#" class="menu-toggle active">
+              <i class="fas fa-image"></i>
+              <span>Chỉnh sửa ảnh</span>
+              <i class="fas fa-chevron-right arrow"></i>
+            </a>
+            <ul class="submenu" style="display:block;">
+              <li><a href="/anh" style="font-weight:700; color:#1e5b9c;"><i class="fas fa-th-list"></i> Xem tất cả công cụ ảnh</a></li>
+              <li><a href="/anh/nen-anh"><i class="fas fa-compress-alt"></i> Nén ảnh</a></li>
+              <li><a href="/anh/thay-doi-kich-thuoc"><i class="fas fa-expand-arrows-alt"></i> Thay đổi kích thước</a></li>
+              <li><a href="/anh/cat-anh"><i class="fas fa-crop-alt"></i> Cắt ảnh</a></li>
+              <li><a href="/anh/chuyen-sang-jpg"><i class="fas fa-file-image"></i> Chuyển sang JPG</a></li>
+              <li><a href="/anh/chuyen-tu-jpg"><i class="fas fa-exchange-alt"></i> Chuyển từ JPG</a></li>
+              <li><a href="/anh/chinh-sua-anh"><i class="fas fa-sliders-h"></i> Trình chỉnh sửa ảnh</a></li>
+              <li><a href="/anh/nang-cap-anh"><i class="fas fa-wand-magic-sparkles"></i> Nâng cấp chất lượng ảnh</a></li>
+              <li><a href="/anh/xoa-phong"><i class="fas fa-magic"></i> Xóa phông</a></li>
+              <li><a href="/anh/dong-dau-anh"><i class="fas fa-stamp"></i> Đóng dấu bản quyền</a></li>
+              <li><a href="/anh/tao-anh-che"><i class="fas fa-laugh-squint"></i> Tạo ảnh chế</a></li>
+              <li><a href="/anh/xoay-anh"><i class="fas fa-redo"></i> Xoay ảnh</a></li>
+              <li><a href="/anh/html-sang-anh"><i class="fas fa-code"></i> Chuyển HTML sang ảnh</a></li>
+              <li><a href="/anh/lam-mo-mat"><i class="fas fa-user-secret"></i> Làm mờ khuôn mặt</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#" class="menu-toggle">
+              <i class="fas fa-mobile-alt"></i>
+              <span>Ứng dụng App</span>
+              <i class="fas fa-chevron-right arrow"></i>
+            </a>
+            <ul class="submenu">
+              <li><a href="/tien-ich/tao-ma-qr"><i class="fas fa-qrcode"></i> Tạo mã QR</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
   </aside>
 
-
-    <!-- ===== BREADCRUMB (SEO) ===== -->
+  <!-- ===== BREADCRUMB (SEO) ===== -->
   <nav class="breadcrumb-nav sr-only" aria-label="Breadcrumb">
     <a href="/"><i class="fas fa-home"></i> Trang chủ</a>
-      <span>/</span>
-      <a href="/">Chỉnh sửa ảnh</a>
-      <span>/</span>
-      <strong>Cắt &amp; xoay ảnh</strong>
+    <span>/</span>
+    <a href="/anh">Chỉnh sửa ảnh</a>
+    <span>/</span>
+    <strong>Cắt ảnh</strong>
   </nav>
 
-  <div class="tool-hero">
-    <h1>Cắt &amp; Xoay ảnh trực tuyến</h1>
-    <p>Thay đổi kích thước, chọn tỉ lệ khung hình (1:1, 16:9, 4:3) hoặc xoay chiều bức ảnh chỉ trong vài thao tác đơn giản.</p>
+  <div class="tool-hero" id="toolHero">
+    <h1>Cắt hình ảnh trực tuyến</h1>
+    <p>Cắt bỏ phần thừa, tập trung vào chủ thể chính và điều chỉnh tỉ lệ khung hình chuẩn xác cho ảnh đại diện, ảnh bài viết hay ảnh bìa.</p>
   </div>
 
-  <div class="tool-container">
+  <!-- BƯỚC 2: WORKSPACE XỬ LÝ TOÀN CHIỀU RỘNG (SÁT LỀ PHẢI THEO CHUẨN XULY.HTML) -->
+  <div class="tool-workspace full-bleed" id="toolWorkspace">
+    <!-- Cột trái: Khu vực xem trước file đã chọn -->
+    <div class="file-area">
+      <!-- Nút nổi thêm / đổi file -->
+      <div class="floating-add-wrap">
+        <div class="floating-add-tooltip" onclick="document.getElementById('fileInput').click()">Chọn ảnh khác</div>
+        <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Chọn ảnh khác">
+          <span class="floating-badge">1</span>
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
 
-    <!-- BƯỚC 1: TẢI ẢNH LÊN -->
+      <div class="file-area-content">
+        <div class="file-card-wrap" id="fileCardWrap">
+          <div class="file-card" id="fileCard">
+            <!-- Nút xóa file -->
+            <button type="button" class="btn-remove-file" onclick="resetFileSelection()" title="Xóa file">
+              <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Tùy chọn khi hover: Xoay 90 độ & Phóng to -->
+            <div class="file-card-actions">
+              <button type="button" class="btn-card-action" onclick="rotatePreview(90)" title="Xoay 90 độ">
+                <i class="fas fa-redo"></i>
+              </button>
+              <button type="button" class="btn-card-action" onclick="openImageZoomModal()" title="Phóng to xem trước">
+                <i class="fas fa-search-plus"></i>
+              </button>
+            </div>
+
+            <div class="file-preview" id="filePreview" style="display:flex; align-items:center; justify-content:center; background:#f0f2f5; min-height:160px; overflow:hidden;">
+              <img id="imagePreview" src="" alt="Xem trước ảnh" style="max-width:100%; max-height:160px; object-fit:contain; transition:transform 0.2s ease;">
+            </div>
+            <div class="file-name" id="selectedFileName">hinh_anh.jpg</div>
+            <div style="font-size:0.75rem; color:#888; margin-top:4px;" id="selectedFileMeta">Kích thước: 1920 x 1080 px</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
+    <aside class="options-area">
+      <div class="options-header">
+        <i class="fas fa-crop-alt"></i> Tùy chọn tỉ lệ cắt ảnh
+      </div>
+
+      <div class="options-body">
+        <div class="form-group">
+            <label class="form-label">Chọn tỉ lệ khung hình (Aspect Ratio)</label>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <button type="button" class="btn btn-outline active ratio-btn" onclick="selectCropRatio(this, 'free')">Tự do (Free)</button>
+              <button type="button" class="btn btn-outline ratio-btn" onclick="selectCropRatio(this, '1:1')">1 : 1 (Vuông - Avatar)</button>
+              <button type="button" class="btn btn-outline ratio-btn" onclick="selectCropRatio(this, '16:9')">16 : 9 (Ngang - YouTube)</button>
+              <button type="button" class="btn btn-outline ratio-btn" onclick="selectCropRatio(this, '4:3')">4 : 3 (Tiêu chuẩn)</button>
+              <button type="button" class="btn btn-outline ratio-btn" onclick="selectCropRatio(this, '9:16')">9 : 16 (Dọc - Story/TikTok)</button>
+              <button type="button" class="btn btn-outline ratio-btn" onclick="selectCropRatio(this, '3:2')">3 : 2 (Nhiếp ảnh)</button>
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:14px;">
+            <label class="form-label">Hỗ trợ xoay ảnh nhanh:</label>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="btn btn-outline" style="flex:1;" onclick="rotatePreview(-90)"><i class="fas fa-undo"></i> Xoay trái 90°</button>
+              <button type="button" class="btn btn-outline" style="flex:1;" onclick="rotatePreview(90)"><i class="fas fa-redo"></i> Xoay phải 90°</button>
+            </div>
+          </div>
+      </div>
+
+      <div class="action-area">
+        <button type="button" class="btn-convert" id="btnExecuteAction" onclick="executeToolAction()">
+          Cắt & Lưu ảnh ngay <i class="fas fa-crop"></i>
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="tool-container" id="toolContainer">
+
+    <!-- BƯỚC 1: KHUNG TẢI FILE (UPLOAD PANEL) -->
     <div class="upload-panel" id="uploadPanel">
       <div class="upload-panel-header">
-        <i class="fas fa-image"></i> Tải hình ảnh cần cắt &amp; xoay
+        <i class="fas fa-crop-alt"></i> Tải hình ảnh lên để cắt xén
       </div>
       <div class="drop-zone" id="dropZone">
         <div class="dz-icon"><i class="fas fa-images"></i></div>
-        <h3>Kéo &amp; thả hình ảnh vào đây</h3>
-        <p>Hỗ trợ định dạng JPG, PNG, WEBP, GIF dung lượng tối đa 25 MB</p>
+        <h3>Kéo &amp; thả file hình ảnh vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
         <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
-          <i class="fas fa-folder-open"></i> Chọn ảnh từ thiết bị
+          <i class="fas fa-folder-open"></i> Chọn tệp hình ảnh
         </button>
-        <input type="file" id="fileInput" accept="image/*" style="display:none;">
-        <div class="dz-note">Xử lý trực tiếp trên trình duyệt hoặc máy chủ bảo mật an toàn</div>
+        <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+        <div class="dz-note">Hỗ trợ JPG, PNG, WEBP, GIF, SVG dung lượng tối đa 25 MB</div>
       </div>
     </div>
 
-    <!-- BƯỚC 2: WORKSPACE CHỈNH SỬA ẢNH -->
-    <div class="tool-workspace" id="toolWorkspace">
-      <!-- Cột trái: Khung xem trước & Canvas ảnh -->
-      <div class="workspace-left" style="align-items:center; justify-content:center;">
-        <div id="imagePreviewContainer" style="max-width:100%; max-height:420px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#e8ebef; border:1px solid #ccc; border-radius:3px; padding:10px;">
-          <img id="imagePreview" src="" alt="Xem trước ảnh" style="max-width:100%; max-height:380px; object-fit:contain; transition:transform 0.2s ease;">
-        </div>
-        <div style="margin-top:14px; font-size:0.82rem; color:#666;" id="imageDimensions">
-          Kích thước: 1920 × 1080 px
-        </div>
-      </div>
-
-      <!-- Cột phải: Bảng điều khiển cắt & xoay -->
-      <div class="workspace-right">
-        <div class="ws-options-head">
-          <i class="fas fa-sliders-h" style="margin-right:6px;"></i> Tùy chọn chỉnh ảnh
-        </div>
-        <div class="ws-options-body">
-          <!-- Tỉ lệ cắt -->
-          <div class="ws-option-group">
-            <label class="ws-option-label">Tỉ lệ khung hình:</label>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-              <button type="button" class="btn btn-outline ratio-btn active" onclick="setAspectRatio(this, 'free')">Tự do</button>
-              <button type="button" class="btn btn-outline ratio-btn" onclick="setAspectRatio(this, '1:1')">1 : 1 (Vuông)</button>
-              <button type="button" class="btn btn-outline ratio-btn" onclick="setAspectRatio(this, '16:9')">16 : 9 (Ngang)</button>
-              <button type="button" class="btn btn-outline ratio-btn" onclick="setAspectRatio(this, '4:3')">4 : 3 (Tiêu chuẩn)</button>
-            </div>
-          </div>
-
-          <!-- Xoay ảnh -->
-          <div class="ws-option-group">
-            <label class="ws-option-label">Xoay góc hình ảnh:</label>
-            <div style="display:flex; gap:8px;">
-              <button type="button" class="btn btn-outline" style="flex:1;" onclick="rotateImage(-90)">
-                <i class="fas fa-undo"></i> Xoay trái 90°
-              </button>
-              <button type="button" class="btn btn-outline" style="flex:1;" onclick="rotateImage(90)">
-                <i class="fas fa-redo"></i> Xoay phải 90°
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="ws-options-action">
-          <button type="button" class="btn-execute" id="btnCrop" onclick="executeCrop()">
-            Cắt &amp; Lưu ảnh <i class="fas fa-arrow-right"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- BƯỚC 3: THẺ TẢI XUỐNG KẾT QUẢ -->
-    <div class="download-card" id="downloadCard">
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <div class="download-card" id="downloadCard" style="display:none;">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Đã cắt &amp; xử lý hình ảnh thành công!</h3>
-      <p id="downloadMeta">Hình ảnh mới đã được tạo với kích thước và góc xoay chính xác.</p>
-      <button type="button" class="btn-download-result" onclick="downloadCroppedImage()">
-        <i class="fas fa-download"></i> Tải hình ảnh về máy
+      <h3 id="downloadSuccessTitle">Đã cắt hình ảnh thành công!</h3>
+      <p id="downloadMeta">Bức ảnh mới đã được cắt theo đúng vùng chọn và tỉ lệ bạn mong muốn.</p>
+      <button type="button" class="btn-download-result" onclick="downloadResultImage()">
+        <i class="fas fa-download"></i> Tải xuống hình ảnh đã xử lý
       </button>
       <div>
-        <button type="button" class="btn-redo" onclick="resetImageSelection()">
-          <i class="fas fa-redo"></i> Chỉnh sửa ảnh khác
+        <button type="button" class="btn-redo" onclick="resetFileSelection()">
+          <i class="fas fa-redo"></i> Cắt bức ảnh khác
         </button>
       </div>
     </div>
 
-    <!-- SEO CONTENT -->
+    <!-- ===== NỘI DUNG CHUẨN SEO (SEO ARTICLE) ===== -->
     <section class="seo-section">
-      <h2><i class="fas fa-list-ol"></i> Cách cắt &amp; xoay ảnh trực tuyến dễ dàng</h2>
+      <h2>Cách sử dụng Cắt ảnh trực tuyến chỉ trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải ảnh của bạn</h4>
-          <p>Kéo và thả ảnh JPG, PNG hoặc chọn tệp từ thư viện ảnh điện thoại, máy tính.</p>
+          <h4>Tải hình ảnh của bạn</h4>
+          <p>Kéo thả ảnh cần cắt vào ô tải lên hoặc mở file từ thư viện ảnh máy tính, điện thoại.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Chọn tỉ lệ &amp; Xoay</h4>
-          <p>Chọn khung tỉ lệ 1:1 cho avatar, 16:9 cho YouTube/Facebook và bấm nút xoay nếu ảnh bị nghiêng.</p>
+          <h4>Chọn khung & tỉ lệ</h4>
+          <p>Chọn tỉ lệ 1:1 cho avatar, 16:9 cho YouTube hoặc kéo khung cắt tự do theo ý thích.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
-          <h4>Lưu ảnh về máy</h4>
-          <p>Bấm "Cắt &amp; Lưu ảnh" để tải bức ảnh đã cắt đẹp mắt về thiết bị hoàn toàn miễn phí.</p>
+          <h4>Lưu bức ảnh đã cắt</h4>
+          <p>Bấm 'Cắt & Lưu ảnh ngay' để tải ngay bức ảnh đã được cắt xén đẹp mắt về thiết bị.</p>
         </div>
+      </div>
+    </section>
+
+    <section class="seo-section">
+      <h2>Bảo mật tài liệu &amp; Quyền riêng tư tối đa</h2>
+      <p>ToolHub cam kết bảo vệ dữ liệu người dùng ở mức cao nhất:</p>
+      <div class="security-features">
+        <div class="sec-item">
+          <div>
+            <strong>Mã hóa SSL 256-bit</strong>
+            <span>Tất cả file hình ảnh được truyền tải an toàn tuyệt đối qua giao thức HTTPS.</span>
+          </div>
+        </div>
+        <div class="sec-item">
+          <div>
+            <strong>Tự động xóa sau 1 giờ</strong>
+            <span>File của bạn được xóa vĩnh viễn khỏi máy chủ sau 60 phút, không lưu trữ dài hạn.</span>
+          </div>
+        </div>
+        <div class="sec-item">
+          <div>
+            <strong>Không ai xem file của bạn</strong>
+            <span>Quá trình xử lý ảnh hoàn toàn tự động bởi thuật toán, không nhân viên nào có quyền xem.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seo-section">
+      <h2>Câu hỏi thường gặp về Cắt ảnh (FAQ)</h2>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Cắt ảnh có làm giảm chất lượng hình ảnh không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Không. Việc cắt ảnh chỉ loại bỏ những vùng điểm ảnh nằm ngoài khung chọn của bạn mà không làm nén hay giảm độ phân giải của phần ảnh được giữ lại.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tỉ lệ 1:1 và 16:9 phù hợp cho những nhu cầu nào?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Tỉ lệ 1:1 (khung hình vuông) thích hợp nhất làm ảnh đại diện Facebook, Zalo, Instagram. Tỉ lệ 16:9 thích hợp làm ảnh bìa video YouTube, màn hình máy tính và bài thuyết trình.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tôi có thể xoay ảnh trong lúc cắt được không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Có, công cụ tích hợp sẵn 2 nút xoay 90 độ sang trái và phải giúp bạn căn chỉnh hướng ảnh ngay lập tức.
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
+    <section class="seo-section seo-article">
+      <h2>Giới thiệu công cụ Cắt ảnh trực tuyến tại ToolHub</h2>
+
+      <p>Một bức ảnh đẹp đôi khi có những chi tiết thừa ở viền cạnh, người đi ngang qua hoặc góc chụp chưa cân đối. <strong>Công cụ Cắt ảnh trực tuyến</strong> của ToolHub cho phép bạn dễ dàng đóng khung lại chủ thể chính, mang đến bố cục hài hòa và chuyên nghiệp mà không cần mở phần mềm đồ họa nặng nề.</p>
+
+      <div class="seo-grid-cols">
+        <div class="seo-col-card">
+          <h4><i class="fas fa-bolt"></i> Đa dạng tỉ lệ chuẩn</h4>
+          <p>Hỗ trợ đầy đủ các khung tỉ lệ phổ biến nhất: 1:1, 16:9, 4:3, 9:16 và chế độ tự do linh hoạt.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-sliders-h"></i> Căn chỉnh trực quan</h4>
+          <p>Giao diện kéo thả dễ dùng, hiển thị khung viền mờ xung quanh để bạn dễ dàng căn góc đẹp nhất.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-lock"></i> Bảo toàn độ phân giải</h4>
+          <p>Vùng ảnh cắt ra được trích xuất trực tiếp từ ảnh gốc với độ sắc nét tuyệt đối.</p>
+        </div>
+        <div class="seo-col-card">
+          <h4><i class="fas fa-mobile-alt"></i> Tương thích mọi thiết bị</h4>
+          <p>Cắt ảnh mượt mà trên cả màn hình cảm ứng điện thoại thông minh lẫn chuột máy tính bàn.</p>
+        </div>
+      </div>
+
+      <h3>Khi nào bạn cần sử dụng công cụ Cắt ảnh?</h3>
+      <ul>
+        <li><strong>Làm ảnh đại diện mạng xã hội:</strong> Tạo ảnh đại diện hình vuông 1:1 chuẩn xác không bị cắt cụt đầu hay mất chữ.</li>
+        <li><strong>Tạo ảnh bìa video YouTube & Facebook:</strong> Cắt nhanh hình ảnh theo tỉ lệ 16:9 nằm ngang để hiển thị vừa vặn trên màn hình.</li>
+        <li><strong>Loại bỏ chi tiết nhạy cảm hoặc thừa:</strong> Cắt bỏ những người hoặc vật thể không mong muốn xuất hiện ở góc bức ảnh chụp du lịch.</li>
+        <li><strong>Tối ưu bố cục theo quy tắc một phần ba:</strong> Dịch chuyển trọng tâm của ảnh để làm nổi bật gương mặt hoặc sản phẩm của bạn.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo sử dụng đạt hiệu quả cao nhất:</strong> Nếu bạn muốn làm video ngắn trên TikTok hoặc Reels Facebook, hãy chọn tỉ lệ <em>'9:16'</em> để ảnh ôm trọn màn hình dọc của smartphone!
       </div>
     </section>
 
   </div>
 
-  <!-- FOOTER -->
-    <!-- ===== FOOTER CHUẨN ===== -->
+  <!-- ===== FOOTER CHUẨN ===== -->
   <footer class="footer">
     <div class="container">
       <div class="footer-cols">
@@ -387,10 +431,10 @@
         <div class="footer-col">
           <h4>Chỉnh sửa ảnh &amp; Tiện ích</h4>
           <ul>
+            <li><a href="/anh/nen-anh"><i class="fas fa-angle-right"></i> Nén ảnh</a></li>
             <li><a href="/anh/cat-anh"><i class="fas fa-angle-right"></i> Cắt &amp; xoay ảnh</a></li>
-            <li><a href="/anh/ghep-anh"><i class="fas fa-angle-right"></i> Ghép ảnh</a></li>
-            <li><a href="/anh/xoa-phong-nen"><i class="fas fa-angle-right"></i> Xóa phông nền</a></li>
-            <li><a href="/tien-ich/tao-ma-qr"><i class="fas fa-angle-right"></i> Tạo mã QR</a></li>
+            <li><a href="/anh/xoa-phong"><i class="fas fa-angle-right"></i> Xóa phông</a></li>
+            <li><a href="/anh/nang-cap-anh"><i class="fas fa-angle-right"></i> Nâng cấp chất lượng ảnh</a></li>
           </ul>
         </div>
 
@@ -420,7 +464,9 @@
     </div>
   </div>
 
-<script src="../../static/js/app.js"></script>
+    <!-- SCRIPTS -->
+  <script src="../../static/js/ultis/anh/image-preview.js"></script>
+  <script src="../../static/js/app.js"></script>
   <script src="../../static/js/tools/anh/cat-anh.js"></script>
 </body>
 </html>

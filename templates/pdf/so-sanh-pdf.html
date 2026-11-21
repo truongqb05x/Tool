@@ -255,34 +255,68 @@
   
   <!-- BƯỚC 2: WORKSPACE XỬ LÝ TOÀN CHIỀU RỘNG (SÁT LỀ PHẢI THEO CHUẨN XULY.HTML) -->
   <div class="tool-workspace full-bleed" id="toolWorkspace">
-    <!-- Cột trái: Khu vực xem trước file đã chọn -->
+    <!-- Cột trái: Khu vực xem trước 2 file đã chọn -->
     <div class="file-area">
       <div class="file-area-content">
-        <div class="file-card-wrap" id="fileCardWrap">
-          <div class="file-card" id="fileCard">
-            <button type="button" class="btn-remove-file" onclick="resetFileSelection()" title="Xóa file">
-              <i class="fas fa-times"></i>
-            </button>
-            <div class="file-preview" id="filePreview">
-              <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
-                <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
-                <div class="line title"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
-                <div class="line"></div>
-                <div class="line block"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
-              </div>
+        <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center; align-items:flex-start;">
+          <!-- File A (Bản gốc) -->
+          <div class="file-card-wrap">
+            <div style="text-align:center; font-weight:700; color:#1e5b9c; margin-bottom:8px; font-size:0.9rem;">
+              <i class="fas fa-file-alt"></i> Bản A (Tài liệu gốc)
             </div>
-            <div class="file-name" id="selectedFileName">tai_lieu.pdf</div>
-            <div class="file-meta" id="selectedFileSize" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 0 KB</div>
+            <div class="file-card" id="fileCardA">
+              <div class="file-preview">
+                <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
+                  <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#1e5b9c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
+                  <div class="line title"></div>
+                  <div class="line"></div>
+                  <div class="line short"></div>
+                  <div class="line"></div>
+                  <div class="line block"></div>
+                </div>
+              </div>
+              <div class="file-name" id="fileNameA">ban_goc.pdf</div>
+              <div class="file-meta" id="fileSizeA" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 0 KB</div>
+            </div>
           </div>
+
+          <!-- Biểu tượng đối chiếu giữa 2 file -->
+          <div style="align-self:center; font-size:1.8rem; color:#64748b; margin-top:20px;">
+            <i class="fas fa-arrows-alt-h"></i>
+          </div>
+
+          <!-- File B (Bản đối chiếu) -->
+          <div class="file-card-wrap">
+            <div style="text-align:center; font-weight:700; color:#27ae60; margin-bottom:8px; font-size:0.9rem;">
+              <i class="fas fa-file-alt"></i> Bản B (Tài liệu mới)
+            </div>
+            <div class="file-card" id="fileCardB">
+              <div class="file-preview">
+                <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
+                  <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#27ae60; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
+                  <div class="line title"></div>
+                  <div class="line"></div>
+                  <div class="line short"></div>
+                  <div class="line"></div>
+                  <div class="line block"></div>
+                </div>
+              </div>
+              <div class="file-name" id="fileNameB">ban_moi.pdf</div>
+              <div class="file-meta" id="fileSizeB" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 0 KB</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nút nổi thêm / đổi file -->
+        <div class="floating-add-wrap">
+          <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Chọn lại 2 file">
+            <i class="fas fa-plus"></i>
+          </button>
         </div>
 
         <!-- Nút chọn file khác -->
         <button type="button" class="btn-add-more" onclick="resetFileSelection()">
-          <i class="fas fa-sync-alt"></i> Chọn file khác
+          <i class="fas fa-sync-alt"></i> Chọn lại 2 tài liệu
         </button>
       </div>
     </div>
@@ -290,28 +324,36 @@
     <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-sliders-h"></i> Tùy chọn so sánh PDF
       </div>
 
       <div class="options-body">
+        <!-- 1. Kiểu so sánh -->
         <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
+          <label class="form-label"><i class="fas fa-search-plus"></i> Chế độ đối chiếu</label>
           <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
-              <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
+            <div class="ws-radio-box selected">
+              <input type="radio" name="compMode" value="text" checked>
+              <div class="ws-radio-info">
+                <strong>So sánh văn bản chi tiết (Khuyên dùng)</strong>
+                <span>Quét dòng văn bản, nhận diện cụm từ thêm mới (+) và bị xóa (-).</span>
               </div>
-            </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
-              <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
+            </div>
+            <div class="ws-radio-box">
+              <input type="radio" name="compMode" value="summary">
+              <div class="ws-radio-info">
+                <strong>Báo cáo tóm tắt tổng quan</strong>
+                <span>Tính toán tỷ lệ tương đồng và tổng hợp trang có thay đổi.</span>
               </div>
-            </label>
+            </div>
           </div>
+        </div>
+
+        <!-- 2. Hướng dẫn đối chiếu -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; font-size:0.85rem; color:#475569; margin-top:12px;">
+          <div style="font-weight:700; color:#1e293b; margin-bottom:6px;"><i class="fas fa-info-circle text-primary"></i> Quy chuẩn phân tích:</div>
+          <p style="margin:0 0 6px 0;">• Nét màu đỏ <strong style="color:#e74c3c;">[-]</strong>: Nội dung ở Bản A đã bị sửa hoặc xóa bỏ.</p>
+          <p style="margin:0;">• Nét màu xanh <strong style="color:#27ae60;">[+]</strong>: Nội dung mới được bổ sung vào Bản B.</p>
         </div>
       </div>
 
@@ -328,53 +370,53 @@
     <!-- BƯỚC 1: KHUNG TẢI FILE (UPLOAD PANEL) -->
     <div class="upload-panel" id="uploadPanel">
       <div class="upload-panel-header">
-        <i class="fas fa-columns"></i> Tải tệp lên để thực hiện So sánh PDF
+        <i class="fas fa-columns"></i> Tải lên 2 tệp PDF để so sánh khác biệt
       </div>
       <div class="drop-zone" id="dropZone">
-        <div class="dz-icon"><i class="fas fa-columns"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>Kéo &amp; thả 2 file PDF vào đây</h3>
+        <p>hoặc nhấn nút bên dưới để chọn đồng thời 2 file (Bản cũ và Bản mới)</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn 2 tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" multiple style="display:none;">
+        <div class="dz-note">Vui lòng chọn 2 file PDF để tiến hành đối chiếu · Tối đa 50 MB / file</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Đã phát hiện và đánh dấu các điểm khác biệt giữa 2 file!</h3>
-      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
-      <button type="button" class="btn-download-result" onclick="downloadResultFile()">
+      <h3>Đã phát hiện và phân tích các điểm khác biệt giữa 2 file thành công!</h3>
+      <p id="downloadMeta">Tài liệu báo cáo đối chiếu PDF đã được tạo hoàn tất.</p>
+      <button type="button" class="btn-download-result" id="btnDownloadResult" onclick="downloadResultFile()">
         <i class="fas fa-download"></i> Tải báo cáo so sánh PDF
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
-          <i class="fas fa-redo"></i> Xử lý tệp khác
+          <i class="fas fa-redo"></i> Xử lý 2 tệp khác
         </button>
       </div>
     </div>
 
     <!-- ===== NỘI DUNG CHUẨN SEO ===== -->
     <section class="seo-section">
-      <h2>Hướng dẫn sử dụng So sánh PDF trực tuyến trong 3 bước</h2>
+      <h2>Hướng dẫn So sánh 2 file PDF trực tuyến trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải 2 file PDF lên</h4>
+          <p>Kéo và thả cùng lúc 2 tệp PDF (Bản cũ và Bản mới) vào khung hoặc nhấn nút Chọn 2 tệp PDF.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Hệ thống đối chiếu tự động</h4>
+          <p>Thuật toán thông minh tự động quét từng dòng chữ, phát hiện nội dung thêm mới và nội dung bị xóa.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
-          <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <h4>Tải báo cáo phân tích</h4>
+          <p>Xem tóm tắt tỷ lệ tương đồng và tải về tệp PDF báo cáo đối chiếu chi tiết chỉ sau vài giây.</p>
         </div>
       </div>
     </section>
@@ -408,25 +450,33 @@
       <h2>Câu hỏi thường gặp về So sánh PDF (FAQ)</h2>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Sử dụng công cụ So sánh PDF tại ToolHub có mất phí không?
+          Công cụ so sánh PDF của ToolHub phát hiện những điểm khác biệt nào?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Hệ thống phát hiện chi tiết các dòng văn bản mới được thêm vào (+), các dòng hoặc điều khoản hợp đồng bị xóa bỏ (-), sự thay đổi thứ tự và tính toán tỷ lệ tương đồng tổng thể giữa hai phiên bản tài liệu.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Tôi có thể so sánh 2 file PDF có số lượng trang khác nhau không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Hoàn toàn được! Thuật toán đối chiếu tự động căn chỉnh và phát hiện các trang bổ sung hoặc trang bị rút gọn một cách chính xác.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Báo cáo so sánh được xuất ra ở định dạng nào?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Báo cáo được biên soạn và tải về dưới dạng tệp PDF tiêu chuẩn, bao gồm bảng tóm tắt chỉ số tương đồng và danh mục trích dẫn thay đổi theo từng trang trực quan.
         </div>
       </div>
     </section>
 
-  
     <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
     <section class="seo-section seo-article">
       <h2>Giới thiệu công cụ So sánh 2 file PDF trực tuyến tại ToolHub</h2>
@@ -438,11 +488,11 @@
       <div class="seo-grid-cols">
         <div class="seo-col-card">
           <h4><i class="fas fa-columns"></i> Đánh dấu khác biệt thông minh</h4>
-          <p>Tô màu trực quan các thay đổi: thêm mới, xóa bỏ hoặc sửa đổi câu chữ.</p>
+          <p>Tô màu trực quan các thay đổi: thêm mới (+), xóa bỏ (-) hoặc sửa đổi câu chữ.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-eye"></i> Xem song song (Side-by-side)</h4>
-          <p>Trình bày hai tài liệu đối chiếu song song giúp quan sát trực quan.</p>
+          <h4><i class="fas fa-percentage"></i> Đo lường tỷ lệ tương đồng</h4>
+          <p>Tính toán chính xác phần trăm trùng khớp nội dung giữa hai phiên bản từ 0% đến 100%.</p>
         </div>
         <div class="seo-col-card">
           <h4><i class="fas fa-balance-scale"></i> Rà soát hợp đồng chuẩn xác</h4>
@@ -452,6 +502,17 @@
           <h4><i class="fas fa-user-shield"></i> An toàn dữ liệu tuyệt đối</h4>
           <p>Quá trình so sánh diễn ra bảo mật, cam kết không lưu trữ tài liệu nhạy cảm.</p>
         </div>
+      </div>
+
+      <h3>Các trường hợp ứng dụng thực tế phổ biến</h3>
+      <ul>
+        <li><strong>Rà soát hợp đồng pháp lý:</strong> Kiểm tra các điều khoản sửa đổi trong phụ lục hợp đồng kinh tế so với bản gốc ban đầu.</li>
+        <li><strong>So sánh hồ sơ mời thầu và dự thầu:</strong> Đối chiếu các yêu cầu kỹ thuật, đơn giá và danh mục vật tư giữa các lần nộp hồ sơ.</li>
+        <li><strong>Kiểm duyệt bản in ấn và xuất bản:</strong> Phát hiện lỗi chính tả, câu chữ bị biên tập viên chỉnh sửa trước khi đưa vào nhà in.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo so sánh hợp đồng hiệu quả:</strong> Khi tải tệp lên, bạn nên chọn đúng file theo thứ tự: file thứ nhất là bản gốc cũ, file thứ hai là bản mới chỉnh sửa để báo cáo phân định chuẩn xác chiều hướng thay đổi nội dung.
       </div>
     </section>
 

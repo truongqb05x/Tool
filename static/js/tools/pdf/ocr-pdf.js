@@ -1,9 +1,22 @@
 /* =========================================================
    CÔNG CỤ PDF: OCR PDF - ocr-pdf.js
-   Logic chuyên biệt: Xử lý chọn file, workspace & chuẩn bị API backend
+   Logic chuyên biệt: Xử lý chọn file, tùy chọn ngôn ngữ & kết nối API
    ========================================================= */
 
 let currentSelectedFile = null;
+let currentDownloadUrl = null;
+let currentDownloadName = null;
+let currentOcrLang = 'vie+eng';
+
+function selectOcrLang(element, lang) {
+  currentOcrLang = lang;
+  document.querySelectorAll('.ws-radio-box').forEach(el => el.classList.remove('selected'));
+  if (element) {
+    element.classList.add('selected');
+    const radio = element.querySelector('input[type="radio"]');
+    if (radio) radio.checked = true;
+  }
+}
 
 function initTool() {
   const fileInput = document.getElementById('fileInput');
@@ -38,6 +51,11 @@ function initTool() {
 }
 
 function handleFileSelected(file) {
+  if (!file.name.toLowerCase().endsWith('.pdf')) {
+    alert('Vui lòng chọn đúng tệp tài liệu PDF (.pdf).');
+    return;
+  }
+
   currentSelectedFile = file;
   const sizeKb = (file.size / 1024).toFixed(1);
   const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
@@ -64,72 +82,105 @@ function handleFileSelected(file) {
   }
 }
 
-function executeToolAction() {
-  if (!currentSelectedFile) return;
-
-  const btn = document.getElementById('btnExecute');
-  if (btn) {
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý tài liệu...';
-  }
-
-  // Giả lập tiến trình xử lý, sẵn sàng thay bằng fetch('/pdf/api/ocr-pdf')
-  setTimeout(function() {
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = 'Quét OCR văn bản <i class="fas fa-arrow-right"></i>';
-    }
-
-    const toolWorkspace = document.getElementById('toolWorkspace');
-    const downloadCard = document.getElementById('downloadCard');
-    const toolContainer = document.getElementById('toolContainer');
-    if (toolContainer) toolContainer.classList.add('aligned-left');
-
-    if (toolWorkspace) toolWorkspace.classList.remove('active');
-    if (downloadCard) {
-      downloadCard.classList.add('show');
-      downloadCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-  }, 1200);
-}
-
-function downloadResultFile() {
-  if (!currentSelectedFile) return;
-  const originalName = currentSelectedFile.name;
-  const dotIndex = originalName.lastIndexOf('.');
-  const baseName = dotIndex !== -1 ? originalName.substring(0, dotIndex) : originalName;
-  const resultFileName = baseName + '_ocr-pdf.pdf';
-
-  if (typeof fakeDownload === 'function') {
-    fakeDownload(resultFileName);
-  } else {
-    alert('Đã chuẩn bị tải về: ' + resultFileName);
-  }
-}
-
 function resetFileSelection() {
   currentSelectedFile = null;
+  currentDownloadUrl = null;
+  currentDownloadName = null;
+
   const fileInput = document.getElementById('fileInput');
   if (fileInput) fileInput.value = '';
 
   const uploadPanel = document.getElementById('uploadPanel');
   const toolWorkspace = document.getElementById('toolWorkspace');
   const downloadCard = document.getElementById('downloadCard');
-
   const toolHero = document.getElementById('toolHero');
   const toolContainer = document.getElementById('toolContainer');
+
   if (toolHero) toolHero.classList.remove('sr-only');
   if (toolContainer) toolContainer.classList.remove('aligned-left');
-  if (downloadCard) downloadCard.classList.remove('show');
   if (toolWorkspace) toolWorkspace.classList.remove('active');
-  if (uploadPanel) uploadPanel.style.display = 'block';
+  if (downloadCard) downloadCard.classList.remove('show');
+  if (uploadPanel) {
+    uploadPanel.style.display = 'block';
+    uploadPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 }
 
-function toggleFaqItem(element) {
-  const faqItem = element.closest('.tool-faq-item');
-  if (faqItem) {
-    faqItem.classList.toggle('active');
+function executeToolAction() {
+  if (!currentSelectedFile) {
+    alert('Vui lòng chọn 1 tệp PDF để thực hiện OCR.');
+    return;
   }
+
+  const btn = document.getElementById('btnExecute');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang quét OCR nhận diện chữ...';
+  }
+
+  const formData = new FormData();
+  formData.append('file', currentSelectedFile);
+  formData.append('lang', currentOcrLang);
+
+  fetch('/pdf/api/ocr-pdf', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = 'Quét OCR văn bản <i class="fas fa-arrow-right"></i>';
+    }
+
+    if (data.status === 'success' || data.success) {
+      currentDownloadUrl = data.download_url;
+      currentDownloadName = data.download_name || 'tai_lieu_searchable.pdf';
+
+      const toolWorkspace = document.getElementById('toolWorkspace');
+      const downloadCard = document.getElementById('downloadCard');
+      const downloadMeta = document.getElementById('downloadMeta');
+
+      const d = data.data || {};
+      if (downloadMeta) {
+        downloadMeta.innerHTML = `Đã nhận diện thành công <strong>${d.total_pages || 1} trang</strong> (${d.total_words || 0} từ). Tệp PDF giờ đây có thể tìm kiếm từ khóa và bôi đen sao chép văn bản.`;
+      }
+
+      if (toolWorkspace) toolWorkspace.classList.remove('active');
+      if (downloadCard) {
+        downloadCard.classList.add('show');
+        downloadCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    } else {
+      alert(data.message || 'Có lỗi xảy ra khi OCR PDF. Vui lòng thử lại!');
+    }
+  })
+  .catch(err => {
+    console.error('Lỗi API OCR PDF:', err);
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = 'Quét OCR văn bản <i class="fas fa-arrow-right"></i>';
+    }
+    alert('Không thể kết nối đến máy chủ. Vui lòng thử lại sau ít phút!');
+  });
+}
+
+function downloadResultFile() {
+  if (currentDownloadUrl) {
+    const a = document.createElement('a');
+    a.href = currentDownloadUrl;
+    if (currentDownloadName) a.download = currentDownloadName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } else {
+    alert('Không tìm thấy tệp tải về!');
+  }
+}
+
+function toggleFaqItem(header) {
+  const item = header.parentElement;
+  if (item) item.classList.toggle('active');
 }
 
 document.addEventListener('DOMContentLoaded', initTool);
