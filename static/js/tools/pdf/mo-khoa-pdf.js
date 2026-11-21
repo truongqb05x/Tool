@@ -1,9 +1,11 @@
 /* =========================================================
    CÔNG CỤ PDF: Mở khóa PDF - mo-khoa-pdf.js
-   Logic chuyên biệt: Xử lý chọn file, workspace & chuẩn bị API backend
+   Logic: Xử lý gỡ bỏ mật khẩu và hạn chế quyền tài liệu PDF
    ========================================================= */
 
 let currentSelectedFile = null;
+let unlockedDownloadUrl = null;
+let unlockedFileName = null;
 
 function initTool() {
   const fileInput = document.getElementById('fileInput');
@@ -38,15 +40,33 @@ function initTool() {
 }
 
 function handleFileSelected(file) {
+  if (!file.name.toLowerCase().endsWith('.pdf')) {
+    alert('Vui lòng chọn tệp có định dạng PDF (.pdf)!');
+    return;
+  }
+
   currentSelectedFile = file;
+  unlockedDownloadUrl = null;
+  unlockedFileName = null;
+
   const sizeKb = (file.size / 1024).toFixed(1);
   const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
   const displaySize = file.size >= 1024 * 1024 ? sizeMb + ' MB' : sizeKb + ' KB';
 
   const nameEl = document.getElementById('selectedFileName');
   const sizeEl = document.getElementById('selectedFileSize');
+  const summaryNameEl = document.getElementById('summaryFileName');
+
   if (nameEl) nameEl.textContent = file.name;
   if (sizeEl) sizeEl.textContent = 'Dung lượng: ' + displaySize;
+  if (summaryNameEl) summaryNameEl.textContent = file.name;
+
+  // Reset ô nhập mật khẩu
+  const pwInput = document.getElementById('pdfPassword');
+  if (pwInput) pwInput.value = '';
+
+  const confirmCheck = document.getElementById('confirmOwner');
+  if (confirmCheck) confirmCheck.checked = false;
 
   const uploadPanel = document.getElementById('uploadPanel');
   const toolWorkspace = document.getElementById('toolWorkspace');
@@ -64,60 +84,140 @@ function handleFileSelected(file) {
   }
 }
 
-function executeToolAction() {
-  if (!currentSelectedFile) return;
+function togglePasswordVisibility() {
+  const pwInput = document.getElementById('pdfPassword');
+  const icon = document.getElementById('togglePasswordIcon');
+  if (!pwInput || !icon) return;
 
-  const btn = document.getElementById('btnExecute');
-  if (btn) {
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý tài liệu...';
+  if (pwInput.type === 'password') {
+    pwInput.type = 'text';
+    icon.classList.remove('fa-eye');
+    icon.classList.add('fa-eye-slash');
+  } else {
+    pwInput.type = 'password';
+    icon.classList.remove('fa-eye-slash');
+    icon.classList.add('fa-eye');
+  }
+}
+
+async function executeToolAction() {
+  if (!currentSelectedFile) {
+    alert('Vui lòng chọn một file PDF trước!');
+    return;
   }
 
-  // Giả lập tiến trình xử lý, sẵn sàng thay bằng fetch('/pdf/api/mo-khoa-pdf')
-  setTimeout(function() {
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = 'Mở khóa tài liệu <i class="fas fa-arrow-right"></i>';
+  const confirmCheck = document.getElementById('confirmOwner');
+  if (confirmCheck && !confirmCheck.checked) {
+    alert('Vui lòng tích xác nhận bạn là chủ sở hữu hoặc có quyền hợp pháp để mở khóa tệp PDF này.');
+    confirmCheck.focus();
+    return;
+  }
+
+  const pwInput = document.getElementById('pdfPassword');
+  const password = pwInput ? pwInput.value : '';
+
+  const btn = document.getElementById('btnExecute');
+  const originalBtnHtml = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i> Đang giải mã và mở khóa...';
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append('file', currentSelectedFile);
+    formData.append('password', password);
+
+    const response = await fetch('/pdf/api/mo-khoa-pdf', {
+      method: 'POST',
+      body: formData
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      alert(result.message || 'Mở khóa file PDF thất bại. Vui lòng kiểm tra lại mật khẩu!');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalBtnHtml;
+      }
+      return;
+    }
+
+    // Mở khóa thành công
+    unlockedDownloadUrl = result.download_url;
+    unlockedFileName = result.filename || (currentSelectedFile.name.replace(/\.pdf$/i, '') + '_unlocked.pdf');
+
+    // Lưu vào lịch sử xử lý gần đây nếu có hàm
+    if (typeof saveRecentFile === 'function') {
+      saveRecentFile({
+        name: unlockedFileName,
+        url: unlockedDownloadUrl,
+        tool: 'mo-khoa-pdf',
+        date: new Date().toISOString()
+      });
     }
 
     const toolWorkspace = document.getElementById('toolWorkspace');
     const downloadCard = document.getElementById('downloadCard');
     const toolContainer = document.getElementById('toolContainer');
-    if (toolContainer) toolContainer.classList.add('aligned-left');
+    const downloadMeta = document.getElementById('downloadMeta');
 
+    if (downloadMeta) {
+      downloadMeta.textContent = `Tài liệu "${unlockedFileName}" đã được loại bỏ hoàn toàn mật khẩu và sẵn sàng tải về.`;
+    }
+
+    if (toolContainer) toolContainer.classList.add('aligned-left');
     if (toolWorkspace) toolWorkspace.classList.remove('active');
     if (downloadCard) {
       downloadCard.classList.add('show');
       downloadCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-  }, 1200);
+
+  } catch (err) {
+    console.error('Lỗi khi mở khóa PDF:', err);
+    alert('Có lỗi kết nối máy chủ khi mở khóa tệp PDF. Vui lòng thử lại!');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = originalBtnHtml;
+    }
+  }
 }
 
 function downloadResultFile() {
-  if (!currentSelectedFile) return;
-  const originalName = currentSelectedFile.name;
-  const dotIndex = originalName.lastIndexOf('.');
-  const baseName = dotIndex !== -1 ? originalName.substring(0, dotIndex) : originalName;
-  const resultFileName = baseName + '_mo-khoa-pdf.pdf';
-
-  if (typeof fakeDownload === 'function') {
-    fakeDownload(resultFileName);
+  if (unlockedDownloadUrl) {
+    const a = document.createElement('a');
+    a.href = unlockedDownloadUrl;
+    a.download = unlockedFileName || 'tai_lieu_unlocked.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   } else {
-    alert('Đã chuẩn bị tải về: ' + resultFileName);
+    alert('Không tìm thấy liên kết tải về. Vui lòng thực hiện lại!');
   }
 }
 
 function resetFileSelection() {
   currentSelectedFile = null;
+  unlockedDownloadUrl = null;
+  unlockedFileName = null;
+
   const fileInput = document.getElementById('fileInput');
   if (fileInput) fileInput.value = '';
+
+  const pwInput = document.getElementById('pdfPassword');
+  if (pwInput) pwInput.value = '';
+
+  const confirmCheck = document.getElementById('confirmOwner');
+  if (confirmCheck) confirmCheck.checked = false;
 
   const uploadPanel = document.getElementById('uploadPanel');
   const toolWorkspace = document.getElementById('toolWorkspace');
   const downloadCard = document.getElementById('downloadCard');
-
   const toolHero = document.getElementById('toolHero');
   const toolContainer = document.getElementById('toolContainer');
+
   if (toolHero) toolHero.classList.remove('sr-only');
   if (toolContainer) toolContainer.classList.remove('aligned-left');
   if (downloadCard) downloadCard.classList.remove('show');

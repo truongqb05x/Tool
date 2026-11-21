@@ -257,13 +257,29 @@
   <div class="tool-workspace full-bleed" id="toolWorkspace">
     <!-- Cột trái: Khu vực xem trước file đã chọn -->
     <div class="file-area">
+      <!-- Nút nổi góc phải trên để chọn file khác -->
+      <div class="floating-add-wrap" data-tooltip="Chọn file PDF khác">
+        <button type="button" class="btn-floating-add" onclick="resetFileSelection()" aria-label="Chọn file khác">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+
       <div class="file-area-content">
         <div class="file-card-wrap" id="fileCardWrap">
-          <div class="file-card" id="fileCard">
+          <div class="file-card" id="fileCard" style="position:relative; width:240px;">
             <button type="button" class="btn-remove-file" onclick="resetFileSelection()" title="Xóa file">
               <i class="fas fa-times"></i>
             </button>
-            <div class="file-preview" id="filePreview">
+
+            <!-- Tùy chọn hover: Xem trước phóng to -->
+            <div class="file-card-actions">
+              <button type="button" class="btn-card-action" onclick="openPdfZoomModal()" title="Phóng to xem trước">
+                <i class="fas fa-search-plus"></i>
+              </button>
+            </div>
+
+            <!-- Khung xem trước trang PDF -->
+            <div class="file-preview" id="filePreview" style="position:relative; min-height:220px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
               <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
                 <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
                 <div class="line title"></div>
@@ -274,43 +290,101 @@
                 <div class="line"></div>
                 <div class="line short"></div>
               </div>
+
+              <!-- Lớp phủ chữ Watermark thời gian thực -->
+              <div id="watermarkPreviewOverlay" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%) rotate(-45deg); font-size:1.5rem; font-weight:800; color:#888888; opacity:0.25; white-space:nowrap; pointer-events:none; text-transform:uppercase; z-index:10; transition:all 0.2s ease;">
+                BẢN QUYỀN - TOOLHUB
+              </div>
             </div>
-            <div class="file-name" id="selectedFileName">tai_lieu.pdf</div>
+
+            <div class="file-name" id="selectedFileName" style="margin-top:8px;">tai_lieu.pdf</div>
             <div class="file-meta" id="selectedFileSize" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 0 KB</div>
           </div>
         </div>
-
-        <!-- Nút chọn file khác -->
-        <button type="button" class="btn-add-more" onclick="resetFileSelection()">
-          <i class="fas fa-sync-alt"></i> Chọn file khác
-        </button>
       </div>
     </div>
 
-    <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
+    <!-- Cột phải: Bảng tùy chọn thiết lập Watermark sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-stamp" style="margin-right:6px;"></i> Thiết lập dấu bản quyền (Watermark)
       </div>
 
       <div class="options-body">
-        <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
+        <!-- Nhập nội dung chữ Watermark -->
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label" for="inputWatermarkText">Nội dung chữ Watermark</label>
+          <input type="text" id="inputWatermarkText" class="ws-text-input" value="BẢN QUYỀN - TOOLHUB" placeholder="Ví dụ: BẢN QUYỀN, CONFIDENTIAL..." oninput="updateWatermarkPreview()">
+          
+          <!-- Các nút gợi ý nhanh -->
+          <div class="ws-quick-tags" style="margin-top:6px;">
+            <button type="button" class="ws-tag-btn" onclick="applyWatermarkTag('BẢN QUYỀN')">BẢN QUYỀN</button>
+            <button type="button" class="ws-tag-btn" onclick="applyWatermarkTag('CONFIDENTIAL')">CONFIDENTIAL</button>
+            <button type="button" class="ws-tag-btn" onclick="applyWatermarkTag('BẢN NHÁP')">BẢN NHÁP</button>
+            <button type="button" class="ws-tag-btn" onclick="applyWatermarkTag('KHÔNG SAO CHÉP')">KHÔNG SAO CHÉP</button>
+          </div>
+        </div>
+
+        <!-- Hướng xoay chữ -->
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Góc xoay chữ</label>
           <div class="ws-option-group">
             <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
+              <input type="radio" name="watermarkRotate" value="45" checked onchange="onWatermarkRotateChange(this)">
               <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
+                <strong>Chéo 45 độ (Khuyến nghị)</strong>
+                <span>Chạy dọc góc chéo trang, chống sao chép tối ưu.</span>
               </div>
             </label>
             <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
+              <input type="radio" name="watermarkRotate" value="0" onchange="onWatermarkRotateChange(this)">
               <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
+                <strong>Nằm ngang 0 độ</strong>
+                <span>Nằm ngang chính giữa trang giấy.</span>
               </div>
             </label>
+          </div>
+        </div>
+
+        <!-- Độ mờ trong suốt (Opacity) -->
+        <div class="form-group" style="margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <label class="form-label" for="sliderOpacity" style="margin-bottom:0;">Độ trong suốt (Mờ)</label>
+            <span id="opacityDisplayVal" style="font-size:0.8rem; font-weight:700; color:#1e5b9c;">25%</span>
+          </div>
+          <input type="range" id="sliderOpacity" min="10" max="80" value="25" step="5" style="width:100%; margin-top:6px; accent-color:#1e5b9c;" oninput="onOpacityChange(this.value)">
+          <small class="ws-input-hint">Kéo sang trái để mờ hơn, kéo sang phải để đậm hơn.</small>
+        </div>
+
+        <!-- Màu sắc chữ -->
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Màu sắc Watermark</label>
+          <div style="display:flex; gap:10px; margin-top:6px;">
+            <button type="button" class="color-pick-btn active" data-color="#888888" onclick="selectColor('#888888', this)" style="flex:1; padding:6px; border:2px solid #1e5b9c; border-radius:4px; background:#f1f5f9; font-size:0.8rem; font-weight:600; color:#475569; display:flex; align-items:center; justify-content:center; gap:6px;">
+              <span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:#888888;"></span> Xám nhạt
+            </button>
+            <button type="button" class="color-pick-btn" data-color="#e74c3c" onclick="selectColor('#e74c3c', this)" style="flex:1; padding:6px; border:1px solid #cbd5e1; border-radius:4px; background:#fff; font-size:0.8rem; font-weight:600; color:#475569; display:flex; align-items:center; justify-content:center; gap:6px;">
+              <span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:#e74c3c;"></span> Đỏ nhạt
+            </button>
+            <button type="button" class="color-pick-btn" data-color="#1e5b9c" onclick="selectColor('#1e5b9c', this)" style="flex:1; padding:6px; border:1px solid #cbd5e1; border-radius:4px; background:#fff; font-size:0.8rem; font-weight:600; color:#475569; display:flex; align-items:center; justify-content:center; gap:6px;">
+              <span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:#1e5b9c;"></span> Xanh dương
+            </button>
+          </div>
+        </div>
+
+        <!-- Tóm tắt thông tin tài liệu -->
+        <div class="ws-file-summary" style="margin-bottom:12px;">
+          <div class="ws-summary-row">
+            <span><i class="fas fa-file-pdf"></i> Tệp gốc:</span>
+            <strong id="summaryFileName" style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">tai_lieu.pdf</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-layer-group"></i> Tổng số trang:</span>
+            <strong id="totalPagesOrig">0 trang</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-eye"></i> Dấu hiển thị:</span>
+            <strong id="summaryWatermarkPreview" style="color:#1e5b9c; max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">BẢN QUYỀN - TOOLHUB</strong>
           </div>
         </div>
       </div>
@@ -331,28 +405,29 @@
         <i class="fas fa-stamp"></i> Tải tệp lên để thực hiện Thêm watermark PDF
       </div>
       <div class="drop-zone" id="dropZone">
-        <div class="dz-icon"><i class="fas fa-stamp"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>Kéo &amp; thả file PDF vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Hỗ trợ file PDF tối đa 50 MB · Tùy biến nội dung, độ mờ và góc xoay watermark</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Đã chèn dấu bản quyền watermark vào file PDF!</h3>
-      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <h3 id="downloadSuccessTitle">Đã chèn dấu bản quyền watermark vào file PDF!</h3>
+      <p id="downloadMeta">Tài liệu đã được đóng dấu bản quyền hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultFile()">
-        <i class="fas fa-download"></i> Tải xuống PDF có watermark
+        <i class="fas fa-download"></i> Tải xuống file PDF có watermark
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
-          <i class="fas fa-redo"></i> Xử lý tệp khác
+          <i class="fas fa-redo"></i> Đóng dấu một tệp khác
         </button>
       </div>
     </div>
@@ -363,18 +438,18 @@
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file PDF lên</h4>
+          <p>Kéo và thả tài liệu PDF vào khung tải lên hoặc bấm nút chọn file từ thiết bị của bạn.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Tùy chỉnh dấu bản quyền</h4>
+          <p>Nhập chữ đóng dấu, chọn góc nghiêng 45 độ hoặc ngang, điều chỉnh độ mờ trong suốt.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
           <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <p>Nhấn "Chèn Watermark ngay" và tải tài liệu PDF đã đóng dấu bảo vệ về thiết bị.</p>
         </div>
       </div>
     </section>
@@ -392,13 +467,13 @@
         <div class="sec-item">
           <div>
             <strong>Tự động xóa sau 1 giờ</strong>
-            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút.</span>
+            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút, không lưu trữ dài hạn.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
-            <strong>Bảo mật thông tin</strong>
-            <span>Không chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
+            <strong>Không ai xem file của bạn</strong>
+            <span>Quá trình đóng dấu hoàn toàn tự động bằng thuật toán, bảo vệ tối đa tính riêng tư.</span>
           </div>
         </div>
       </div>
@@ -412,46 +487,75 @@
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Hoàn toàn miễn phí 100%! Bạn có thể đóng dấu bao nhiêu tài liệu tùy thích mà không cần đăng ký tài khoản trả phí.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Watermark có làm mờ chữ hoặc che mất nội dung gốc của tài liệu không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Không. Bạn có thể chủ động chỉnh thanh "Độ trong suốt" xuống 20% - 25%, dấu bản quyền sẽ xuất hiện mờ mịt phía sau văn bản mà mắt người vẫn đọc được chữ rõ ràng.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tôi có thể chèn các cụm từ tiếng Việt có dấu như "BẢN QUYỀN", "BẢN NHÁP" được không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Có. Hệ thống hỗ trợ bảng mã Unicode tiếng Việt đầy đủ, hiển thị chính xác mọi ký tự tiếng Việt có dấu mà không bị lỗi font.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tài liệu sau khi đóng dấu có giữ nguyên chất lượng không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Có, thuật toán PyMuPDF giữ nguyên 100% độ sắc nét của văn bản và hình ảnh gốc, chỉ bổ sung thêm lớp dấu bản quyền bảo vệ.
         </div>
       </div>
     </section>
 
-  
     <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
     <section class="seo-section seo-article">
       <h2>Giới thiệu công cụ Chèn Watermark vào PDF tại ToolHub</h2>
 
-      <p>Đánh dấu bản quyền thương hiệu, ghi chú tài liệu mật (CONFIDENTIAL) hoặc chống sao chép tài liệu nội bộ là việc làm thiết yếu trước khi phát hành tài liệu PDF công khai ra bên ngoài.</p>
+      <p>Khi chia sẻ các tài liệu quan trọng như hồ sơ báo giá, bản thảo đề tài nghiên cứu, hợp đồng mẫu hoặc tài liệu nội bộ công ty lên Internet, nguy cơ bị sao chép trái phép, giả mạo hoặc sử dụng sai mục đích là rất lớn. Việc đóng dấu bản quyền chìm (Watermark) là phương thức hiệu quả và đơn giản nhất để khẳng định quyền sở hữu trí tuệ và ngăn chặn hành vi ăn cắp nội dung.</p>
 
-      <p>Công cụ <strong>Chèn Watermark PDF ToolHub</strong> giúp bạn đóng dấu chìm bằng văn bản tùy chỉnh hoặc logo hình ảnh sắc nét lên toàn bộ các trang tài liệu với độ mờ, kích thước và góc nghiêng chuẩn xác.</p>
+      <p>Công cụ <strong>Thêm Watermark PDF trực tuyến ToolHub</strong> cung cấp giải pháp đóng dấu chìm chuyên nghiệp với khả năng tùy chỉnh nội dung văn bản, góc xoay nghiêng, độ mờ trong suốt và màu sắc hiển thị thời gian thực ngay trên trình duyệt mà không cần cài đặt phần mềm đắt tiền.</p>
 
       <div class="seo-grid-cols">
         <div class="seo-col-card">
-          <h4><i class="fas fa-stamp"></i> Watermark văn bản & hình ảnh</h4>
-          <p>Tùy chọn đóng dấu bằng chữ (Bản quyền, Mật, Mẫu) hoặc chèn logo công ty.</p>
+          <h4><i class="fas fa-stamp"></i> Watermark văn bản linh hoạt</h4>
+          <p>Tùy chọn đóng dấu bằng chữ bất kỳ (Bản quyền, Mật, Bản nháp, Tên tác giả) với font chữ sắc nét.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-adjust"></i> Điều chỉnh độ trong suốt</h4>
-          <p>Kiểm soát độ mờ (opacity) hợp lý để dấu chìm rõ nét mà không cản trở việc đọc chữ.</p>
+          <h4><i class="fas fa-adjust"></i> Tùy chỉnh độ mờ trong suốt</h4>
+          <p>Dễ dàng kéo thanh trượt kiểm soát độ mờ hợp lý để dấu chìm rõ ràng mà không cản trở việc đọc chữ.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-sync-alt"></i> Tùy chỉnh góc xoay & vị trí</h4>
-          <p>Đặt dấu chìm chéo 45 độ, chính giữa trang hoặc ở bất kỳ góc nào theo ý muốn.</p>
+          <h4><i class="fas fa-sync-alt"></i> Tùy chọn xoay 45° hoặc ngang</h4>
+          <p>Đặt dấu chìm chéo 45 độ qua tâm trang hoặc nằm ngang chuẩn mực theo tiêu chuẩn quốc tế.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-copy"></i> Áp dụng hàng loạt</h4>
-          <p>Đóng dấu toàn bộ hàng trăm trang tài liệu đồng bộ chỉ với một cú nhấp chuột.</p>
+          <h4><i class="fas fa-copy"></i> Áp dụng hàng loạt tốc độ cao</h4>
+          <p>Tự động đóng dấu đồng bộ vào toàn bộ hàng chục hay hàng trăm trang tài liệu chỉ trong vài giây.</p>
         </div>
+      </div>
+
+      <h3>Khi nào bạn nên chèn Watermark vào tài liệu PDF?</h3>
+      <ul>
+        <li><strong>Bản thảo luận văn, đề tài nghiên cứu:</strong> Đóng dấu "BẢN NHÁP" hoặc "DRAFT" trước khi nộp duyệt để tránh bị phát tán bản chưa chính thức.</li>
+        <li><strong>Báo giá và hồ sơ năng lực gửi đối tác:</strong> Đóng dấu chìm tên công ty hoặc số điện thoại để khẳng định quyền tác giả và quảng bá thương hiệu.</li>
+        <li><strong>Tài liệu nội bộ bảo mật cao:</strong> Đóng dấu "CONFIDENTIAL" hoặc "MẬT" để nâng cao ý thức bảo mật thông tin của nhân viên.</li>
+        <li><strong>Chứng từ, hóa đơn mẫu:</strong> Đóng dấu "MẪU THỬ" hoặc "SPECIMEN" để chống các hành vi gian lận tài chính.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo đóng dấu đẹp:</strong> Góc nghiêng <strong>"Chéo 45 độ"</strong> kết hợp với độ mờ <strong>25%</strong> và màu xám nhạt là cấu hình chuẩn quốc tế được ưa chuộng nhất, giúp bảo vệ tối ưu mà vẫn giữ trọn vẻ đẹp trang nhã của tài liệu.
       </div>
     </section>
 
@@ -516,8 +620,9 @@
   </div>
 
   <!-- SCRIPTS -->
-
-<script src="../../static/js/app.js"></script>
+  <script src="../../static/vendor/pdfjs/pdf.min.js"></script>
+  <script src="../../static/js/ultis/pdf/pdf-preview.js"></script>
+  <script src="../../static/js/app.js"></script>
   <script src="../../static/js/tools/pdf/them-watermark-pdf.js"></script>
 
 </body>

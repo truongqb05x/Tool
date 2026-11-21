@@ -13,8 +13,16 @@ def download_pdf_result(task_id, filename):
     """Gửi tệp đã xử lý (nén, gộp, tách .pdf hoặc .zip) về máy tính của người dùng."""
     upload_dir = current_app.config.get('UPLOAD_FOLDER', 'uploads')
 
-    # Kiểm tra trong các thư mục reordered, deleted_pages, rotated, split, merged, compressed
+    # Kiểm tra trong các thư mục converted_images, converted_pdf, unlocked, protected, watermarked, numbered_pages, extracted, reordered, deleted_pages, rotated, split, merged, compressed
     candidates = [
+        (os.path.join(upload_dir, 'converted_images', f"{task_id}.zip"), 'application/zip'),
+        (os.path.join(upload_dir, 'converted_pdf', f"{task_id}.pdf"), 'application/pdf'),
+        (os.path.join(upload_dir, 'unlocked', f"{task_id}_unlocked.pdf"), 'application/pdf'),
+        (os.path.join(upload_dir, 'protected', f"{task_id}_protected.pdf"), 'application/pdf'),
+        (os.path.join(upload_dir, 'watermarked', f"{task_id}_watermark.pdf"), 'application/pdf'),
+        (os.path.join(upload_dir, 'numbered_pages', f"{task_id}_numbered.pdf"), 'application/pdf'),
+        (os.path.join(upload_dir, 'extracted', f"{task_id}.zip"), 'application/zip'),
+        (os.path.join(upload_dir, 'extracted', f"{task_id}_extracted.pdf"), 'application/pdf'),
         (os.path.join(upload_dir, 'reordered', f"{task_id}_reordered.pdf"), 'application/pdf'),
         (os.path.join(upload_dir, 'deleted_pages', f"{task_id}_deleted.pdf"), 'application/pdf'),
         (os.path.join(upload_dir, 'rotated', f"{task_id}_rotated.pdf"), 'application/pdf'),

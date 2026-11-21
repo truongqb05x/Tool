@@ -255,69 +255,128 @@
   
   <!-- BƯỚC 2: WORKSPACE XỬ LÝ TOÀN CHIỀU RỘNG (SÁT LỀ PHẢI THEO CHUẨN XULY.HTML) -->
   <div class="tool-workspace full-bleed" id="toolWorkspace">
-    <!-- Cột trái: Khu vực xem trước file đã chọn -->
+    <!-- Cột trái: Khu vực xem trước danh sách ảnh đã chọn -->
     <div class="file-area">
-      <div class="file-area-content">
-        <div class="file-card-wrap" id="fileCardWrap">
-          <div class="file-card" id="fileCard">
-            <button type="button" class="btn-remove-file" onclick="resetFileSelection()" title="Xóa file">
-              <i class="fas fa-times"></i>
-            </button>
-            <div class="file-preview" id="filePreview">
-              <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
-                <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
-                <div class="line title"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
-                <div class="line"></div>
-                <div class="line block"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
-              </div>
-            </div>
-            <div class="file-name" id="selectedFileName">tai_lieu.pdf</div>
-            <div class="file-meta" id="selectedFileSize" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 0 KB</div>
-          </div>
+      <!-- Nút nổi thêm ảnh góc phải trên của khung xem trước -->
+      <div class="floating-add-wrap">
+        <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Thêm hình ảnh khác">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+
+      <div class="file-area-content" style="max-height: calc(100vh - 120px); overflow-y: auto; padding: 20px;">
+        <!-- Lưới thumbnail ảnh đã chọn -->
+        <div id="imageListContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; width: 100%;">
+          <!-- JS sẽ render các thẻ thumbnail ảnh vào đây -->
         </div>
 
-        <!-- Nút chọn file khác -->
-        <button type="button" class="btn-add-more" onclick="resetFileSelection()">
-          <i class="fas fa-sync-alt"></i> Chọn file khác
-        </button>
+        <!-- Nút chọn thêm ảnh -->
+        <div style="text-align: center; margin-top: 20px;">
+          <button type="button" class="btn-add-more" onclick="document.getElementById('fileInput').click()">
+            <i class="fas fa-plus-circle"></i> Thêm hình ảnh khác
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-sliders-h"></i> Thiết lập tạo PDF từ ảnh
       </div>
 
       <div class="options-body">
-        <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
-          <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
+        <!-- Khổ trang -->
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" style="font-weight:600; margin-bottom:8px; display:block;">Khổ trang PDF</label>
+          <div class="ws-option-group" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px;">
+            <label class="ws-radio-box selected" id="optSizeFit" style="padding:8px 4px; text-align:center; cursor:pointer;">
+              <input type="radio" name="pageSize" value="fit" checked onchange="handlePageSizeChange('fit')">
               <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
+                <strong style="font-size:0.83rem;">Vừa ảnh</strong>
               </div>
             </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
+            <label class="ws-radio-box" id="optSizeA4" style="padding:8px 4px; text-align:center; cursor:pointer;">
+              <input type="radio" name="pageSize" value="a4" onchange="handlePageSizeChange('a4')">
               <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
+                <strong style="font-size:0.83rem;">Khổ A4</strong>
               </div>
             </label>
+            <label class="ws-radio-box" id="optSizeLetter" style="padding:8px 4px; text-align:center; cursor:pointer;">
+              <input type="radio" name="pageSize" value="letter" onchange="handlePageSizeChange('letter')">
+              <div class="ws-radio-text">
+                <strong style="font-size:0.83rem;">Letter</strong>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Hướng trang (chỉ áp dụng khi chọn khổ chuẩn A4/Letter) -->
+        <div class="form-group" id="orientationWrap" style="margin-bottom:16px;">
+          <label class="form-label" style="font-weight:600; margin-bottom:8px; display:block;">Hướng trang in</label>
+          <div class="ws-option-group" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px;">
+            <label class="ws-radio-box selected" id="optOrientAuto" style="padding:8px 4px; text-align:center; cursor:pointer;">
+              <input type="radio" name="orientation" value="auto" checked onchange="handleOrientationChange('auto')">
+              <div class="ws-radio-text">
+                <strong style="font-size:0.83rem;">Tự động</strong>
+              </div>
+            </label>
+            <label class="ws-radio-box" id="optOrientPort" style="padding:8px 4px; text-align:center; cursor:pointer;">
+              <input type="radio" name="orientation" value="portrait" onchange="handleOrientationChange('portrait')">
+              <div class="ws-radio-text">
+                <strong style="font-size:0.83rem;">Dọc</strong>
+              </div>
+            </label>
+            <label class="ws-radio-box" id="optOrientLand" style="padding:8px 4px; text-align:center; cursor:pointer;">
+              <input type="radio" name="orientation" value="landscape" onchange="handleOrientationChange('landscape')">
+              <div class="ws-radio-text">
+                <strong style="font-size:0.83rem;">Ngang</strong>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Khoảng cách lề -->
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" style="font-weight:600; margin-bottom:8px; display:block;">Khoảng cách lề trang</label>
+          <div class="ws-option-group" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px;">
+            <label class="ws-radio-box selected" id="optMarginNone" style="padding:8px 4px; text-align:center; cursor:pointer;">
+              <input type="radio" name="marginSize" value="0" checked onchange="handleMarginChange(0)">
+              <div class="ws-radio-text">
+                <strong style="font-size:0.83rem;">Không lề</strong>
+              </div>
+            </label>
+            <label class="ws-radio-box" id="optMarginSmall" style="padding:8px 4px; text-align:center; cursor:pointer;">
+              <input type="radio" name="marginSize" value="12" onchange="handleMarginChange(12)">
+              <div class="ws-radio-text">
+                <strong style="font-size:0.83rem;">Lề nhỏ</strong>
+              </div>
+            </label>
+            <label class="ws-radio-box" id="optMarginBig" style="padding:8px 4px; text-align:center; cursor:pointer;">
+              <input type="radio" name="marginSize" value="24" onchange="handleMarginChange(24)">
+              <div class="ws-radio-text">
+                <strong style="font-size:0.83rem;">Lề rộng</strong>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Tóm tắt số lượng ảnh -->
+        <div class="ws-file-summary" style="margin-bottom:12px;">
+          <div class="ws-summary-row">
+            <span><i class="fas fa-images"></i> Tổng số ảnh:</span>
+            <strong id="summaryImageCount" style="color:#e67e22;">0 ảnh</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-file-invoice"></i> Khổ trang:</span>
+            <strong id="summaryPageSize" style="color:#1e5b9c;">Vừa kích thước ảnh</strong>
           </div>
         </div>
       </div>
 
       <div class="action-area">
         <button type="button" class="btn-convert btn-execute" id="btnExecute" onclick="executeToolAction()">
-          Tạo file PDF từ ảnh <i class="fas fa-arrow-right"></i>
+          <i class="fas fa-file-pdf" style="margin-right:6px;"></i> Ghép thành PDF ngay
         </button>
       </div>
     </aside>
@@ -328,53 +387,54 @@
     <!-- BƯỚC 1: KHUNG TẢI FILE (UPLOAD PANEL) -->
     <div class="upload-panel" id="uploadPanel">
       <div class="upload-panel-header">
-        <i class="fas fa-images"></i> Tải tệp lên để thực hiện Ảnh sang PDF
+        <i class="fas fa-images"></i> Tải ảnh lên để chuyển sang tài liệu PDF
       </div>
       <div class="drop-zone" id="dropZone">
         <div class="dz-icon"><i class="fas fa-images"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <h3>Kéo &amp; thả các hình ảnh vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn một hoặc nhiều ảnh từ thiết bị</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp hình ảnh
+        </button>
+        <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg,image/webp,image/bmp" multiple style="display:none;">
+        <div class="dz-note">Hỗ trợ định dạng JPG, PNG, WEBP, BMP · Cho phép tải lên nhiều ảnh cùng lúc</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Các hình ảnh đã được ghép thành một file PDF hoàn chỉnh!</h3>
+      <h3 id="downloadSuccessTitle">Tất cả hình ảnh đã được ghép thành một file PDF hoàn chỉnh!</h3>
       <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultFile()">
         <i class="fas fa-download"></i> Tải xuống file PDF từ ảnh
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
-          <i class="fas fa-redo"></i> Xử lý tệp khác
+          <i class="fas fa-redo"></i> Ghép ảnh khác
         </button>
       </div>
     </div>
 
     <!-- ===== NỘI DUNG CHUẨN SEO ===== -->
     <section class="seo-section">
-      <h2>Hướng dẫn sử dụng Ảnh sang PDF trực tuyến trong 3 bước</h2>
+      <h2>Hướng dẫn chuyển hình ảnh sang PDF trực tuyến trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải ảnh lên</h4>
+          <p>Kéo và thả các tệp hình ảnh vào khung tải lên hoặc bấm nút chọn ảnh từ thiết bị của bạn.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Tùy chỉnh định dạng trang</h4>
+          <p>Chọn khổ giấy (A4, Vừa ảnh), hướng trang (dọc/ngang) và khoảng cách lề trang theo ý muốn.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
-          <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <h4>Tải file PDF về máy</h4>
+          <p>Nhấn "Ghép thành PDF ngay" và tải về tài liệu hoàn chỉnh sẵn sàng in ấn hoặc gửi đi.</p>
         </div>
       </div>
     </section>
@@ -386,72 +446,137 @@
         <div class="sec-item">
           <div>
             <strong>Mã hóa SSL 256-bit</strong>
-            <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức HTTPS.</span>
+            <span>Tất cả hình ảnh và file xuất ra được mã hóa an toàn qua giao thức HTTPS.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
             <strong>Tự động xóa sau 1 giờ</strong>
-            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút.</span>
+            <span>Hình ảnh tải lên được xóa vĩnh viễn khỏi hệ thống sau 60 phút, không lưu trữ lâu dài.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
-            <strong>Bảo mật thông tin</strong>
-            <span>Không chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
+            <strong>Bảo mật thông tin tuyệt đối</strong>
+            <span>Không sao lưu hình ảnh, không sử dụng cho mục đích huấn luyện AI hay chia sẻ bên thứ ba.</span>
           </div>
         </div>
       </div>
     </section>
 
     <section class="seo-section">
-      <h2>Câu hỏi thường gặp về Ảnh sang PDF (FAQ)</h2>
+      <h2>Câu hỏi thường gặp về chuyển Ảnh sang PDF (FAQ)</h2>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Sử dụng công cụ Ảnh sang PDF tại ToolHub có mất phí không?
+          Tôi có thể tải lên cùng lúc nhiều ảnh có định dạng khác nhau không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Hoàn toàn được! Bạn có thể chọn kết hợp cả ảnh JPG, PNG, WEBP và BMP trong cùng một lần tải lên, hệ thống sẽ tự động ghép tất cả vào một file PDF duy nhất.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Làm thế nào để thứ tự các trang trong PDF đúng như mong muốn?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Các hình ảnh được ghép vào tài liệu theo đúng thứ tự hiển thị trong vùng xem trước. Bạn có thể xóa bớt hoặc thêm ảnh mới để đạt thứ tự mong muốn.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Khổ giấy "Vừa ảnh" (Fit) khác gì so với khổ "A4"?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Chế độ "Vừa ảnh" tạo mỗi trang PDF có kích thước trùng khít 100% với kích thước gốc của bức ảnh đó, không có viền thừa trắng. Trong khi khổ "A4" sẽ căn chỉnh ảnh vào giữa trang giấy in tiêu chuẩn A4 (210 x 297 mm), rất thuận tiện khi in ấn ra giấy.
         </div>
       </div>
     </section>
 
-  
-    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
+    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO 4 KHỐI CHUẨN ===== -->
     <section class="seo-section seo-article">
-      <h2>Giới thiệu công cụ Chuyển ảnh sang PDF trực tuyến tại ToolHub</h2>
+      <h2>Giới thiệu công cụ Chuyển ảnh sang PDF trực tuyến miễn phí tại ToolHub</h2>
 
-      <p>Chuyển đổi các định dạng hình ảnh như JPG, PNG, WEBP sang file tài liệu PDF là nhu cầu thường xuyên khi tổng hợp hóa đơn, chứng từ, scan tài liệu hoặc tạo portfolio ảnh chuyên nghiệp.</p>
+      <!-- KHỐI 1: GIỚI THIỆU CHUNG (SEO-INTRO) -->
+      <div class="seo-intro">
+        <p>Việc chuyển đổi nhiều hình ảnh đơn lẻ thành một tệp tài liệu PDF đồng bộ là nhu cầu thiết yếu đối với học sinh, sinh viên và nhân viên văn phòng khi cần nộp hồ sơ, gửi hóa đơn thanh toán, nộp bài tập scan hoặc lưu trữ tài liệu chứng từ. Công cụ <strong>Chuyển ảnh sang PDF trực tuyến tại ToolHub</strong> mang lại giải pháp ghép ảnh nhanh chóng, linh hoạt và tiện dụng hàng đầu ngay trên trình duyệt máy tính và điện thoại.</p>
+        <p>Không cần cài đặt phần mềm chuyển đổi cồng kềnh, bạn chỉ việc chọn các bức ảnh của mình và tùy chỉnh khổ in, hệ thống sẽ kết xuất file PDF hoàn mỹ với độ phân giải nguyên bản cao nhất.</p>
+      </div>
 
-      <p>Công cụ <strong>Chuyển ảnh sang PDF ToolHub</strong> giúp bạn ghép nhiều bức ảnh thành một tệp PDF duy nhất, tự do tùy chỉnh thứ tự ảnh, kích thước trang in (A4, A3, Letter) và lề trang mà vẫn giữ nguyên chất lượng ảnh sắc nét.</p>
+      <!-- KHỐI 2: TÍNH NĂNG NỔI BẬT (SEO-FEATURES-GRID) -->
+      <h3 style="margin-top:28px; margin-bottom:16px; font-size:1.2rem; color:#1e293b;">
+        <i class="fas fa-star" style="color:#f39c12; margin-right:6px;"></i> Tính năng nổi bật khi tạo PDF từ ảnh tại ToolHub
+      </h3>
+      <div class="seo-features-grid">
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-images"></i></div>
+          <h4>Hỗ trợ đa định dạng hình ảnh</h4>
+          <p>Tương thích hoàn hảo với JPG, JPEG, PNG, WEBP và BMP, cho phép gộp lẫn lộn các định dạng khác nhau.</p>
+        </div>
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-print"></i></div>
+          <h4>Tùy chỉnh khổ in tiêu chuẩn</h4>
+          <p>Hỗ trợ tạo trang theo khổ in A4, Letter tiêu chuẩn hoặc kích thước tự động vừa vặn theo từng bức ảnh gốc.</p>
+        </div>
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-border-style"></i></div>
+          <h4>Căn chỉnh lề trang linh hoạt</h4>
+          <p>Tự do lựa chọn không viền lề (tràn viền) hoặc thêm khoảng cách lề hẹp, lề vừa tạo cảm giác thẩm mỹ chuyên nghiệp.</p>
+        </div>
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+          <h4>Ghép không giới hạn số lượng</h4>
+          <p>Thuật toán xử lý tối ưu của PyMuPDF cho phép ghép hàng chục hình ảnh thành tệp PDF chỉ trong vài giây.</p>
+        </div>
+      </div>
 
-      <div class="seo-grid-cols">
-        <div class="seo-col-card">
-          <h4><i class="fas fa-images"></i> Hỗ trợ đa dạng ảnh</h4>
-          <p>Ghép các tệp JPG, PNG, GIF, BMP, WEBP thành tệp PDF chất lượng cao.</p>
+      <!-- KHỐI 3: HƯỚNG DẪN CHI TIẾT (SEO-STEPS-DETAILED) -->
+      <h3 style="margin-top:28px; margin-bottom:16px; font-size:1.2rem; color:#1e5b9c; margin-right:6px;">
+        <i class="fas fa-list-ol" style="color:#1e5b9c; margin-right:6px;"></i> Hướng dẫn các bước chuyển đổi ảnh sang PDF
+      </h3>
+      <div class="seo-steps-detailed">
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 1</div>
+          <div class="step-content">
+            <h4>Tải các file hình ảnh lên hệ thống</h4>
+            <p>Bấm vào nút <strong>"Chọn tệp hình ảnh"</strong> hoặc kéo thả toàn bộ các bức ảnh bạn muốn ghép vào khung tải lên.</p>
+          </div>
         </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-sliders-h"></i> Tùy chỉnh khổ giấy & lề</h4>
-          <p>Dễ dàng chọn khổ giấy in A4, chiều dọc hoặc ngang, căn chỉnh lề theo ý muốn.</p>
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 2</div>
+          <div class="step-content">
+            <h4>Cấu hình thông số trang tài liệu</h4>
+            <p>Ở thanh tùy chọn bên phải, chọn khổ trang in (Khổ A4 hoặc Vừa ảnh), chọn hướng trang (Dọc/Ngang) và chọn lề trang.</p>
+          </div>
         </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-object-group"></i> Ghép nối không giới hạn</h4>
-          <p>Kết hợp nhiều hình ảnh liên tiếp thành một file PDF đồng bộ duy nhất.</p>
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 3</div>
+          <div class="step-content">
+            <h4>Thực hiện ghép thành tài liệu PDF</h4>
+            <p>Bấm nút <strong>"Ghép thành PDF ngay"</strong>. Hệ thống sẽ kết hợp tất cả các ảnh thành một tài liệu duy nhất.</p>
+          </div>
         </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-bolt"></i> Tốc độ xử lý siêu tốc</h4>
-          <p>Chuyển đổi trực tiếp trên trình duyệt, tải xuống ngay không cần chờ đợi.</p>
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 4</div>
+          <div class="step-content">
+            <h4>Tải tệp PDF hoàn chỉnh về thiết bị</h4>
+            <p>Bấm nút <strong>"Tải xuống file PDF từ ảnh"</strong> để lưu tệp PDF về máy tính hoặc điện thoại.</p>
+          </div>
         </div>
+      </div>
+
+      <!-- KHỐI 4: MẸO & LƯU Ý HỮU ÍCH (SEO-TIPS-BOX) -->
+      <div class="seo-tips-box" style="margin-top:28px; background:#eff6ff; border-left:4px solid #3b82f6; padding:18px 20px; border-radius:0 8px 8px 0;">
+        <h4 style="margin:0 0 10px 0; color:#1e40af; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+          <i class="fas fa-lightbulb" style="color:#f59e0b;"></i> Một số mẹo hữu ích khi gộp ảnh sang file PDF:
+        </h4>
+        <ul style="margin:0; padding-left:20px; color:#334155; line-height:1.6; font-size:0.92rem;">
+          <li><strong>Đặt tên ảnh theo số thứ tự:</strong> Trước khi tải lên, bạn nên đổi tên ảnh theo dạng 01.jpg, 02.jpg,... để khi chọn nhiều file trình duyệt sẽ giữ chuẩn thứ tự mong muốn.</li>
+          <li><strong>Chọn khổ A4 khi in ấn:</strong> Nếu mục đích cuối cùng là in tài liệu ra giấy A4, hãy chọn khổ trang "Khổ A4" và lề nhỏ để tài liệu khi in ra giấy không bị mất góc hay lệch mép giấy.</li>
+          <li><strong>Giữ nguyên tỷ lệ ảnh:</strong> Chế độ chuyển đổi tại ToolHub tự động cân đối tỷ lệ rộng/cao (aspect ratio) của bức ảnh, cam kết không bao giờ bị méo mó hay co dãn hình.</li>
+        </ul>
       </div>
     </section>
 

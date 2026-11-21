@@ -257,13 +257,29 @@
   <div class="tool-workspace full-bleed" id="toolWorkspace">
     <!-- Cột trái: Khu vực xem trước file đã chọn -->
     <div class="file-area">
+      <!-- Nút nổi góc phải trên để chọn file khác -->
+      <div class="floating-add-wrap" data-tooltip="Chọn file PDF khác">
+        <button type="button" class="btn-floating-add" onclick="resetFileSelection()" aria-label="Chọn file khác">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+
       <div class="file-area-content">
         <div class="file-card-wrap" id="fileCardWrap">
-          <div class="file-card" id="fileCard">
+          <div class="file-card" id="fileCard" style="position:relative; width:240px;">
             <button type="button" class="btn-remove-file" onclick="resetFileSelection()" title="Xóa file">
               <i class="fas fa-times"></i>
             </button>
-            <div class="file-preview" id="filePreview">
+
+            <!-- Tùy chọn hover: Xem trước phóng to -->
+            <div class="file-card-actions">
+              <button type="button" class="btn-card-action" onclick="openPdfZoomModal()" title="Phóng to xem trước">
+                <i class="fas fa-search-plus"></i>
+              </button>
+            </div>
+
+            <!-- Khung xem trước trang PDF -->
+            <div class="file-preview" id="filePreview" style="position:relative; min-height:220px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
               <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
                 <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
                 <div class="line title"></div>
@@ -274,50 +290,89 @@
                 <div class="line"></div>
                 <div class="line short"></div>
               </div>
+
+              <!-- Icon ổ khóa minh họa bảo mật -->
+              <div style="position:absolute; top:12px; right:12px; width:30px; height:30px; border-radius:50%; background:#1e5b9c; color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.2); z-index:10;">
+                <i class="fas fa-lock" style="font-size:0.85rem;"></i>
+              </div>
             </div>
-            <div class="file-name" id="selectedFileName">tai_lieu.pdf</div>
+
+            <div class="file-name" id="selectedFileName" style="margin-top:8px;">tai_lieu.pdf</div>
             <div class="file-meta" id="selectedFileSize" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 0 KB</div>
           </div>
         </div>
-
-        <!-- Nút chọn file khác -->
-        <button type="button" class="btn-add-more" onclick="resetFileSelection()">
-          <i class="fas fa-sync-alt"></i> Chọn file khác
-        </button>
       </div>
     </div>
 
-    <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
+    <!-- Cột phải: Bảng tùy chọn đặt mật khẩu sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-shield-alt" style="margin-right:6px;"></i> Thiết lập mật khẩu bảo vệ PDF
       </div>
 
       <div class="options-body">
-        <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
-          <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
-              <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
-              </div>
-            </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
-              <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
-              </div>
-            </label>
+        <!-- Nhập mật khẩu -->
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label" for="inputUserPassword">Nhập mật khẩu mở file</label>
+          <div style="position:relative;">
+            <input type="password" id="inputUserPassword" class="ws-text-input" placeholder="Nhập mật khẩu để khóa file" style="padding-right:36px;" oninput="onPasswordInput()">
+            <button type="button" class="btn-toggle-pw" onclick="togglePasswordVisibility('inputUserPassword', this)" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); border:none; background:transparent; color:#64748b; cursor:pointer;" aria-label="Ẩn hiện mật khẩu">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          
+          <!-- Thanh đánh giá độ mạnh của mật khẩu -->
+          <div id="passwordStrengthWrap" style="margin-top:6px; display:none;">
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748b; margin-bottom:2px;">
+              <span>Độ mạnh:</span>
+              <strong id="passwordStrengthLabel">Trung bình</strong>
+            </div>
+            <div style="width:100%; height:4px; background:#e2e8f0; border-radius:2px; overflow:hidden;">
+              <div id="passwordStrengthBar" style="width:50%; height:100%; background:#f59e0b; transition:all 0.25s ease;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Xác nhận lại mật khẩu -->
+        <div class="form-group" style="margin-bottom:14px;">
+          <label class="form-label" for="inputConfirmPassword">Xác nhận lại mật khẩu</label>
+          <div style="position:relative;">
+            <input type="password" id="inputConfirmPassword" class="ws-text-input" placeholder="Nhập lại mật khẩu để xác nhận" style="padding-right:36px;" oninput="onPasswordInput()">
+            <button type="button" class="btn-toggle-pw" onclick="togglePasswordVisibility('inputConfirmPassword', this)" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); border:none; background:transparent; color:#64748b; cursor:pointer;" aria-label="Ẩn hiện mật khẩu">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <small id="passwordMatchError" style="color:#ef4444; font-size:0.75rem; display:none; margin-top:4px;">
+            <i class="fas fa-exclamation-circle"></i> Mật khẩu xác nhận không trùng khớp.
+          </small>
+        </div>
+
+        <!-- Box cảnh báo lưu trữ mật khẩu -->
+        <div class="ws-info-box" style="margin-bottom:12px; font-size:0.82rem; line-height:1.5;">
+          <i class="fas fa-shield-alt"></i>
+          <div>Tài liệu sẽ được mã hóa an toàn bằng tiêu chuẩn <strong>AES 256-bit</strong>. Vui lòng ghi nhớ mật khẩu, hệ thống không lưu lại mật khẩu của bạn.</div>
+        </div>
+
+        <!-- Tóm tắt thông tin file -->
+        <div class="ws-file-summary" style="margin-bottom:12px;">
+          <div class="ws-summary-row">
+            <span><i class="fas fa-file-pdf"></i> Tệp gốc:</span>
+            <strong id="summaryFileName" style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">tai_lieu.pdf</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-layer-group"></i> Tổng số trang:</span>
+            <strong id="totalPagesOrig">0 trang</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-key"></i> Tiêu chuẩn mã hóa:</span>
+            <strong style="color:#1e5b9c;">AES 256-bit</strong>
           </div>
         </div>
       </div>
 
       <div class="action-area">
         <button type="button" class="btn-convert btn-execute" id="btnExecute" onclick="executeToolAction()">
-          Đặt mật khẩu bảo vệ <i class="fas fa-arrow-right"></i>
+          <i class="fas fa-lock" style="margin-right:6px;"></i> Đặt mật khẩu bảo vệ ngay
         </button>
       </div>
     </aside>
@@ -331,28 +386,29 @@
         <i class="fas fa-lock"></i> Tải tệp lên để thực hiện Bảo vệ PDF bằng mật khẩu
       </div>
       <div class="drop-zone" id="dropZone">
-        <div class="dz-icon"><i class="fas fa-lock"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>Kéo &amp; thả file PDF vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Hỗ trợ file PDF tối đa 50 MB · Mã hóa bảo mật cao AES 256-bit chuẩn quốc tế</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>File PDF của bạn đã được khóa an toàn bằng mật khẩu!</h3>
-      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <h3 id="downloadSuccessTitle">Tài liệu PDF của bạn đã được khóa bảo vệ thành công!</h3>
+      <p id="downloadMeta">Tệp đã được mã hóa an toàn bằng mật khẩu và sẵn sàng lưu về thiết bị.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultFile()">
-        <i class="fas fa-download"></i> Tải xuống PDF đã bảo vệ
+        <i class="fas fa-download"></i> Tải xuống file PDF đã khóa
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
-          <i class="fas fa-redo"></i> Xử lý tệp khác
+          <i class="fas fa-redo"></i> Khóa một tệp khác
         </button>
       </div>
     </div>
@@ -363,18 +419,18 @@
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file PDF lên</h4>
+          <p>Kéo và thả tài liệu PDF vào khung tải lên hoặc bấm nút chọn file từ thiết bị của bạn.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Đặt mật khẩu</h4>
+          <p>Nhập mật khẩu an toàn và xác nhận lại mật khẩu ở cột thiết lập bên phải.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
           <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <p>Nhấn "Đặt mật khẩu bảo vệ ngay" và tải tài liệu PDF đã được mã hóa về máy.</p>
         </div>
       </div>
     </section>
@@ -385,20 +441,20 @@
       <div class="security-features">
         <div class="sec-item">
           <div>
-            <strong>Mã hóa SSL 256-bit</strong>
-            <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức HTTPS.</span>
+            <strong>Mã hóa AES 256-bit</strong>
+            <span>Chuẩn bảo mật cao nhất ngăn chặn truy cập trái phép khi không có mật khẩu.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
             <strong>Tự động xóa sau 1 giờ</strong>
-            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút.</span>
+            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút, không lưu trữ dài hạn.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
-            <strong>Bảo mật thông tin</strong>
-            <span>Không chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
+            <strong>Tuyệt đối không lưu mật khẩu</strong>
+            <span>Mật khẩu chỉ dùng để mã hóa file trong phiên xử lý và không được lưu ở bất kỳ cơ sở dữ liệu nào.</span>
           </div>
         </div>
       </div>
@@ -412,46 +468,75 @@
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Hoàn toàn miễn phí 100%! Bạn có thể đặt mật khẩu cho bao nhiêu tài liệu tùy thích mà không cần đăng ký tài khoản trả phí.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          File PDF đã cài mật khẩu có mở được trên điện thoại và máy tính khác không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Có. File sử dụng chuẩn mã hóa tiêu chuẩn Adobe Acrobat quốc tế, tương thích 100% với mọi phần mềm đọc PDF trên Windows, macOS, Android, iPhone và trình duyệt web.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Nếu tôi quên mật khẩu đã đặt thì ToolHub có lấy lại được không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Để đảm bảo tính riêng tư tuyệt đối, hệ thống không lưu lại mật khẩu của người dùng. Vì vậy bạn hãy ghi nhớ hoặc lưu lại mật khẩu trước khi gửi file đi.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tài liệu sau khi khóa mật khẩu có bị suy giảm chất lượng không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Không. Thuật toán mã hóa chỉ thiết lập lớp khóa bảo mật bao quanh file, giữ nguyên 100% độ sắc nét của văn bản và hình ảnh bên trong.
         </div>
       </div>
     </section>
 
-  
     <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
     <section class="seo-section seo-article">
       <h2>Giới thiệu công cụ Đặt mật khẩu bảo vệ PDF tại ToolHub</h2>
 
-      <p>Các tài liệu chứa dữ liệu nhạy cảm như hợp đồng kinh doanh, bảng lương, báo cáo tài chính hoặc thông tin cá nhân cần được bảo mật an toàn tuyệt đối trước khi chia sẻ qua email hoặc lưu trữ đám mây.</p>
+      <p>Trong thời đại số hóa, việc trao đổi các tài liệu mật như bảng lương nhân viên, hợp đồng thương mại, hồ sơ đấu thầu hay sao kê tài chính cá nhân qua Email và ứng dụng nhắn tin tiềm ẩn rất nhiều rủi ro bị rò rỉ dữ liệu hoặc đọc trộm khi thiết bị bị thất lạc.</p>
 
-      <p>Công cụ <strong>Bảo vệ PDF ToolHub</strong> áp dụng thuật toán mã hóa tiêu chuẩn quân đội AES 128-bit và 256-bit, ngăn chặn hành vi mở tài liệu, sao chép nội dung hoặc in ấn trái phép khi chưa được cấp quyền.</p>
+      <p>Công cụ <strong>Bảo vệ PDF trực tuyến ToolHub</strong> cung cấp giải pháp mã hóa cấp độ doanh nghiệp với thuật toán AES 256-bit chuẩn quốc tế, giúp bạn khóa tài liệu PDF bằng mật khẩu an toàn chỉ trong vài giây ngay trên trình duyệt.</p>
 
       <div class="seo-grid-cols">
         <div class="seo-col-card">
-          <h4><i class="fas fa-lock"></i> Mã hóa AES 256-bit</h4>
-          <p>Tiêu chuẩn mã hóa mạnh mẽ nhất hiện nay, bảo vệ tài liệu trước mọi sự can thiệp.</p>
+          <h4><i class="fas fa-shield-alt"></i> Mã hóa AES 256-bit</h4>
+          <p>Chuẩn mã hóa tiêu chuẩn quân đội, chống lại các cuộc tấn công dò mật khẩu tự động.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-user-shield"></i> Chống sao chép & in ấn</h4>
-          <p>Khóa quyền chỉnh sửa, sao chép văn bản và in tài liệu cho người xem trái phép.</p>
+          <h4><i class="fas fa-eye-slash"></i> Chống xem trộm nội dung</h4>
+          <p>Yêu cầu nhập đúng mật khẩu người dùng mới có thể mở xem được các trang trong file.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-laptop"></i> Tương thích mọi trình đọc PDF</h4>
-          <p>Mở mượt mà trên Adobe Acrobat, Foxit Reader, trình duyệt web và thiết bị di động.</p>
+          <h4><i class="fas fa-mobile-alt"></i> Tương thích 100% thiết bị</h4>
+          <p>Mở trơn tru trên Adobe Reader, Foxit, trình duyệt Chrome, Safari và ứng dụng điện thoại.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-check-circle"></i> Bảo mật an toàn tuyệt đối</h4>
-          <p>File được xóa hoàn toàn khỏi máy chủ sau 60 phút, không lưu trữ thông tin mật khẩu.</p>
+          <h4><i class="fas fa-lock"></i> Quyền riêng tư tối đa</h4>
+          <p>Hệ thống không lưu trữ mật khẩu hay đọc dữ liệu của bạn, xóa file tự động sau 60 phút.</p>
         </div>
+      </div>
+
+      <h3>Khi nào bạn nên cài mật khẩu bảo vệ tài liệu PDF?</h3>
+      <ul>
+        <li><strong>Gửi hợp đồng &amp; Điều khoản bảo mật (NDA):</strong> Khóa mật khẩu và gửi mật khẩu qua một kênh liên lạc riêng biệt (SMS/Zalo) để bảo vệ thông tin đàm phán.</li>
+        <li><strong>Bảng lương &amp; Sao kê tài chính:</strong> Phòng nhân sự và kế toán bảo mật bảng lương từng nhân viên trước khi gửi qua email nội bộ.</li>
+        <li><strong>Hồ sơ xin visa, chứng minh tài chính:</strong> Bảo vệ các giấy tờ tùy thân như CCCD, sổ đỏ, hộ chiếu tránh bị kẻ xấu lợi dụng.</li>
+        <li><strong>Tài liệu nghiên cứu, bản quyền đề tài:</strong> Ngăn chặn việc phát tán các tài liệu chưa được công bố rộng rãi.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo đặt mật khẩu an toàn:</strong> Hãy kết hợp chữ hoa, chữ thường, chữ số và ký tự đặc biệt (ví dụ: <code>ToolHub@2025!</code>) để đạt độ mạnh cao nhất, tránh sử dụng các mật khẩu quá đơn giản như <code>123456</code> hay ngày sinh nhật.
       </div>
     </section>
 
@@ -516,8 +601,9 @@
   </div>
 
   <!-- SCRIPTS -->
-
-<script src="../../static/js/app.js"></script>
+  <script src="../../static/vendor/pdfjs/pdf.min.js"></script>
+  <script src="../../static/js/ultis/pdf/pdf-preview.js"></script>
+  <script src="../../static/js/app.js"></script>
   <script src="../../static/js/tools/pdf/bao-ve-pdf.js"></script>
 
 </body>

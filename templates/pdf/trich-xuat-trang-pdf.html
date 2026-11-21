@@ -257,67 +257,106 @@
   <div class="tool-workspace full-bleed" id="toolWorkspace">
     <!-- Cột trái: Khu vực xem trước file đã chọn -->
     <div class="file-area">
-      <div class="file-area-content">
-        <div class="file-card-wrap" id="fileCardWrap">
-          <div class="file-card" id="fileCard">
-            <button type="button" class="btn-remove-file" onclick="resetFileSelection()" title="Xóa file">
-              <i class="fas fa-times"></i>
-            </button>
-            <div class="file-preview" id="filePreview">
-              <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
-                <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
-                <div class="line title"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
-                <div class="line"></div>
-                <div class="line block"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
-              </div>
-            </div>
-            <div class="file-name" id="selectedFileName">tai_lieu.pdf</div>
-            <div class="file-meta" id="selectedFileSize" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 0 KB</div>
-          </div>
-        </div>
-
-        <!-- Nút chọn file khác -->
-        <button type="button" class="btn-add-more" onclick="resetFileSelection()">
-          <i class="fas fa-sync-alt"></i> Chọn file khác
+      <!-- Nút nổi góc phải trên để chọn file khác -->
+      <div class="floating-add-wrap" data-tooltip="Chọn file PDF khác">
+        <button type="button" class="btn-floating-add" onclick="resetFileSelection()" aria-label="Chọn file khác">
+          <i class="fas fa-plus"></i>
         </button>
+      </div>
+
+      <div class="file-area-content">
+        <!-- Lưới thumbnail các trang PDF cho phép click để chọn/bỏ chọn trích xuất -->
+        <div class="file-card-wrap" id="fileCardWrap"></div>
       </div>
     </div>
 
-    <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
+    <!-- Cột phải: Bảng tùy chọn trích xuất trang PDF sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-file-export" style="margin-right:6px;"></i> Tùy chọn trích xuất trang PDF
       </div>
 
       <div class="options-body">
-        <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label" for="inputPagesToExtract">Chọn các trang cần trích xuất</label>
+          <input type="text" id="inputPagesToExtract" class="ws-text-input" placeholder="Ví dụ: 1, 3, 5-8" oninput="onPagesInputChange()">
+          <small class="ws-input-hint">Nhấp trực tiếp vào các trang ở khung bên trái hoặc nhập số trang riêng lẻ / dải trang.</small>
+
+          <!-- Các nút chọn nhanh -->
+          <div class="ws-quick-tags">
+            <button type="button" class="ws-tag-btn" onclick="applyQuickTag('all')">
+              <i class="fas fa-check-double"></i> Tất cả
+            </button>
+            <button type="button" class="ws-tag-btn" onclick="applyQuickTag('first')">
+              <i class="fas fa-step-backward"></i> Trang đầu
+            </button>
+            <button type="button" class="ws-tag-btn" onclick="applyQuickTag('last')">
+              <i class="fas fa-step-forward"></i> Trang cuối
+            </button>
+            <button type="button" class="ws-tag-btn" onclick="applyQuickTag('even')">
+              <i class="fas fa-list-ol"></i> Trang chẵn
+            </button>
+            <button type="button" class="ws-tag-btn" onclick="applyQuickTag('odd')">
+              <i class="fas fa-list-ul"></i> Trang lẻ
+            </button>
+            <button type="button" class="ws-tag-btn" onclick="clearPagesInput()">
+              <i class="fas fa-times"></i> Bỏ chọn
+            </button>
+          </div>
+        </div>
+
+        <!-- Chế độ xuất file -->
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Phương thức xuất tệp</label>
           <div class="ws-option-group">
             <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
+              <input type="radio" name="extractMode" value="merged" checked onchange="onExtractModeChange(this)">
               <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
+                <strong>Gộp vào 1 file PDF mới (Khuyến nghị)</strong>
+                <span>Tất cả các trang được chọn sẽ gom chung thành 1 tài liệu duy nhất.</span>
               </div>
             </label>
             <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
+              <input type="radio" name="extractMode" value="separate" onchange="onExtractModeChange(this)">
               <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
+                <strong>Tách riêng từng trang (Tải file .ZIP)</strong>
+                <span>Mỗi trang trích xuất thành 1 file PDF độc lập, đóng gói vào tệp zip.</span>
               </div>
             </label>
+          </div>
+        </div>
+
+        <!-- Tóm tắt số trang tài liệu -->
+        <div class="ws-file-summary" style="margin-bottom:12px;">
+          <div class="ws-summary-row">
+            <span><i class="fas fa-file-pdf"></i> Tệp gốc:</span>
+            <strong id="selectedFileName" style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">tai_lieu.pdf</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-layer-group"></i> Tổng số trang gốc:</span>
+            <strong id="totalPagesOrig">0 trang</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-check-circle" style="color:#10b981;"></i> Số trang trích xuất:</span>
+            <strong id="totalExtractCount" style="color:#10b981;">0 trang</strong>
+          </div>
+          <div class="ws-summary-row" style="flex-direction:column; align-items:flex-start; gap:4px; padding-top:8px; border-top:1px dashed #e2e8f0;">
+            <span style="font-weight:600;"><i class="fas fa-list-ol"></i> Các trang được chọn:</span>
+            <div id="pagesSelectedSummary" style="font-size:0.8rem; color:#1e5b9c; font-weight:700; word-break:break-all; max-height:55px; overflow-y:auto; line-height:1.4; background:#f8fafc; padding:6px 8px; border-radius:4px; border:1px solid #e2e8f0; width:100%; box-sizing:border-box;">Chưa chọn trang nào</div>
+          </div>
+        </div>
+
+        <div class="ws-info-box">
+          <i class="fas fa-info-circle"></i>
+          <div id="extractNoticeText">
+            Vui lòng nhấp vào các thẻ trang ở khung bên trái hoặc nhập số trang vào ô bên trên.
           </div>
         </div>
       </div>
 
       <div class="action-area">
         <button type="button" class="btn-convert btn-execute" id="btnExecute" onclick="executeToolAction()">
-          Trích xuất các trang <i class="fas fa-arrow-right"></i>
+          Trích xuất trang PDF ngay <i class="fas fa-arrow-right"></i>
         </button>
       </div>
     </aside>
@@ -331,28 +370,29 @@
         <i class="fas fa-file-export"></i> Tải tệp lên để thực hiện Trích xuất trang PDF
       </div>
       <div class="drop-zone" id="dropZone">
-        <div class="dz-icon"><i class="fas fa-file-export"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>Kéo &amp; thả file PDF vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Hỗ trợ file PDF tối đa 50 MB · Nhấp chọn trang trực quan để bóc tách</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Các trang được chọn đã được trích xuất thành công!</h3>
-      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <h3 id="downloadSuccessTitle">Các trang PDF đã được trích xuất thành công!</h3>
+      <p id="downloadMeta">Tài liệu mới đã được khởi tạo hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultFile()">
-        <i class="fas fa-download"></i> Tải file PDF trích xuất
+        <i class="fas fa-download"></i> Tải xuống tệp đã trích xuất
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
-          <i class="fas fa-redo"></i> Xử lý tệp khác
+          <i class="fas fa-redo"></i> Trích xuất một tệp khác
         </button>
       </div>
     </div>
@@ -363,18 +403,18 @@
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file PDF lên</h4>
+          <p>Kéo và thả tài liệu PDF vào khung tải lên hoặc bấm nút chọn file từ thiết bị của bạn.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Chọn các trang cần lấy</h4>
+          <p>Nhấp trực tiếp vào hình thu nhỏ của các trang hoặc nhập danh sách trang (ví dụ: 1, 3, 5-8).</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
           <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <p>Nhấn "Trích xuất trang PDF ngay" và tải tài liệu PDF mới hoặc file nén ZIP về máy.</p>
         </div>
       </div>
     </section>
@@ -392,13 +432,13 @@
         <div class="sec-item">
           <div>
             <strong>Tự động xóa sau 1 giờ</strong>
-            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút.</span>
+            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút, không lưu trữ dài hạn.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
-            <strong>Bảo mật thông tin</strong>
-            <span>Không chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
+            <strong>Không ai xem file của bạn</strong>
+            <span>Quá trình trích xuất hoàn toàn tự động bằng thuật toán, bảo vệ tối đa tính bảo mật.</span>
           </div>
         </div>
       </div>
@@ -412,46 +452,75 @@
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Hoàn toàn miễn phí 100%! Bạn có thể trích xuất không giới hạn số lần, không giới hạn dung lượng mà không cần đăng ký tài khoản.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Tôi có thể xuất từng trang thành các file riêng lẻ được không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Có. Bạn chỉ cần chọn tùy chọn "Tách riêng từng trang (Tải file .ZIP)", hệ thống sẽ tự động bóc tách từng trang thành các file PDF độc lập và đóng gói vào 1 file ZIP để bạn tải về nhanh chóng.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tài liệu sau khi trích xuất có giữ nguyên chất lượng và font chữ không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Có. Thuật toán trích xuất trang bằng PyMuPDF giữ nguyên 100% độ sắc nét của văn bản, hình ảnh, liên kết và định dạng nguyên bản của các trang được chọn.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tôi có thể chọn các trang không liên tiếp nhau để trích xuất không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Hoàn toàn được! Bạn có thể nhấp chọn tự do các trang bất kỳ trên giao diện hoặc nhập chuỗi kết hợp như <code>1, 4, 7-10</code> vào ô chỉ định.
         </div>
       </div>
     </section>
 
-  
     <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
     <section class="seo-section seo-article">
       <h2>Giới thiệu công cụ Trích xuất trang PDF trực tuyến tại ToolHub</h2>
 
-      <p>Bạn đang sở hữu một tập tin PDF tổng hợp dung lượng lớn nhưng chỉ cần gửi một số trang nội dung nhất định cho khách hàng, đồng nghiệp mà không muốn chia sẻ toàn bộ tài liệu gốc.</p>
+      <p>Trong công việc và học tập, bạn thường xuyên nhận được những tập tin PDF tài liệu dài hàng chục, thậm chí hàng trăm trang như sách điện tử (eBook), tài liệu báo cáo nghiên cứu dày cộp, hợp đồng kinh tế kèm theo hàng loạt phụ lục. Tuy nhiên, khi cần chia sẻ cho đối tác, gửi email cho đồng nghiệp hay nộp cho cơ quan, bạn chỉ cần một vài trang quan trọng nhất. Nếu gửi cả tệp gốc thì dung lượng quá nặng và có thể làm lộ những thông tin không cần thiết.</p>
 
-      <p>Công cụ <strong>Trích xuất trang PDF ToolHub</strong> cho phép bạn chọn lọc và bóc tách các trang riêng lẻ theo danh sách tùy ý để tạo thành một tệp PDF mới tinh gọn, đúng trọng tâm và dung lượng siêu nhẹ.</p>
+      <p>Công cụ <strong>Trích xuất trang PDF ToolHub</strong> mang đến giải pháp trực quan, mạnh mẽ và hoàn toàn miễn phí, cho phép bạn chọn lọc và bóc tách chính xác các trang mong muốn để tạo ra một tài liệu PDF mới tinh gọn, chuyên nghiệp và bảo mật cao.</p>
 
       <div class="seo-grid-cols">
         <div class="seo-col-card">
-          <h4><i class="fas fa-cut"></i> Trích xuất trang tự do</h4>
-          <p>Nhập danh sách trang cần lấy (ví dụ: 1, 3, 5-10) dễ dàng và chuẩn xác.</p>
+          <h4><i class="fas fa-mouse-pointer"></i> Nhấp chọn trang trực quan</h4>
+          <p>Giao diện hiển thị thumbnail toàn bộ trang, cho phép bạn nhấp chuột trực tiếp để chọn hoặc bỏ chọn từng trang dễ dàng.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-file-pdf"></i> Tạo file PDF mới siêu nhẹ</h4>
-          <p>Tệp kết quả chỉ chứa đúng những trang bạn cần, tiết kiệm bộ nhớ.</p>
+          <h4><i class="fas fa-file-archive"></i> Xuất gộp PDF hoặc nén ZIP</h4>
+          <p>Linh hoạt lựa chọn gom các trang thành 1 file PDF mới hoặc tách riêng từng trang thành các tệp độc lập đóng gói ZIP.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-check-circle"></i> Giữ nguyên chất lượng gốc</h4>
-          <p>Không nén ép làm giảm độ phân giải của văn bản và hình vẽ trong trang.</p>
+          <h4><i class="fas fa-check-circle"></i> Bảo toàn 100% chất lượng gốc</h4>
+          <p>Không qua nén giảm chất lượng, văn bản font chữ, biểu đồ và hình ảnh giữ nguyên độ sắc nét tuyệt đối như bản gốc.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-bolt"></i> Xử lý trực tuyến tốc độ cao</h4>
-          <p>Bóc tách trang tức thì, không cần cài đặt bất kỳ phần mềm hỗ trợ nào.</p>
+          <h4><i class="fas fa-shield-alt"></i> Bảo mật an toàn tuyệt đối</h4>
+          <p>Toàn bộ tài liệu được mã hóa SSL 256-bit và tự động xóa sạch khỏi máy chủ sau 60 phút để bảo vệ quyền riêng tư.</p>
         </div>
+      </div>
+
+      <h3>Khi nào bạn nên sử dụng công cụ Trích xuất trang PDF?</h3>
+      <ul>
+        <li><strong>Bóc tách hợp đồng &amp; Phụ lục kinh tế:</strong> Trích xuất trang ký kết hoặc điều khoản cụ thể để gửi xác nhận cho đối tác mà không để lộ các phụ lục bảo mật khác.</li>
+        <li><strong>Lấy hóa đơn, chứng từ kế toán trong file gộp:</strong> Khi kế toán scan hàng loạt hóa đơn vào cùng một tệp PDF, bạn có thể dễ dàng trích xuất từng tờ hóa đơn riêng biệt để lưu trữ và kê khai.</li>
+        <li><strong>Tách chương sách, bài học trong giáo trình:</strong> Giáo viên và học sinh có thể bóc tách riêng từng chương sách, từng bài tập từ tài liệu tham khảo dung lượng lớn để in ấn hoặc học nhóm.</li>
+        <li><strong>Giảm dung lượng tệp khi gửi Email:</strong> Gửi đúng những trang cần thiết giúp file siêu nhẹ, không lo bị vượt quá giới hạn 25MB của hòm thư điện tử.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo thao tác nhanh:</strong> Bạn có thể dùng các nút chọn nhanh như <strong>"Trang chẵn"</strong>, <strong>"Trang lẻ"</strong>, <strong>"Trang đầu"</strong> hoặc di chuột bấm biểu tượng kính lúp trên từng trang để xem phóng to nội dung trước khi bấm xuất file.
       </div>
     </section>
 
@@ -516,8 +585,9 @@
   </div>
 
   <!-- SCRIPTS -->
-
-<script src="../../static/js/app.js"></script>
+  <script src="../../static/vendor/pdfjs/pdf.min.js"></script>
+  <script src="../../static/js/ultis/pdf/pdf-preview.js"></script>
+  <script src="../../static/js/app.js"></script>
   <script src="../../static/js/tools/pdf/trich-xuat-trang-pdf.js"></script>
 
 </body>

@@ -257,6 +257,13 @@
   <div class="tool-workspace full-bleed" id="toolWorkspace">
     <!-- Cột trái: Khu vực xem trước file đã chọn -->
     <div class="file-area">
+      <!-- Nút nổi thêm file góc phải trên của khung xem trước -->
+      <div class="floating-add-wrap">
+        <button type="button" class="btn-floating-add" onclick="document.getElementById('fileInput').click()" title="Chọn file PDF khác">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+
       <div class="file-area-content">
         <div class="file-card-wrap" id="fileCardWrap">
           <div class="file-card" id="fileCard">
@@ -264,15 +271,9 @@
               <i class="fas fa-times"></i>
             </button>
             <div class="file-preview" id="filePreview">
-              <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
-                <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
-                <div class="line title"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
-                <div class="line"></div>
-                <div class="line block"></div>
-                <div class="line"></div>
-                <div class="line short"></div>
+              <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <div style="font-size:3rem; color:#e74c3c; margin-bottom:10px;"><i class="fas fa-file-pdf"></i></div>
+                <div style="font-size:1.8rem; color:#27ae60;"><i class="fas fa-file-image"></i></div>
               </div>
             </div>
             <div class="file-name" id="selectedFileName">tai_lieu.pdf</div>
@@ -290,34 +291,87 @@
     <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-sliders-h"></i> Thiết lập chuyển đổi sang Ảnh
       </div>
 
       <div class="options-body">
-        <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
-          <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
+        <!-- Định dạng ảnh xuất -->
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" style="font-weight:600; margin-bottom:8px; display:block;">Định dạng ảnh đầu ra</label>
+          <div class="ws-option-group" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <label class="ws-radio-box selected" id="optJpgLabel" style="padding:10px; cursor:pointer;">
+              <input type="radio" name="imgFormat" value="jpg" checked onchange="handleFormatChange('jpg')">
               <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
+                <strong style="font-size:0.9rem;"><i class="fas fa-file-image" style="color:#e67e22;"></i> JPG</strong>
+                <span style="font-size:0.75rem; color:#666;">Dung lượng nhẹ, chia sẻ nhanh</span>
               </div>
             </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
+            <label class="ws-radio-box" id="optPngLabel" style="padding:10px; cursor:pointer;">
+              <input type="radio" name="imgFormat" value="png" onchange="handleFormatChange('png')">
               <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
+                <strong style="font-size:0.9rem;"><i class="fas fa-file-image" style="color:#27ae60;"></i> PNG</strong>
+                <span style="font-size:0.75rem; color:#666;">Không nén, giữ nét tối đa</span>
               </div>
             </label>
+          </div>
+        </div>
+
+        <!-- Độ nét / DPI -->
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" style="font-weight:600; margin-bottom:8px; display:block;">Độ phân giải hiển thị (DPI)</label>
+          <div class="ws-option-group" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <label class="ws-radio-box selected" id="optDpi150Label" style="padding:10px; cursor:pointer;">
+              <input type="radio" name="imgDpi" value="150" checked onchange="handleDpiChange('150')">
+              <div class="ws-radio-text">
+                <strong style="font-size:0.88rem;">150 DPI</strong>
+                <span style="font-size:0.75rem; color:#666;">Tiêu chuẩn (Khuyên dùng)</span>
+              </div>
+            </label>
+            <label class="ws-radio-box" id="optDpi300Label" style="padding:10px; cursor:pointer;">
+              <input type="radio" name="imgDpi" value="300" onchange="handleDpiChange('300')">
+              <div class="ws-radio-text">
+                <strong style="font-size:0.88rem;">300 DPI</strong>
+                <span style="font-size:0.75rem; color:#666;">Độ nét cao HD (In ấn)</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Phạm vi trang chuyển đổi -->
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" style="font-weight:600; margin-bottom:8px; display:block;">Phạm vi trang cần chuyển</label>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.88rem; margin:0;">
+              <input type="radio" name="pageScope" value="all" checked onchange="togglePageRangeInput(false)">
+              <span>Tất cả các trang trong tài liệu</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.88rem; margin:0;">
+              <input type="radio" name="pageScope" value="custom" onchange="togglePageRangeInput(true)">
+              <span>Chỉ xuất các trang cụ thể</span>
+            </label>
+          </div>
+          <div id="pageRangeWrap" style="display:none; margin-top:10px;">
+            <input type="text" id="pageRangeInput" class="form-control" placeholder="Ví dụ: 1-3, 5, 8" style="width:100%; padding:8px 12px; border:1px solid #dcdfe6; border-radius:6px; font-size:0.88rem;">
+            <small style="display:block; margin-top:4px; color:#666; font-size:0.75rem;">Nhập số trang cách nhau bởi dấu phẩy hoặc gạch ngang (vd: 1-5, 8).</small>
+          </div>
+        </div>
+
+        <!-- Tóm tắt thông tin file -->
+        <div class="ws-file-summary" style="margin-bottom:12px;">
+          <div class="ws-summary-row">
+            <span><i class="fas fa-file-pdf"></i> Tệp gốc:</span>
+            <strong id="summaryFileName" style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">tai_lieu.pdf</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-images"></i> Xuất dạng:</span>
+            <strong id="summaryFormatDpi" style="color:#1e5b9c;">Ảnh JPG (150 DPI)</strong>
           </div>
         </div>
       </div>
 
       <div class="action-area">
         <button type="button" class="btn-convert btn-execute" id="btnExecute" onclick="executeToolAction()">
-          Chuyển đổi sang Ảnh <i class="fas fa-arrow-right"></i>
+          <i class="fas fa-file-image" style="margin-right:6px;"></i> Chuyển sang ảnh ngay
         </button>
       </div>
     </aside>
@@ -331,50 +385,51 @@
         <i class="fas fa-file-image"></i> Tải tệp lên để thực hiện PDF sang ảnh
       </div>
       <div class="drop-zone" id="dropZone">
-        <div class="dz-icon"><i class="fas fa-file-image"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>Kéo &amp; thả file PDF vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Hỗ trợ file PDF tối đa 50 MB · Xuất trọn bộ ảnh JPG/PNG nén ZIP tải về 1 chạm</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Các trang PDF đã được chuyển thành hình ảnh chất lượng cao!</h3>
-      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <h3 id="downloadSuccessTitle">Các trang PDF đã được chuyển thành hình ảnh thành công!</h3>
+      <p id="downloadMeta">Bộ sưu tập hình ảnh chất lượng cao đã được đóng gói và sẵn sàng lưu về máy.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultFile()">
-        <i class="fas fa-download"></i> Tải xuống hình ảnh (.zip)
+        <i class="fas fa-download"></i> Tải xuống tệp nén hình ảnh (.zip)
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
-          <i class="fas fa-redo"></i> Xử lý tệp khác
+          <i class="fas fa-redo"></i> Chuyển đổi tệp khác
         </button>
       </div>
     </div>
 
     <!-- ===== NỘI DUNG CHUẨN SEO ===== -->
     <section class="seo-section">
-      <h2>Hướng dẫn sử dụng PDF sang ảnh trực tuyến trong 3 bước</h2>
+      <h2>Hướng dẫn chuyển PDF sang ảnh JPG, PNG trực tuyến trong 3 bước</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file PDF lên</h4>
+          <p>Kéo và thả tài liệu PDF vào khung tải lên hoặc chọn từ máy tính, điện thoại của bạn.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Chọn định dạng &amp; chất lượng</h4>
+          <p>Lựa chọn định dạng ảnh JPG hoặc PNG, độ phân giải 150 DPI hoặc 300 DPI siêu nét.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
-          <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <h4>Tải ảnh về máy</h4>
+          <p>Bấm "Chuyển sang ảnh ngay" và tải về trọn bộ hình ảnh được đóng gói sẵn trong file ZIP.</p>
         </div>
       </div>
     </section>
@@ -386,72 +441,137 @@
         <div class="sec-item">
           <div>
             <strong>Mã hóa SSL 256-bit</strong>
-            <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức HTTPS.</span>
+            <span>Tất cả file được truyền tải an toàn tuyệt đối qua giao thức HTTPS bảo mật.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
             <strong>Tự động xóa sau 1 giờ</strong>
-            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút.</span>
+            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút, không lưu trữ lâu dài.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
-            <strong>Bảo mật thông tin</strong>
-            <span>Không chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
+            <strong>Bảo mật thông tin tuyệt đối</strong>
+            <span>Không sao lưu hình ảnh, không xem trộm hay chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
           </div>
         </div>
       </div>
     </section>
 
     <section class="seo-section">
-      <h2>Câu hỏi thường gặp về PDF sang ảnh (FAQ)</h2>
+      <h2>Câu hỏi thường gặp về chuyển PDF sang ảnh (FAQ)</h2>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Sử dụng công cụ PDF sang ảnh tại ToolHub có mất phí không?
+          Nên chọn định dạng JPG hay PNG khi chuyển đổi PDF?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Nếu tài liệu chủ yếu là văn bản, sách báo, tài liệu scan thông thường cần dung lượng nhẹ để gửi qua mạng xã hội, Zalo, bạn nên chọn <strong>JPG</strong>. Nếu tài liệu chứa hình vẽ kỹ thuật, đồ họa vector, bản thiết kế yêu cầu độ nét tuyệt đối và không nén mờ điểm ảnh, bạn nên chọn <strong>PNG</strong>.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Tài liệu sau khi chuyển đổi có bị mờ hoặc vỡ nét không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Hoàn toàn không. Công cụ sử dụng engine render PyMuPDF cao cấp với độ phân giải lên đến 300 DPI, đảm bảo từng con chữ, đường nét biểu đồ và hình ảnh đều sắc nét như tài liệu gốc.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tôi có thể chọn chuyển đổi một số trang thay vì toàn bộ không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Có. Bạn chỉ cần chọn tùy chọn "Chỉ xuất các trang cụ thể" và nhập số trang bạn muốn (ví dụ: 1-3, 5) để chỉ xuất những trang cần thiết.
         </div>
       </div>
     </section>
 
-  
-    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
+    <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO 4 KHỐI CHUẨN ===== -->
     <section class="seo-section seo-article">
-      <h2>Giới thiệu công cụ Chuyển PDF sang Ảnh (JPG, PNG) tại ToolHub</h2>
+      <h2>Giới thiệu công cụ Chuyển PDF sang Ảnh (JPG, PNG) trực tuyến tại ToolHub</h2>
 
-      <p>Nhiều tình huống công việc yêu cầu chia sẻ nhanh các trang tài liệu lên mạng xã hội, nhúng vào website, slide thuyết trình hoặc gửi qua tin nhắn Zalo/Messenger dưới dạng ảnh xem ngay mà không cần mở PDF.</p>
+      <!-- KHỐI 1: GIỚI THIỆU CHUNG (SEO-INTRO) -->
+      <div class="seo-intro">
+        <p>Trong công việc và học tập, chúng ta thường xuyên gặp nhu cầu trích xuất nội dung các trang tài liệu PDF để chèn vào bài thuyết trình PowerPoint, đăng tải lên mạng xã hội (Facebook, LinkedIn, Zalo), gửi tin nhắn xem nhanh trên điện thoại hoặc lưu trữ ảnh hồ sơ. Công cụ <strong>Chuyển PDF sang Ảnh trực tuyến tại ToolHub</strong> là giải pháp hoàn hảo giúp bạn trích xuất từng trang PDF thành từng file ảnh độc lập chất lượng cao hoàn toàn miễn phí.</p>
+        <p>Hỗ trợ đầy đủ hai định dạng phổ biến nhất là <strong>JPG</strong> và <strong>PNG</strong>, cùng tùy chọn độ nét chuẩn 150 DPI hoặc siêu nét 300 DPI, công cụ đảm bảo mọi hình ảnh được kết xuất hoàn mỹ nhất chỉ trong vài giây thao tác.</p>
+      </div>
 
-      <p>Công cụ <strong>Chuyển PDF sang Ảnh ToolHub</strong> giúp bạn trích xuất từng trang PDF thành từng bức ảnh JPG hoặc PNG độc lập với độ phân giải cao, hiển thị màu sắc và font chữ rõ nét đến từng chi tiết.</p>
+      <!-- KHỐI 2: TÍNH NĂNG NỔI BẬT (SEO-FEATURES-GRID) -->
+      <h3 style="margin-top:28px; margin-bottom:16px; font-size:1.2rem; color:#1e293b;">
+        <i class="fas fa-star" style="color:#f39c12; margin-right:6px;"></i> Các ưu điểm vượt trội của công cụ chuyển PDF sang ảnh
+      </h3>
+      <div class="seo-features-grid">
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-image"></i></div>
+          <h4>Độ phân giải siêu nét (300 DPI)</h4>
+          <p>Thuật toán render vector chất lượng cao giúp hình ảnh sắc nét, không vỡ hạt ngay cả khi phóng to xem chi tiết.</p>
+        </div>
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-sliders-h"></i></div>
+          <h4>Lựa chọn linh hoạt JPG &amp; PNG</h4>
+          <p>Tự do tùy chọn lưu dạng ảnh JPG dung lượng gọn nhẹ hoặc PNG chất lượng đồ họa không nén suy hao.</p>
+        </div>
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-file-archive"></i></div>
+          <h4>Đóng gói ZIP tải về tiện lợi</h4>
+          <p>Toàn bộ các trang ảnh được tự động đánh số thứ tự chuẩn và nén vào một file ZIP duy nhất để bạn tải về nhanh chóng.</p>
+        </div>
+        <div class="seo-feature-card">
+          <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+          <h4>An toàn &amp; Riêng tư tuyệt đối</h4>
+          <p>Toàn bộ quá trình chuyển đổi thực thi trên hệ thống bảo mật SSL và tự động hủy sau 60 phút.</p>
+        </div>
+      </div>
 
-      <div class="seo-grid-cols">
-        <div class="seo-col-card">
-          <h4><i class="fas fa-image"></i> Độ phân giải cao (HD)</h4>
-          <p>Xuất ảnh sắc nét 300 DPI, không bị vỡ hạt hay mờ nhòe chữ viết.</p>
+      <!-- KHỐI 3: HƯỚNG DẪN CHI TIẾT (SEO-STEPS-DETAILED) -->
+      <h3 style="margin-top:28px; margin-bottom:16px; font-size:1.2rem; color:#1e293b;">
+        <i class="fas fa-list-ol" style="color:#1e5b9c; margin-right:6px;"></i> Hướng dẫn chi tiết cách đổi file PDF sang hình ảnh
+      </h3>
+      <div class="seo-steps-detailed">
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 1</div>
+          <div class="step-content">
+            <h4>Tải tệp PDF lên</h4>
+            <p>Bấm vào nút <strong>"Chọn tệp PDF"</strong> hoặc kéo thả file PDF cần chuyển đổi vào khung tải tệp trên màn hình.</p>
+          </div>
         </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-file-image"></i> Hỗ trợ định dạng JPG & PNG</h4>
-          <p>Tự do chọn lưu ảnh JPG dung lượng nhẹ hoặc PNG trong suốt chất lượng cao.</p>
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 2</div>
+          <div class="step-content">
+            <h4>Thiết lập định dạng và độ phân giải</h4>
+            <p>Chọn định dạng ảnh bạn muốn (JPG hoặc PNG), chọn độ phân giải (150 DPI thông thường hoặc 300 DPI chất lượng cao) và chọn phạm vi trang cần xuất.</p>
+          </div>
         </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-file-archive"></i> Tải về tệp ZIP tiện lợi</h4>
-          <p>Toàn bộ các trang tài liệu được đóng gói gọn gàng thành 1 file nén tải về.</p>
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 3</div>
+          <div class="step-content">
+            <h4>Thực hiện chuyển đổi</h4>
+            <p>Bấm vào nút <strong>"Chuyển sang ảnh ngay"</strong>. Hệ thống sẽ bóc tách và vẽ từng trang tài liệu thành hình ảnh với tốc độ cực nhanh.</p>
+          </div>
         </div>
-        <div class="seo-col-card">
-          <h4><i class="fas fa-bolt"></i> Xử lý siêu tốc</h4>
-          <p>Chuyển đổi hàng chục trang PDF thành hình ảnh chỉ trong vài nhấp chuột.</p>
+        <div class="detailed-step-item">
+          <div class="step-badge">Bước 4</div>
+          <div class="step-content">
+            <h4>Tải tệp ZIP về máy</h4>
+            <p>Bấm nút <strong>"Tải xuống tệp nén hình ảnh (.zip)"</strong> để lưu trữ toàn bộ các bức ảnh về thiết bị của bạn.</p>
+          </div>
         </div>
+      </div>
+
+      <!-- KHỐI 4: MẸO & LƯU Ý HỮU ÍCH (SEO-TIPS-BOX) -->
+      <div class="seo-tips-box" style="margin-top:28px; background:#eff6ff; border-left:4px solid #3b82f6; padding:18px 20px; border-radius:0 8px 8px 0;">
+        <h4 style="margin:0 0 10px 0; color:#1e40af; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+          <i class="fas fa-lightbulb" style="color:#f59e0b;"></i> Một số mẹo hữu ích khi chuyển đổi PDF sang ảnh:
+        </h4>
+        <ul style="margin:0; padding-left:20px; color:#334155; line-height:1.6; font-size:0.92rem;">
+          <li><strong>Tối ưu dung lượng khi chia sẻ:</strong> Nên chọn định dạng JPG 150 DPI nếu bạn chỉ cần gửi ảnh tài liệu qua tin nhắn Zalo, Facebook hoặc đính kèm email để tránh quá tải dung lượng.</li>
+          <li><strong>Dành cho in ấn quảng cáo:</strong> Hãy chọn định dạng PNG 300 DPI để đạt chất lượng in ấn chuyên nghiệp, không răng cưa chữ.</li>
+          <li><strong>Chỉ trích xuất trang cần thiết:</strong> Nếu file PDF dài hàng trăm trang mà bạn chỉ cần một vài trang biểu đồ, hãy sử dụng tính năng xuất theo khoảng trang (ví dụ: 12-15) để tiết kiệm thời gian và dung lượng lưu trữ.</li>
+        </ul>
       </div>
     </section>
 

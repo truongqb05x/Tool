@@ -257,13 +257,29 @@
   <div class="tool-workspace full-bleed" id="toolWorkspace">
     <!-- Cột trái: Khu vực xem trước file đã chọn -->
     <div class="file-area">
+      <!-- Nút nổi góc phải trên để chọn file khác -->
+      <div class="floating-add-wrap" data-tooltip="Chọn file PDF khác">
+        <button type="button" class="btn-floating-add" onclick="resetFileSelection()" aria-label="Chọn file khác">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+
       <div class="file-area-content">
         <div class="file-card-wrap" id="fileCardWrap">
-          <div class="file-card" id="fileCard">
+          <div class="file-card" id="fileCard" style="position:relative; width:240px;">
             <button type="button" class="btn-remove-file" onclick="resetFileSelection()" title="Xóa file">
               <i class="fas fa-times"></i>
             </button>
-            <div class="file-preview" id="filePreview">
+
+            <!-- Tùy chọn hover: Xem trước phóng to -->
+            <div class="file-card-actions">
+              <button type="button" class="btn-card-action" onclick="openPdfZoomModal()" title="Phóng to xem trước">
+                <i class="fas fa-search-plus"></i>
+              </button>
+            </div>
+
+            <!-- Khung xem trước trang PDF -->
+            <div class="file-preview" id="filePreview" style="position:relative; min-height:220px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
               <div class="paper-mockup" style="position:relative; display:flex; flex-direction:column;">
                 <div style="position:absolute; bottom:8px; right:8px; font-size:1.8rem; color:#e74c3c; opacity:0.3;"><i class="fas fa-file-pdf"></i></div>
                 <div class="line title"></div>
@@ -274,43 +290,83 @@
                 <div class="line"></div>
                 <div class="line short"></div>
               </div>
+
+              <!-- Lớp phủ hiển thị vị trí số trang mẫu thời gian thực -->
+              <div id="pageNumberPreviewBadge" style="position:absolute; bottom:10px; left:50%; transform:translateX(-50%); background:#1e5b9c; color:#fff; font-size:0.75rem; font-weight:700; padding:2px 8px; border-radius:3px; box-shadow:0 1px 4px rgba(0,0,0,0.3); pointer-events:none; transition:all 0.25s ease; z-index:10;">
+                1 / 10
+              </div>
             </div>
-            <div class="file-name" id="selectedFileName">tai_lieu.pdf</div>
+
+            <div class="file-name" id="selectedFileName" style="margin-top:8px;">tai_lieu.pdf</div>
             <div class="file-meta" id="selectedFileSize" style="font-size:0.75rem; color:#888; margin-top:4px;">Dung lượng: 0 KB</div>
           </div>
         </div>
-
-        <!-- Nút chọn file khác -->
-        <button type="button" class="btn-add-more" onclick="resetFileSelection()">
-          <i class="fas fa-sync-alt"></i> Chọn file khác
-        </button>
       </div>
     </div>
 
-    <!-- Cột phải: Bảng tùy chọn sát lề bên phải màn hình -->
+    <!-- Cột phải: Bảng tùy chọn thiết lập đánh số trang sát lề bên phải màn hình -->
     <aside class="options-area">
       <div class="options-header">
-        <i class="fas fa-sliders-h"></i> Tùy chọn xử lý
+        <i class="fas fa-list-ol" style="margin-right:6px;"></i> Thiết lập đánh số trang
       </div>
 
       <div class="options-body">
-        <div class="form-group">
-          <label class="form-label">Chế độ thực hiện</label>
-          <div class="ws-option-group">
-            <label class="ws-radio-box selected">
-              <input type="radio" name="toolMode" value="standard" checked>
-              <div class="ws-radio-text">
-                <strong>Chế độ tiêu chuẩn (Khuyến nghị)</strong>
-                <span>Xử lý tối ưu chất lượng và tốc độ cao nhất.</span>
-              </div>
-            </label>
-            <label class="ws-radio-box">
-              <input type="radio" name="toolMode" value="advanced">
-              <div class="ws-radio-text">
-                <strong>Chế độ nâng cao</strong>
-                <span>Tùy chỉnh sâu tham số và cấu trúc tệp xuất ra.</span>
-              </div>
-            </label>
+        <!-- Vị trí đặt số trang -->
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Vị trí chèn số trang</label>
+          <div class="ws-position-grid" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; margin-top:6px;">
+            <button type="button" class="ws-pos-btn" data-pos="top-left" onclick="selectPosition('top-left')">Trên - Trái</button>
+            <button type="button" class="ws-pos-btn" data-pos="top-center" onclick="selectPosition('top-center')">Trên - Giữa</button>
+            <button type="button" class="ws-pos-btn" data-pos="top-right" onclick="selectPosition('top-right')">Trên - Phải</button>
+            <button type="button" class="ws-pos-btn" data-pos="bottom-left" onclick="selectPosition('bottom-left')">Dưới - Trái</button>
+            <button type="button" class="ws-pos-btn active" data-pos="bottom-center" onclick="selectPosition('bottom-center')" style="background:#1e5b9c; color:#fff; font-weight:700;">Dưới - Giữa</button>
+            <button type="button" class="ws-pos-btn" data-pos="bottom-right" onclick="selectPosition('bottom-right')">Dưới - Phải</button>
+          </div>
+          <small class="ws-input-hint">Nhấp vị trí trên lưới để chọn góc đặt số trang phù hợp.</small>
+        </div>
+
+        <!-- Kiểu định dạng số trang -->
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label" for="selectFormatType">Định dạng số trang</label>
+          <select id="selectFormatType" class="ws-text-input" onchange="onFormatChange()">
+            <option value="page_total" selected>Trang hiện tại / Tổng số (Ví dụ: 1 / 10)</option>
+            <option value="page_only">Chỉ số trang (Ví dụ: 1, 2, 3)</option>
+            <option value="text_page_total">Kèm chữ (Ví dụ: Trang 1 / 10)</option>
+            <option value="text_page_only">Kèm chữ đơn giản (Ví dụ: Trang 1)</option>
+          </select>
+        </div>
+
+        <!-- Phạm vi trang đánh số & số bắt đầu -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+          <div>
+            <label class="form-label" for="inputFromPage">Đánh số từ trang</label>
+            <input type="number" id="inputFromPage" class="ws-text-input" value="1" min="1" oninput="onSettingsChange()">
+            <small class="ws-input-hint">Bỏ qua trang bìa nếu cần</small>
+          </div>
+          <div>
+            <label class="form-label" for="inputStartNumber">Số đầu tiên</label>
+            <input type="number" id="inputStartNumber" class="ws-text-input" value="1" min="1" oninput="onSettingsChange()">
+            <small class="ws-input-hint">Thường bắt đầu từ 1</small>
+          </div>
+        </div>
+
+        <!-- Tóm tắt số trang tài liệu -->
+        <div class="ws-file-summary" style="margin-bottom:12px;">
+          <div class="ws-summary-row">
+            <span><i class="fas fa-file-pdf"></i> Tệp gốc:</span>
+            <strong id="summaryFileName" style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">tai_lieu.pdf</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-layer-group"></i> Tổng số trang:</span>
+            <strong id="totalPagesOrig">0 trang</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-map-marker-alt"></i> Vị trí:</span>
+            <strong id="summaryPositionText" style="color:#1e5b9c;">Dưới - Chính giữa</strong>
+          </div>
+          <div class="ws-summary-row">
+            <span><i class="fas fa-eye"></i> Mẫu hiển thị:</span>
+            <strong id="summaryFormatPreview" style="color:#1e5b9c;">1 / 10</strong>
           </div>
         </div>
       </div>
@@ -331,28 +387,29 @@
         <i class="fas fa-list-ol"></i> Tải tệp lên để thực hiện Thêm số trang PDF
       </div>
       <div class="drop-zone" id="dropZone">
-        <div class="dz-icon"><i class="fas fa-list-ol"></i></div>
-        <h3>Kéo &amp; thả file vào đây</h3>
-        <p>hoặc nhấn nút bên dưới để chọn file từ thiết bị của bạn</p>
-        <label for="fileInput" class="btn-file-select">
-          <i class="fas fa-folder-open"></i> Chọn tệp từ máy
-        </label>
-        <input type="file" id="fileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.png,.jpg,.jpeg">
-        <div class="dz-tip">Hỗ trợ định dạng tài liệu tối đa 50MB · Xử lý bảo mật cao</div>
+        <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>Kéo &amp; thả file PDF vào đây</h3>
+        <p>hoặc nhấn vào nút bên dưới để chọn tệp từ máy tính, điện thoại</p>
+        <button type="button" class="btn-select-file" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Chọn tệp PDF
+        </button>
+        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display:none;">
+        <div class="dz-note">Hỗ trợ file PDF tối đa 50 MB · Tùy biến vị trí và định dạng số trang linh hoạt</div>
       </div>
     </div>
 
-<!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
+    <!-- BƯỚC 3: THẺ KẾT QUẢ TẢI XUỐNG (DOWNLOAD CARD) -->
     <div class="download-card" id="downloadCard">
       <div class="download-card-icon"><i class="fas fa-check"></i></div>
-      <h3>Đã chèn số trang vào toàn bộ tài liệu PDF thành công!</h3>
-      <p id="downloadMeta">Tài liệu đã được tối ưu hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <h3 id="downloadSuccessTitle">Đã chèn số trang vào toàn bộ tài liệu PDF thành công!</h3>
+      <p id="downloadMeta">Tài liệu đã được đánh số trang hoàn tất và sẵn sàng lưu về thiết bị.</p>
+      <div id="saveAccountNotice" class="save-account-notice" style="display:none;"></div>
       <button type="button" class="btn-download-result" onclick="downloadResultFile()">
-        <i class="fas fa-download"></i> Tải xuống PDF đã đánh số
+        <i class="fas fa-download"></i> Tải xuống file PDF đã đánh số
       </button>
       <div>
         <button type="button" class="btn-redo" onclick="resetFileSelection()">
-          <i class="fas fa-redo"></i> Xử lý tệp khác
+          <i class="fas fa-redo"></i> Đánh số một tệp khác
         </button>
       </div>
     </div>
@@ -363,18 +420,18 @@
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">1</div>
-          <h4>Tải file lên</h4>
-          <p>Kéo và thả tài liệu vào khung hoặc chọn từ thiết bị của bạn.</p>
+          <h4>Tải file PDF lên</h4>
+          <p>Kéo và thả tài liệu PDF vào khung tải lên hoặc bấm nút chọn file từ thiết bị của bạn.</p>
         </div>
         <div class="step-card">
           <div class="step-num">2</div>
-          <h4>Tùy chỉnh thông số</h4>
-          <p>Chọn các thông số cấu hình phù hợp với nhu cầu công việc của bạn.</p>
+          <h4>Tùy chỉnh vị trí &amp; định dạng</h4>
+          <p>Chọn góc hiển thị số trang trên trang giấy (trên/dưới/trái/phải) và định dạng hiển thị.</p>
         </div>
         <div class="step-card">
           <div class="step-num">3</div>
           <h4>Lưu file kết quả</h4>
-          <p>Bấm thực hiện và tải tài liệu hoàn tất về thiết bị ngay lập tức.</p>
+          <p>Nhấn "Đánh số trang ngay" và tải tài liệu PDF đã hoàn thiện về thiết bị ngay lập tức.</p>
         </div>
       </div>
     </section>
@@ -392,13 +449,13 @@
         <div class="sec-item">
           <div>
             <strong>Tự động xóa sau 1 giờ</strong>
-            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút.</span>
+            <span>File của bạn được xóa vĩnh viễn khỏi hệ thống sau 60 phút, không lưu trữ dài hạn.</span>
           </div>
         </div>
         <div class="sec-item">
           <div>
-            <strong>Bảo mật thông tin</strong>
-            <span>Không chia sẻ dữ liệu với bất kỳ bên thứ ba nào.</span>
+            <strong>Không ai xem file của bạn</strong>
+            <span>Quá trình chèn số trang hoàn toàn tự động bằng thuật toán, bảo vệ tối đa tính riêng tư.</span>
           </div>
         </div>
       </div>
@@ -412,46 +469,75 @@
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Hoàn toàn miễn phí 100%! Bạn có thể sử dụng không giới hạn số lần mà không cần đăng ký tài khoản trả phí.
+          Hoàn toàn miễn phí 100%! Bạn có thể đánh số bao nhiêu tài liệu tùy thích mà không cần đăng ký tài khoản trả phí.
         </div>
       </div>
       <div class="tool-faq-item">
         <div class="tool-faq-q" onclick="toggleFaqItem(this)">
-          Tài liệu sau khi xử lý có giữ nguyên chất lượng không?
+          Tôi có thể bỏ qua không đánh số trang bìa đầu tiên được không?
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="tool-faq-a">
-          Có, thuật toán xử lý giữ nguyên độ phân giải, bố cục trang và định dạng font chữ sắc nét.
+          Có. Ở mục "Đánh số từ trang", bạn chỉ cần nhập số <code>2</code>, trang bìa đầu tiên sẽ được giữ nguyên và số trang sẽ bắt đầu xuất hiện từ trang thứ 2.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Số trang được chèn có làm lệch chữ hay che lấp nội dung cũ không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Không. Số trang được tính toán tọa độ tự động nằm ngoài lề trang in chuẩn (margin 0.5 inch), vừa vặn và thẩm mỹ mà không đè lên nội dung văn bản gốc.
+        </div>
+      </div>
+      <div class="tool-faq-item">
+        <div class="tool-faq-q" onclick="toggleFaqItem(this)">
+          Tôi có thể chọn định dạng kiểu "Trang 1 / 20" được không?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="tool-faq-a">
+          Hoàn toàn được! Bạn có thể chọn trong danh sách định dạng kiểu "Kèm chữ (Trang 1 / 10)" hoặc "Chỉ số trang (1 / 10)" rất tiện lợi.
         </div>
       </div>
     </section>
 
-  
     <!-- ===== BÀI VIẾT GIỚI THIỆU CHỨC NĂNG & TỐI ƯU SEO ===== -->
     <section class="seo-section seo-article">
       <h2>Giới thiệu công cụ Đánh số trang PDF trực tuyến tại ToolHub</h2>
 
-      <p>Tài liệu học tập, luận văn tốt nghiệp, báo cáo nghiên cứu hoặc hồ sơ thầu dài nhiều trang bắt buộc phải được đánh số thứ tự rõ ràng để tiện tra cứu mục lục và in ấn đóng quyển.</p>
+      <p>Trong quá trình hoàn thiện các văn bản hành chính, đề tài khoa học, luận văn tốt nghiệp, báo cáo tài chính hay hồ sơ thầu, việc đánh số thứ tự từng trang là yêu cầu bắt buộc theo quy chuẩn trình bày văn bản. Một tài liệu không có số trang sẽ khiến người đọc gặp khó khăn khi tra cứu mục lục, dẫn chứng nội dung và gây trở ngại lớn khi in ấn đóng cuốn.</p>
 
-      <p>Công cụ <strong>Thêm số trang PDF ToolHub</strong> cho phép bạn tự do đánh số trang tự động với nhiều định dạng chuyên nghiệp, tùy chọn vị trí hiển thị (đầu trang, chân trang, giữa, trái, phải) và định dạng số linh hoạt.</p>
+      <p>Công cụ <strong>Thêm số trang PDF trực tuyến ToolHub</strong> cung cấp giải pháp chuyên nghiệp, tự động chèn số thứ tự trang vào tài liệu PDF một cách nhanh chóng với độ chính xác cao mà không cần đến các phần mềm nặng nề như Adobe Acrobat Pro.</p>
 
       <div class="seo-grid-cols">
         <div class="seo-col-card">
-          <h4><i class="fas fa-list-ol"></i> Vị trí linh hoạt</h4>
-          <p>Tùy ý đặt số trang ở góc dưới, góc trên, căn trái, căn phải hoặc căn giữa trang.</p>
+          <h4><i class="fas fa-compass"></i> 6 vị trí linh hoạt</h4>
+          <p>Dễ dàng đặt số trang ở đầu trang, chân trang, góc trái, góc phải hoặc chính giữa theo quy chuẩn.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-font"></i> Đa dạng kiểu định dạng</h4>
-          <p>Hỗ trợ đánh số kiểu "Trang 1", "1/N", số La Mã hoặc số Ả Rập chuẩn mực.</p>
+          <h4><i class="fas fa-font"></i> Đa dạng mẫu định dạng</h4>
+          <p>Hỗ trợ kiểu số đơn giản "1, 2, 3", dạng phân số "1/N" hoặc dạng văn bản trang trọng "Trang 1/N".</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-file-alt"></i> Chọn trang bắt đầu</h4>
-          <p>Dễ dàng bỏ qua trang bìa, trang mục lục và bắt đầu đánh số từ trang bất kỳ.</p>
+          <h4><i class="fas fa-file-alt"></i> Tùy chọn bỏ trang bìa</h4>
+          <p>Cho phép chọn trang bắt đầu đánh số linh hoạt để giữ nguyên vẻ đẹp của trang bìa và trang mục lục.</p>
         </div>
         <div class="seo-col-card">
-          <h4><i class="fas fa-check-circle"></i> Giữ nguyên bố cục gốc</h4>
-          <p>Số trang được chèn hài hòa, không che lấp nội dung văn bản có sẵn.</p>
+          <h4><i class="fas fa-shield-alt"></i> Bảo mật an toàn tuyệt đối</h4>
+          <p>Toàn bộ tài liệu được mã hóa SSL 256-bit và tự động xóa sạch khỏi máy chủ sau 60 phút để bảo vệ quyền riêng tư.</p>
         </div>
+      </div>
+
+      <h3>Khi nào bạn nên sử dụng công cụ Thêm số trang PDF?</h3>
+      <ul>
+        <li><strong>Hoàn thiện luận văn, đồ án tốt nghiệp:</strong> Bắt buộc phải đánh số trang ở chân trang chính giữa hoặc góc trên bên phải để nộp cho hội đồng chấm thi.</li>
+        <li><strong>Hồ sơ dự thầu, hợp đồng kinh tế:</strong> Đánh số trang đầy đủ giúp các bên dễ dàng kiểm tra, ký nháy từng trang và tránh tình trạng thất lạc tài liệu.</li>
+        <li><strong>Tài liệu scan sau khi gộp nhiều file:</strong> Sau khi gộp các chứng từ từ nhiều nguồn khác nhau, việc đánh số trang lại toàn bộ giúp tài liệu có tính liền mạch và thống nhất.</li>
+        <li><strong>Tài liệu giảng dạy, giáo án giáo viên:</strong> Hỗ trợ học sinh và sinh viên dễ dàng theo dõi bài học theo số trang được chỉ định.</li>
+      </ul>
+
+      <div class="seo-highlight-box">
+        <strong><i class="fas fa-lightbulb"></i> Mẹo đánh số trang chuẩn:</strong> Đối với các báo cáo tài chính và luận văn, vị trí chuẩn phổ biến nhất là <strong>"Dưới - Giữa"</strong> hoặc <strong>"Dưới - Phải"</strong>. Hãy đặt <em>"Đánh số từ trang: 2"</em> nếu tài liệu của bạn có trang bìa đầu tiên.
       </div>
     </section>
 
@@ -516,8 +602,9 @@
   </div>
 
   <!-- SCRIPTS -->
-
-<script src="../../static/js/app.js"></script>
+  <script src="../../static/vendor/pdfjs/pdf.min.js"></script>
+  <script src="../../static/js/ultis/pdf/pdf-preview.js"></script>
+  <script src="../../static/js/app.js"></script>
   <script src="../../static/js/tools/pdf/them-so-trang-pdf.js"></script>
 
 </body>
